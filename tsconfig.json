@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "jsx": "preserve",
+    "baseUrl": "."
+  },
+  "include": [
+    "next-env.d.ts",
+    "src/types/*",
+    "src/pages/**/*",
+    "src/**/*"
+  ],
+  "exclude": [
+    ".next",
+    ".vscode",
+    ".yarn",
+    "public"
+  ]
+}

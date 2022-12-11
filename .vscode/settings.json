@@ -1,0 +1,16 @@
+{
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "all",
+  "editor.tabSize": 2,
+  "files.eol": "\n",
+  "git.mergeEditor": false,
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "eslint.nodePath": ".yarn/sdks",
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}

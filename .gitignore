@@ -1,0 +1,23 @@
+.env*
+
+# yarn berry
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# next.js build output
+.next
+
+# next-pwa
+**/public/service-worker.js
+**/public/service-worker.js.map
+**/public/sw.js
+**/public/sw.js.map
+**/public/workbox-*.js
+**/public/workbox-*.js.map
+
+# ts-import
+.cache

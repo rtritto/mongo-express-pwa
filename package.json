@@ -1,0 +1,49 @@
+{
+  "name": "mongo-express-pwa",
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "packageManager": "yarn@4.0.0-rc.32",
+  "dependencies": {
+    ".ts-import": "link:./.ts-import",
+    "@emotion/cache": "^11.10.5",
+    "@emotion/react": "^11.10.5",
+    "@emotion/server": "^11.10.0",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.10.17",
+    "@next/font": "^13.0.6",
+    "common": "link:./src/common",
+    "components": "link:./src/common/components",
+    "config.default.mts": "link:./config.default.mts",
+    "middlewares": "link:./src/middlewares",
+    "mongodb": "^4.12.1",
+    "next": "^13.0.7-canary.3",
+    "next-pwa": "^5.6.0",
+    "pages": "link:./pages",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recoil": "^0.7.6",
+    "recoil-persist": "^4.2.0",
+    "store": "link:./src/common/store",
+    "ts-import": "^4.0.0-beta.10",
+    "utils": "link:./src/utils"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/eslint-parser": "^7.19.1",
+    "@mui/types": "^7.2.2",
+    "@types/node": "^18.11.12",
+    "@types/react": "^18.0.26",
+    "@yarnpkg/sdks": "^3.0.0-rc.32",
+    "eslint": "^8.29.0",
+    "eslint-config-next": "^13.0.6",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-unicorn": "^45.0.1",
+    "typescript": "^4.9.3"
+  },
+  "scripts": {
+    "dev": "yarn next -p 8081",
+    "od": "yarn outdated"
+  }
+}
