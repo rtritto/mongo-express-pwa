@@ -1,8 +1,15 @@
 import type { Admin } from 'mongodb'
 
+// import type config from 'config.default.mts'
+
 export { }
 
 declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      config: import('config.default.mts')
+    }
+  }
   var mongo: {
     clients: Array<ClientInfo>
     collections?: Object<string, Array<string>>
@@ -11,7 +18,7 @@ declare global {
     mainClient?: {
       adminDb?: Admin | undefined
     }
-    getDatabases?: () => Array<string>
+    getDatabases: () => Array<string>
     updateCollections: (dbConnection: Connection) => Promise<void>
     updateDatabases: () => Promise<void>
   }

@@ -42,7 +42,9 @@ global.mongo = {
     this.collections = {}
 
     const addConnection = (info: ClientInfo, db: Db, dbName: string) => {
-      const fullName = `${info.connectionName}_${dbName}`
+      const fullName = this.clients.length > 1
+        ? `${info.connectionName}_${dbName}`
+        : dbName
       const newConnection = {
         info,
         dbName,

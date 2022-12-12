@@ -1,9 +1,10 @@
 import Image from 'next/image.js'
 import Link from 'next/link.js'
-import { MouseEvent, useState } from 'react'
+import { useState } from 'react'
 import {
   AppBar,
   Box,
+  Button,
   Container,
   Divider,
   Hidden,
@@ -12,20 +13,17 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Menu,
-  MenuItem,
   SvgIcon,
   SwipeableDrawer,
   Switch,
   Typography,
   Toolbar,
-  Button,
-  Popover
+  Breadcrumbs
 } from '@mui/material'
-import { useRecoilState } from 'recoil'
 
 // import { darkModeState } from 'src/store/Theme/atoms'
 import { Apps, Close, Hamburger, Home, Info, PlayCircleFilledOutlined } from 'common/SvgIcons.mts'
+import NavDatabases from './NavDatabases.tsx'
 
 const navLinks = [
   { title: 'Home', path: '/', icon: Home },
@@ -44,7 +42,7 @@ const mapNavLinks = navLinks.map(({ icon, title, path }) => (
       textDecoration: 'none' /* remove text underline */
     }}
   >
-    <ListItemButton sx={{ width: { md: 'auto' } /* display inline text and center span */ }} >
+    <ListItemButton sx={{ width: { md: 'auto' } /* display inline text and center span */ }}>
       <Hidden mdUp>
         <ListItemIcon>
           <SvgIcon><path d={icon} /></SvgIcon>
@@ -78,21 +76,6 @@ const CustomNavBar = () => {
 
     setState(isOpen)
   }
-
-  //#region Database Dropdown
-  const [anchorElDB, setAnchorElDB] = useState<null | HTMLElement>(null)
-
-  const open = Boolean(anchorElDB)
-  const id = open ? 'simple-popover' : undefined
-
-  const handleOpenDBMenu = (event: MouseEvent<HTMLElement>) => {
-    setAnchorElDB(event.currentTarget);
-  }
-
-  const handleCloseDBMenu = () => {
-    setAnchorElDB(null)
-  }
-  //#endregion
 
   const menuIconButton = (
     <IconButton
@@ -135,7 +118,9 @@ const CustomNavBar = () => {
       <List
         aria-labelledby="main navigation"
         component="nav"
+        dense
         onClick={() => { setState(false) }}	// close Drawer after ListItem click
+        sx={{ padding: 0 }}
       >
         {mapNavLinks}
       </List>
@@ -147,86 +132,71 @@ const CustomNavBar = () => {
   )
 
   return (
-    <div style={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Container>
-          <Toolbar disableGutters variant="dense">
-            <Hidden mdDown>
-              <List
-                aria-labelledby="main navigation"
-                component="nav"
-                sx={{	// navDisplayFlex
-                  // display: 'flex',
-                  // justifyContent: 'space-between'
+    <AppBar position="relative">
+      <Container>
+        <Toolbar disableGutters variant="dense">
+          <Hidden mdDown>
+            <List
+              aria-labelledby="main navigation"
+              component="nav"
+              sx={{	// navDisplayFlex
+                display: 'flex',
+                padding: 0,
+                alignItems: 'center',
+                // justifyContent: 'space-between'
+              }}
+            >
+              <Link
+                key="logoNav"
+                href="/"
+                passHref
+                style={{ display: 'flex', margin: 10 /* padding: 0, verticalAlign: 'middle' */ }}
+              >
+                <Image alt="logo nav" src="/favicon.ico" height={25} width={25} />
+              </Link>
+
+              <Typography
+                noWrap
+                component="a"
+                href="/"
+                sx={{
+                  // mr: 2,
+                  // display: { xs: 'flex', md: 'none' },
+                  // flexGrow: 1,
+                  // fontFamily: 'monospace',
+                  // fontWeight: 700,
+                  // letterSpacing: '.3rem',
+                  padding: 2,
+                  color: 'inherit',
+                  textDecoration: 'none',
                 }}
               >
-                <Link key="logoNav" href="/" passHref style={{ margin: '12px', padding: 0, verticalAlign: 'middle' }}>
-                  <Image alt="logo nav" src="/favicon.ico" height={25} width={25} />
+                Mongo Express
+              </Typography>
+
+              <Breadcrumbs aria-label="breadcrumb" separator=">">
+                <NavDatabases />
+
+                <Link
+                  key={'title'}
+                  href={'/db/test'}
+                  passHref
+                  style={{
+                    color: 'white',
+                    textDecoration: 'none' /* remove text underline */
+                  }}
+                >
+                  Test
                 </Link>
+              </Breadcrumbs>
 
-                <Typography
-                  noWrap
-                  component="a"
-                  href="/"
-                  sx={{
-                    // mr: 2,
-                    // display: { xs: 'flex', md: 'none' },
-                    // flexGrow: 1,
-                    // fontFamily: 'monospace',
-                    // fontWeight: 700,
-                    // letterSpacing: '.3rem',
-                    color: 'inherit',
-                    textDecoration: 'none',
-                  }}
-                >
-                  Mongo Express
-                </Typography>
+              {/* {mapNavLinks} */}
 
-                <Button aria-describedby={id} variant="contained" onClick={handleOpenDBMenu}>
-                  Databases
-                </Button>
+              {/* <Switch checked={darkMode} onChange={handleDarkModeToggle} /> */}
+            </List>
+          </Hidden>
 
-                <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorElDB}
-                  onClose={handleCloseDBMenu}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                >
-                  <Menu
-                    sx={{ mt: '45px' }}
-                    id="menu-appbar"
-                    anchorEl={anchorElDB}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right'
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right'
-                    }}
-                    open={Boolean(anchorElDB)}
-                    onClose={handleCloseDBMenu}
-                  >
-                    {/* {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ))} */}
-                  </Menu>
-                </Popover>
-
-                {/* {mapNavLinks} */}
-
-                {/* <Switch checked={darkMode} onChange={handleDarkModeToggle} /> */}
-              </List>
-            </Hidden>
-
-            {/*<Hidden mdUp>
+          {/*<Hidden mdUp>
             {menuIconButton}
 
             <SwipeableDrawer
@@ -238,10 +208,9 @@ const CustomNavBar = () => {
               {sideDrawerList}
             </SwipeableDrawer>
             </Hidden>*/}
-          </Toolbar>
-        </Container>
-      </AppBar>
-    </div>
+        </Toolbar>
+      </Container>
+    </AppBar>
   )
 }
 

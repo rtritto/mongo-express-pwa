@@ -6,10 +6,10 @@ const loadOptions = {
   compiledJsExtension: '.cjs'
 }
 
-const { default: configDefault } = loadSync('./config.default.mts', loadOptions)
+const { default: configDefault } = loadSync('config.default.mts', loadOptions)
 const { connect } = loadSync('src/utils/db.mts', loadOptions)
 
-const isDev = process.env.NODE_ENV === 'development'
+// const isDev = process.env.NODE_ENV === 'development'
 
 // const mongodb = 
 await connect(configDefault)

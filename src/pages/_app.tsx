@@ -2,21 +2,49 @@
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { CacheProvider } from '@emotion/react'
-import type { AppProps } from 'next/app.js'
 import { RecoilRoot } from 'recoil'
+import type { AppProps } from 'next/app.js'
 
 import theme from 'components/theme.mts'
 import createEmotionCache from 'components/createEmotionCache.mts'
 import NavBar from 'components/Nav/NavBar.tsx'
+import { setConnection } from 'middlewares/middlewareDb.mts'
+import { databasesState, selectedDbState } from 'store/globalAtoms.mts'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
-export default function MyApp(props: AppProps) {
+function MyApp(props: AppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+  // const router = useRouter()
+
+  // useEffect(() => {
+  //   const handleRouteChange = (url, { shallow }) => {
+  //     console.log(
+  //       `App is changing to ${url} ${shallow ? 'with' : 'without'
+  //       } shallow routing`
+  //     )
+  //   }
+
+  //   router.events.on('routeChangeStart', handleRouteChange)
+
+  //   // If the component is unmounted, unsubscribe
+  //   // from the event with the `off` method:
+  //   return () => {
+  //     router.events.off('routeChangeStart', handleRouteChange)
+  //   }
+  // }, [])
 
   return (
-    <RecoilRoot>
+    <RecoilRoot
+      key="init"
+      initializeState={({ set }) => {
+        set(databasesState, props.databases)
+        if ('dbName' in props) {
+          set(selectedDbState, props.dbName)
+        }
+      }}
+    >
       <CacheProvider value={emotionCache}>
         {/* <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
@@ -33,3 +61,21 @@ export default function MyApp(props: AppProps) {
     </RecoilRoot>
   )
 }
+
+MyApp.getInitialProps = async ({ router /* or ctx.req */ }) => {
+  const mongo = setConnection()
+
+  // if (mongo.adminDb) {
+  //   const rawInfo = await mongo.adminDb.serverStatus()
+  //   const info = mapMongoDBInfo(rawInfo)
+  //   // global.info = info
+
+  //   return { info }
+  // }
+  return {
+    databases: mongo.databases,
+    ...'dbName' in router.query && { dbName: router.query.dbName }
+  }
+}
+
+export default MyApp
