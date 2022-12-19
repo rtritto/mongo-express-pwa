@@ -1,6 +1,7 @@
 import type { Admin } from 'mongodb'
 
 // import type config from 'config.default.mts'
+import { setConnection } from 'middlewares/connection.mts'
 
 export { }
 
@@ -22,4 +23,5 @@ declare global {
     updateCollections: (dbConnection: Connection) => Promise<void>
     updateDatabases: () => Promise<void>
   }
+  var req: ReturnType<typeof setConnection>
 }

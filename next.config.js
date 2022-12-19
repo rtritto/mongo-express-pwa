@@ -7,7 +7,7 @@ const loadOptions = {
 }
 
 const { default: configDefault } = loadSync('config.default.mts', loadOptions)
-const { connect } = loadSync('src/utils/db.mts', loadOptions)
+const { connect } = loadSync('src/middlewares/db.mts', loadOptions)
 
 // const isDev = process.env.NODE_ENV === 'development'
 

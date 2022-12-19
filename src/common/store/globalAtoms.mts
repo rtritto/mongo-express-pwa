@@ -7,5 +7,5 @@ export const databasesState = atom({
 
 export const selectedDbState = atom({
   key: 'selectedDbState',
-  default: 'Databases'
+  default: ''
 })

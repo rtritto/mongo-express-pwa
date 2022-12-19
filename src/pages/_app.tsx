@@ -8,7 +8,7 @@ import type { AppProps } from 'next/app.js'
 import theme from 'components/theme.mts'
 import createEmotionCache from 'components/createEmotionCache.mts'
 import NavBar from 'components/Nav/NavBar.tsx'
-import { setConnection } from 'middlewares/middlewareDb.mts'
+import { setConnection } from 'middlewares/connection.mts'
 import { databasesState, selectedDbState } from 'store/globalAtoms.mts'
 
 // Client-side cache, shared for the whole session of the user in the browser.

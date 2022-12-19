@@ -1,29 +1,8 @@
-import { Box, Button, Container, Divider, FormGroup, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
+import { Box, Container, Divider, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import Head from 'next/head.js'
 
+import CreateDatabase from 'components/CreateDatabase/index.tsx'
 import { mapMongoDBInfo, mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
-
-const CreateDatabase = () => {
-  return (
-    <Box sx={{ my: 2 }}>
-      <form method="POST">
-        <FormGroup sx={{ padding: 2, borderRadius: 2, border: '1px solid', /* , borderColor: 'primary.main' */ }}>
-          <Grid container /* justifyContent="flex-end"*/ >
-            <Typography component='h6' sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }} variant='h6'>
-              Databases
-            </Typography>
-
-            <Box sx={{ display: 'flex', marginLeft: 'auto' }}>
-              <TextField name="databaseName" placeholder="Database name" size="small" variant="outlined" sx={{ paddingBottom: 0 }} />
-
-              <Button type="submit" variant="contained" size="small" sx={{ textTransform: 'none' }}>Create Database</Button>
-            </Box>
-          </Grid>
-        </FormGroup>
-      </form>
-    </Box>
-  )
-}
 
 const TableCellStyle = {
   // border: 1,
@@ -45,6 +24,7 @@ const DenseTable = ({ rows }: { rows: ReturnType<typeof mapMongoDBInfoForTable> 
             </TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
           {rows.map((row, index) => (
             <TableRow key={`row${index}`}>

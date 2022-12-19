@@ -121,18 +121,3 @@ export const connect = async function (config: Config) {
   await global.mongo.updateDatabases()
   return global.mongo
 }
-
-// export const setConnection = function () {
-//   console.log('setConnection');
-//   return {
-//     mainClient: connectionData.mainClient,
-//     adminDb: connectionData.mainClient.adminDb || undefined,
-//     databases: connectionData.getDatabases(), // List of database names
-//     collections: connectionData.collections, // List of collection names in all databases
-//     // gridFSBuckets = colsToGrid(connectionData.collections);
-
-//     // Allow page handlers to request an update for collection list
-//     updateCollections: connectionData.updateCollections,
-//     updateDatabases: connectionData.updateDatabases
-//   }
-// }
