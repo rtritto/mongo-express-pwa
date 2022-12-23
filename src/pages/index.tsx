@@ -1,21 +1,20 @@
 import { Box, Container, Divider, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import Head from 'next/head.js'
 
-import CreateDatabase from 'components/CreateDatabase/index.tsx'
 import ShowDatabases from 'components/ShowDatabases/index.tsx'
 import { mapMongoDBInfo, mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
 
 const TableCellStyle = {
   // border: 1,
-  padding: 1
+  padding: 0.8
 }
 
 const DenseTable = ({ rows }: { rows: ReturnType<typeof mapMongoDBInfoForTable> }) => {
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
-      <Table aria-label="a dense table">
-        <TableHead>
-          <TableRow style={{ backgroundColor: 'darkgrey' }}>
+      <Table>
+        <TableHead sx={{ px: 1.5, py: 1 }}>
+          <TableRow style={{ backgroundColor: '#616161' }}>
             <TableCell sx={TableCellStyle} colSpan={4}>
               <Box margin={0.5}>
                 <Typography component='h6' sx={{ fontWeight: 'bold' }} variant='h6'>
@@ -64,14 +63,16 @@ const Index = ({ databases, noDelete, readOnly, stats }: IndexProps) => {
         <meta key="title" content="Home" property="og:title" />
       </Head>
 
-      <Container sx={{ padding: 1 }}>
+      <Container sx={{ p: 1 }}>
         <Typography component="h4" gutterBottom variant="h4">Mongo Express</Typography>
 
-        <Divider sx={{ border: 1 }} />
+        <Divider sx={{ border: 1, my: 1.5 }} />
 
-        <CreateDatabase showCreateDb={readOnly === false} />
-
-        <ShowDatabases databases={databases} showDeleteDatabases={noDelete === false && readOnly === false} />
+        <ShowDatabases
+          databases={databases}
+          showCreateDb={readOnly === false}
+          showDeleteDatabases={noDelete === false && readOnly === false}
+        />
 
         <Box sx={{ my: 2 }}>
           {stats ? <DenseTable rows={mapMongoDBInfoForTable(stats)} /> : (

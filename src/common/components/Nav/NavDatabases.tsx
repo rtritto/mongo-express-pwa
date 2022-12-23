@@ -13,7 +13,7 @@ const NavDatabases = () => {
   }
 
   return (
-    <FormControl sx={{ m: 1.3, minWidth: 120 }} fullWidth size="small">
+    <FormControl sx={{ mx: 1, minWidth: 120 }} fullWidth size="small">
       <InputLabel id="select-database" size="small">Database</InputLabel>
 
       <Select

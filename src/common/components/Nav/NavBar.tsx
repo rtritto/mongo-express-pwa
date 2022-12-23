@@ -54,7 +54,7 @@ const mapNavLinks = navLinks.map(({ icon, title, path }) => (
 ))
 
 const CustomNavBar = () => {
-  const [state, setState] = useState(false)
+  // const [state, setState] = useState(false)
 
   //#region Theme
   // const [darkMode, setDarkMode] = useRecoilState(darkModeState)
@@ -64,137 +64,138 @@ const CustomNavBar = () => {
   // }
   //#endregion
 
-  const toggleDrawer = (isOpen: boolean) => (event /* SyntheticEvent MouseEvent<HTMLElement> */) => {
-    if (
-      event
-      && event.type === 'keydown'
-      && (event.key === 'Tab' || event.key === 'Shift')
-    ) {
-      return
-    }
+  // const toggleDrawer = (isOpen: boolean) => (event /* SyntheticEvent MouseEvent<HTMLElement> */) => {
+  //   if (
+  //     event
+  //     && event.type === 'keydown'
+  //     && (event.key === 'Tab' || event.key === 'Shift')
+  //   ) {
+  //     return
+  //   }
 
-    setState(isOpen)
-  }
+  //   setState(isOpen)
+  // }
 
-  const menuIconButton = (
-    <IconButton
-      aria-label="menu"
-      color="inherit"
-      edge="start"
-      aria-labelledby="open drawer"
-      onClick={toggleDrawer(true)}
-      sx={{ padding: 1.5 }}
-    >
-      <SvgIcon sx={{ width: 30, height: 30 }}><path d={Hamburger} /></SvgIcon>
-    </IconButton>
-  )
+  // const menuIconButton = (
+  //   <IconButton
+  //     aria-label="menu"
+  //     color="inherit"
+  //     edge="start"
+  //     aria-labelledby="open drawer"
+  //     onClick={toggleDrawer(true)}
+  //     sx={{ padding: 1.5 }}
+  //   >
+  //     <SvgIcon sx={{ width: 30, height: 30 }}><path d={Hamburger} /></SvgIcon>
+  //   </IconButton>
+  // )
 
-  const sideDrawerList = (
-    <Box
-      role="presentation"
-      style={{	// sideDrawerList
-        width: 250
-      }}
-    >
-      <IconButton
-        aria-label="menu"
-        color="inherit"
-        edge="start"
-        onClick={toggleDrawer(false)}
-        sx={{	// menuButton
-          padding: 1.5,
-          marginTop: 0.5,
-          marginBottom: 0.5,
-          marginLeft: 1.5, // theme.spacing(2) <=> (2 * 8)px
-          marginRight: 1.5 // theme.spacing(2) <=> (2 * 8)px
-        }}
-      >
-        <SvgIcon sx={{ width: 30, height: 30 }}><path d={Close} /></SvgIcon>
-      </IconButton>
+  // const sideDrawerList = (
+  //   <Box
+  //     role="presentation"
+  //     style={{	// sideDrawerList
+  //       width: 250
+  //     }}
+  //   >
+  //     <IconButton
+  //       aria-label="menu"
+  //       color="inherit"
+  //       edge="start"
+  //       onClick={toggleDrawer(false)}
+  //       sx={{	// menuButton
+  //         padding: 1.5,
+  //         marginTop: 0.5,
+  //         marginBottom: 0.5,
+  //         marginLeft: 1.5, // theme.spacing(2) <=> (2 * 8)px
+  //         marginRight: 1.5 // theme.spacing(2) <=> (2 * 8)px
+  //       }}
+  //     >
+  //       <SvgIcon sx={{ width: 30, height: 30 }}><path d={Close} /></SvgIcon>
+  //     </IconButton>
 
-      <Divider />
+  //     <Divider />
 
-      <List
-        aria-labelledby="main navigation"
-        component="nav"
-        dense
-        onClick={() => { setState(false) }}	// close Drawer after ListItem click
-        sx={{ padding: 0 }}
-      >
-        {mapNavLinks}
-      </List>
+  //     <List
+  //       aria-labelledby="main navigation"
+  //       component="nav"
+  //       dense
+  //       onClick={() => { setState(false) }}	// close Drawer after ListItem click
+  //       sx={{ padding: 0 }}
+  //     >
+  //       {mapNavLinks}
+  //     </List>
 
-      <Divider />
+  //     <Divider />
 
-      {/* <Switch checked={darkMode} onChange={handleDarkModeToggle} /> */}
-    </Box>
-  )
+  //     {/* <Switch checked={darkMode} onChange={handleDarkModeToggle} /> */}
+  //   </Box>
+  // )
 
   return (
     <AppBar position="relative">
       <Container>
         <Toolbar disableGutters variant="dense">
-          <Hidden mdDown>
-            <List
-              aria-labelledby="main navigation"
-              component="nav"
-              sx={{	// navDisplayFlex
-                display: 'flex',
-                padding: 0,
-                alignItems: 'center',
-                // justifyContent: 'space-between'
+          {/* <Hidden mdDown> */}
+          <List
+            aria-labelledby="main navigation"
+            component="nav"
+            sx={{	// navDisplayFlex
+              display: 'flex',
+              p: 0,
+              alignItems: 'center',
+              // justifyContent: 'space-between'
+            }}
+          >
+            <Link
+              key="logoNav"
+              href="/"
+              passHref
+              style={{ display: 'flex', margin: 12 /* padding: 0, verticalAlign: 'middle' */ }}
+            >
+              <Image alt="logo nav" src="/favicon.ico" height={24} width={24} />
+            </Link>
+
+            <Typography
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                // mr: 2,
+                // display: { xs: 'flex', md: 'none' },
+                // flexGrow: 1,
+                // fontFamily: 'monospace',
+                // fontWeight: 700,
+                // letterSpacing: '.3rem',
+                px: 1.5,
+                py: 1,
+                color: 'inherit',
+                textDecoration: 'none',
               }}
             >
-              <Link
-                key="logoNav"
-                href="/"
-                passHref
-                style={{ display: 'flex', margin: 10 /* padding: 0, verticalAlign: 'middle' */ }}
-              >
-                <Image alt="logo nav" src="/favicon.ico" height={25} width={25} />
-              </Link>
+              Mongo Express
+            </Typography>
 
-              <Typography
-                noWrap
-                component="a"
-                href="/"
-                sx={{
-                  // mr: 2,
-                  // display: { xs: 'flex', md: 'none' },
-                  // flexGrow: 1,
-                  // fontFamily: 'monospace',
-                  // fontWeight: 700,
-                  // letterSpacing: '.3rem',
-                  padding: 2,
-                  color: 'inherit',
-                  textDecoration: 'none',
+            <Breadcrumbs aria-label="breadcrumb" separator=">" >
+              <NavDatabases />
+
+              {/* TODO Update */}
+              <Link
+                key={'title'}
+                href={'/db/test'}
+                passHref
+                style={{
+                  color: 'white',
+                  textDecoration: 'none' /* remove text underline */
                 }}
               >
-                Mongo Express
-              </Typography>
+                Test
+              </Link>
+            </Breadcrumbs>
 
-              <Breadcrumbs aria-label="breadcrumb" separator=">">
-                <NavDatabases />
+            {/* {mapNavLinks} */}
 
-                {/* TODO Update */}
-                <Link
-                  key={'title'}
-                  href={'/db/test'}
-                  passHref
-                  style={{
-                    color: 'white',
-                    textDecoration: 'none' /* remove text underline */
-                  }}
-                >
-                  Test
-                </Link>
-              </Breadcrumbs>
-
-              {/* {mapNavLinks} */}
-
-              {/* <Switch checked={darkMode} onChange={handleDarkModeToggle} /> */}
-            </List>
-          </Hidden>
+            {/* <Switch checked={darkMode} onChange={handleDarkModeToggle} /> */}
+          </List>
+          {/* </Hidden> */}
 
           {/*<Hidden mdUp>
             {menuIconButton}

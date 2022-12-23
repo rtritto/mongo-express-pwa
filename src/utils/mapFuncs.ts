@@ -48,11 +48,11 @@ export const mapMongoDBInfoForTable = (info: ReturnType<typeof mapMongoDBInfo>) 
       { id: 'dbVersion', name: 'MongoDB Version', value: info.version.DBVersion }
     ],
     [
-      { id: 'uptime', name: 'Uptime', value: `${info.uptime > 86400 ? `${Math.floor(info.uptime / 86400)} days` : `${info.uptime} seconds`}` },
+      { id: 'uptime', name: 'Uptime', value: `${info.uptime} seconds ${info.uptime > 86400 ? `(${Math.floor(info.uptime / 86400)} days)` : ''}` },
       { id: 'nodeVersion', name: 'Node Version', value: info.version.node }
     ],
     [
-      { id: 'serverTime', name: 'Server Time', value: new Date(info.localTime).toDateString() },
+      { id: 'serverTime', name: 'Server Time', value: new Date(info.localTime).toUTCString() },
       { id: 'v8Version', name: 'V8 Version', value: info.version.v8 }
     ],
     [],
