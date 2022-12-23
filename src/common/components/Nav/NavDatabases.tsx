@@ -2,7 +2,7 @@ import { FormControl, InputLabel, Select, SelectChangeEvent } from '@mui/materia
 import { useRecoilState, useRecoilValue } from 'recoil'
 
 import { selectedDbState, databasesState } from 'store/globalAtoms.mts'
-import CustomLink from './CustomLink.tsx'
+import CustomLink from 'components/Custom/CustomLink.tsx'
 
 const NavDatabases = () => {
   const databases = useRecoilValue<string[]>(databasesState)
@@ -31,10 +31,9 @@ const NavDatabases = () => {
         {databases.map((database) => (
           <CustomLink
             key={database}
-            href={`/db/${database}`}
-            value={database}
+            // Link
+            href={`/db/${encodeURIComponent(database)}`}
             style={{
-              color: 'white',
               display: 'flex',
               margin: 1,
               // marginLeft: 20,
@@ -44,15 +43,17 @@ const NavDatabases = () => {
                 pointerEvents: 'none'  // disable onClick when selected
               }
             }}
+            // Button
+            disabled={selectedDb === database}
+            fullWidth
             sx={{
               justifyContent: 'flex-start',
               // padding: 0,
               paddingLeft: 2,
               textTransform: 'none' /* remove uppercase */,
-              width: '100%',
               background: selectedDb === database ? 'grey' : 'darkgrey'
             }}
-            disabled={selectedDb === database}
+            value={database}
             variant="contained"
           >
             {database}

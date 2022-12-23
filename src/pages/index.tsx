@@ -2,6 +2,7 @@ import { Box, Container, Divider, Paper, Table, TableBody, TableCell, TableConta
 import Head from 'next/head.js'
 
 import CreateDatabase from 'components/CreateDatabase/index.tsx'
+import ShowDatabases from 'components/ShowDatabases/index.tsx'
 import { mapMongoDBInfo, mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
 
 const TableCellStyle = {
@@ -48,12 +49,13 @@ const DenseTable = ({ rows }: { rows: ReturnType<typeof mapMongoDBInfoForTable> 
 }
 
 interface IndexProps {
+  databases: string[]
   noDelete: boolean
   readOnly: boolean
   stats?: ReturnType<typeof mapMongoDBInfo>
 }
 
-const Index = ({ noDelete, readOnly, stats }: IndexProps) => {
+const Index = ({ databases, noDelete, readOnly, stats }: IndexProps) => {
   return (
     <div>
       <Head>
@@ -67,9 +69,9 @@ const Index = ({ noDelete, readOnly, stats }: IndexProps) => {
 
         <Divider sx={{ border: 1 }} />
 
-        {noDelete === false && <CreateDatabase />}
+        <CreateDatabase showCreateDb={readOnly === false} />
 
-        {/* {(noDelete === false && readOnly === false) && } */}
+        <ShowDatabases databases={databases} showDeleteDatabases={noDelete === false && readOnly === false} />
 
         <Box sx={{ my: 2 }}>
           {stats ? <DenseTable rows={mapMongoDBInfoForTable(stats)} /> : (
@@ -87,6 +89,7 @@ const Index = ({ noDelete, readOnly, stats }: IndexProps) => {
 
 export async function getServerSideProps() {
   const { options: { noDelete, readOnly } } = process.env.config
+  const { databases } = global.req
 
   if (global.req.adminDb) {
     const rawInfo = await global.req.adminDb.serverStatus()
@@ -95,6 +98,7 @@ export async function getServerSideProps() {
 
     return {
       props: {
+        databases,
         noDelete,
         readOnly,
         stats
@@ -104,6 +108,7 @@ export async function getServerSideProps() {
 
   return {
     props: {
+      databases,
       noDelete,
       readOnly
     }
