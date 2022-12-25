@@ -1,7 +1,7 @@
 import { Box, Container, Divider, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import Head from 'next/head.js'
 
-import ShowDatabases from 'components/ShowDatabases/index.tsx'
+import ShowDatabases from 'components/Pages/Index/ShowDatabases/index.tsx'
 import { mapMongoDBInfo, mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
 
 const TableCellStyle = {

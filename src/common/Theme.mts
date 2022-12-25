@@ -10,7 +10,7 @@ import { red } from '@mui/material/colors'
 // })
 
 // Create a theme instance.
-let theme = createTheme({
+let Theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
@@ -28,24 +28,24 @@ let theme = createTheme({
   // }
 })
 
-const backgroundColor = theme.palette.mode === 'light'
-  ? theme.palette.grey[100]
-  : theme.palette.grey[800]
+const backgroundColor = Theme.palette.mode === 'light'
+  ? Theme.palette.grey[100]
+  : Theme.palette.grey[800]
 
-theme = createTheme(theme, {
+Theme = createTheme(Theme, {
   components: {
     MuiChip: {
       styleOverrides: {
         root: {
           backgroundColor,
-          height: theme.spacing(3),
-          color: theme.palette.text.primary,
-          fontWeight: theme.typography.fontWeightRegular,
+          height: Theme.spacing(3),
+          color: Theme.palette.text.primary,
+          fontWeight: Theme.typography.fontWeightRegular,
           '&:hover, &:focus': {
             backgroundColor: emphasize(backgroundColor, 0.06)
           },
           '&:active': {
-            boxShadow: theme.shadows[1],
+            boxShadow: Theme.shadows[1],
             backgroundColor: emphasize(backgroundColor, 0.12)
           }
         }
@@ -55,7 +55,7 @@ theme = createTheme(theme, {
       styleOverrides: {
         root: {
           '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.action.hover
+            backgroundColor: Theme.palette.action.hover
           },
           // remove last border
           // '&:last-child td, &:last-child th': {
@@ -79,4 +79,4 @@ theme = createTheme(theme, {
   }
 })
 
-export default theme
+export default Theme
