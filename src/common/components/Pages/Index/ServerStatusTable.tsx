@@ -1,3 +1,5 @@
+import { mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
+
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 
 const TableCellStyle = {
@@ -5,7 +7,38 @@ const TableCellStyle = {
   padding: 0.8
 }
 
-const ServerStatusTable = ({ rows }: { rows: ReturnType<typeof mapMongoDBInfoForTable> }) => {
+const getRowsComponent = (fields: Fields) => {
+  const outRaw = []
+  for (const cell in fields) {
+    if (fields[cell].value) {
+      outRaw.push([
+        <TableCell key={`cellName${cell}`} sx={TableCellStyle}>
+          <strong>{fields[cell].label}</strong>
+        </TableCell>,
+        <TableCell key={`cellValue${cell}`} id={cell} sx={TableCellStyle}>
+          {fields[cell].value}
+        </TableCell>
+      ])
+    }
+  }
+  const out = []
+  for (let i = 0, len = outRaw.length; i < len; i = i + 2) {
+    const tableRow = [
+      ...outRaw[i],
+      ...i + 1 < len
+        ? [...outRaw[i + 1]]
+        : []
+    ]
+    out.push(
+      <TableRow key={`row${i}`}>
+        {tableRow}
+      </TableRow>
+    )
+  }
+  return out
+}
+
+const ServerStatusTable = ({ fields }: { fields: Fields }) => {
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
       <Table>
@@ -20,21 +53,7 @@ const ServerStatusTable = ({ rows }: { rows: ReturnType<typeof mapMongoDBInfoFor
         </TableHead>
 
         <TableBody>
-          {rows.map((row, index) => (
-            <TableRow key={`row${index}`}>
-              {row.length > 0
-                ? row.map((cell) => [
-                  <TableCell key={`cellName${index}`} sx={TableCellStyle}>
-                    <strong>{cell.name}</strong>
-                  </TableCell>,
-                  <TableCell key={`cellValue${index}`} sx={TableCellStyle} id={cell.id}>
-                    {cell.value}
-                  </TableCell>
-                ])
-                : <TableCell key={`cellEmpty${index}`} sx={TableCellStyle} colSpan={4} />
-              }
-            </TableRow>
-          ))}
+          {getRowsComponent(fields)}
         </TableBody>
       </Table>
     </TableContainer>

@@ -1,99 +1,105 @@
 import * as validators from 'utils/validations.ts'
 
-export const mapMongoDBInfo = (info: Info) => ({
-  backgroundFlushing: {
-    ...info.backgroundFlushing && {
-      average_ms: info.backgroundFlushing.average_ms,
-      flushes: info.backgroundFlushing.flushes,
-      last_finished: info.backgroundFlushing.last_finished,
-      total_ms: info.backgroundFlushing.total_ms
-    }
+export const mapMongoDBInfoForTable = (info: Info) => ({
+  dbHost: {
+    label: 'Hostname',
+    value: info.host
   },
-  connections: {
-    available: info.connections.available,
-    current: info.connections.current
+  dbVersion: {
+    label: 'MongoDB Version',
+    value: info.version
   },
-  globalLock: {
-    ...info.globalLock?.activeClients && {
+  uptime: {
+    label: 'Uptime',
+    value: `${info.uptime} seconds ${info.uptime > 86400
+      ? `(${Math.floor(info.uptime / 86400)} days)`
+      : ''}`
+  },
+  nodeVersion: {
+    label: 'Node Version',
+    value: process.versions.node
+  },
+  serverTime: {
+    label: 'Server Time',
+    value: info.localTime.toUTCString()
+  },
+  v8Version: {
+    label: 'V8 Version',
+    value: process.versions.v8
+  },
+  currentConnections: {
+    label: 'Current Connections',
+    value: info.connections.current
+  },
+  availableConnections: {
+    label: 'Available Connections',
+    value: info.connections.available
+  },
+  ...info.globalLock && {
+    ...info.globalLock.activeClients && {
       activeClients: {
-        readers: info.globalLock.activeClients.readers,
-        total: info.globalLock.activeClients.total
+        label: 'Active Clients',
+        value: info.globalLock.activeClients.total
+      },
+      clientsReading: {
+        label: 'Clients Reading',
+        value: info.globalLock.activeClients.readers
+      },
+      clientsWriting: {
+        label: 'Clients Writing',
+        value: info.globalLock.activeClients.writers
       }
     },
-    ...info.globalLock?.currentQueue && {
-      currentQueue: {
-        total: info.globalLock.currentQueue.total,
-        writers: info.globalLock.currentQueue.writers
+    ...info.globalLock.currentQueue && {
+      queuedOperations: {
+        label: 'Queued Operations',
+        value: info.globalLock.currentQueue.total
+      },
+      readLockQueue: {
+        label: 'Read Lock Queue',
+        value: info.globalLock.currentQueue.readers
+      },
+      writeLockQueue: {
+        label: 'Write Lock Queue',
+        value: info.globalLock.currentQueue.writers
       }
     }
   },
-  host: info.host,
-  localTime: JSON.parse(JSON.stringify(info.localTime)),
-  opcounters: {
-    delete: info.opcounters.delete,
-    insert: info.opcounters.insert,
-    query: info.opcounters.query,
-    update: info.opcounters.update
+  ...info.backgroundFlushing && {
+    diskFlushes: {
+      label: 'Disk Flushes',
+      value: info.backgroundFlushing.flushes
+    },
+    lastFlush: {
+      label: 'Last Flush',
+      value: info.backgroundFlushing.last_finished && info.backgroundFlushing.last_finished.toDateString()
+    },
+    timeSpentFlushing: {
+      label: 'Time Spent Flushing',
+      value: info.backgroundFlushing.total_ms && `${info.backgroundFlushing.total_ms} ms`
+    },
+    averageFlushTime: {
+      label: 'Average Flush Time',
+      value: info.backgroundFlushing.average_ms && `${info.backgroundFlushing.average_ms} ms`
+    }
   },
-  uptime: info.uptime,
-  version: {
-    DBVersion: info.version,
-    node: process.versions.node,
-    v8: process.versions.v8
+  totalInserts: {
+    label: 'Total Inserts',
+    value: info.opcounters.insert
+  },
+  totalQueries: {
+    label: 'Total Queries',
+    value: info.opcounters.query
+  },
+  totalUpdates: {
+    label: 'Total Updates',
+    value: info.opcounters.update
+  },
+  totalDeletes: {
+    label: 'Total Deletes',
+    value: info.opcounters.delete
   }
 })
-
-export const mapMongoDBInfoForTable = (info: ReturnType<typeof mapMongoDBInfo>) => {
-  return [
-    [
-      { id: 'dbHost', name: 'Hostname', value: info.host },
-      { id: 'dbVersion', name: 'MongoDB Version', value: info.version.DBVersion }
-    ],
-    [
-      { id: 'uptime', name: 'Uptime', value: `${info.uptime} seconds ${info.uptime > 86400 ? `(${Math.floor(info.uptime / 86400)} days)` : ''}` },
-      { id: 'nodeVersion', name: 'Node Version', value: info.version.node }
-    ],
-    [
-      { id: 'serverTime', name: 'Server Time', value: new Date(info.localTime).toUTCString() },
-      { id: 'v8Version', name: 'V8 Version', value: info.version.v8 }
-    ],
-    [],
-    [
-      { id: 'currentConnections', name: 'Current Connections', value: info.connections.current },
-      { id: 'availableConnections', name: 'Available Connections', value: info.connections.available }
-    ],
-    [
-      { id: 'activeClients', name: 'Active Clients', value: info.globalLock.activeClients?.total },
-      { id: 'queuedOperations', name: 'Queued Operations', value: info.globalLock.currentQueue?.total }
-    ],
-    [
-      { id: 'clientsReading', name: 'Clients Reading', value: info.globalLock.activeClients?.readers },
-      { id: 'clientsWriting', name: 'Clients Writing', value: info.globalLock.activeClients?.writers }
-    ],
-    [
-      { id: 'readLockQueue', name: 'Read Lock Queue', value: info.globalLock.currentQueue?.readers },
-      { id: 'writeLockQueue', name: 'Write Lock Queue', value: info.globalLock.currentQueue?.writers }
-    ],
-    [],
-    [
-      { id: 'diskFlushes', name: 'Disk Flushes', value: info.backgroundFlushing.flushes },
-      { id: 'lastFlush', name: 'Last Flush', value: info.backgroundFlushing.last_finished && new Date(info.backgroundFlushing.last_finished).toDateString() }
-    ],
-    [
-      { id: 'timeSpentFlushing', name: 'Time Spent Flushing', value: info.backgroundFlushing.total_ms && `${info.backgroundFlushing.total_ms} ms` },
-      { id: 'averageFlushTime', name: 'Average Flush Time', value: info.backgroundFlushing.average_ms && `${info.backgroundFlushing.average_ms} ms` }
-    ],
-    [],
-    [
-      { id: 'totalInserts', name: 'Total Inserts', value: info.opcounters.insert },
-      { id: 'totalQueries', name: 'Total Queries', value: info.opcounters.query }
-    ],
-    [
-      { id: 'totalUpdates', name: 'Total Updates', value: info.opcounters.update },
-      { id: 'totalDeletes', name: 'Total Deletes', value: info.opcounters.delete }
-    ]
-  ]
-}
 
 export const getCtx = (data, dbName: string) => ({
   databases: global.req.databases,

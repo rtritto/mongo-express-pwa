@@ -5,25 +5,18 @@ const TableCellStyle = {
   padding: 0.8
 }
 
-declare interface Stats {
-  [key: string]: {
-    label: string
-    value: string | null
-  }
-}
-
-const getStatsRows = (stats: Stats) => {
+const getRowsComponent = (fields: Fields) => {
   const out = []
-  for (const stat in stats) {
-    if (stats[stat].value) {
+  for (const cell in fields) {
+    if (fields[cell].value) {
       out.push(
-        <TableRow key={`row${stat}`}>
-          <TableCell key={`cellName${stat}`} sx={TableCellStyle}>
-            <strong>{stats[stat].label}</strong>
+        <TableRow key={`row${cell}`}>
+          <TableCell key={`cellName${cell}`} sx={TableCellStyle}>
+            <strong>{fields[cell].label}</strong>
           </TableCell>
 
-          <TableCell key={`cellValue${stat}`} id={stat} sx={TableCellStyle}>
-            {stats[stat].value}
+          <TableCell key={`cellValue${cell}`} id={cell} sx={TableCellStyle}>
+            {fields[cell].value}
           </TableCell>
         </TableRow>
       )
@@ -32,7 +25,7 @@ const getStatsRows = (stats: Stats) => {
   return out
 }
 
-const DatabaseStatsTable = ({ stats }: { stats: Stats }) => {
+const DatabaseStatsTable = ({ fields }: { fields: Fields }) => {
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
       <Table>
@@ -47,7 +40,7 @@ const DatabaseStatsTable = ({ stats }: { stats: Stats }) => {
         </TableHead>
 
         <TableBody>
-          {getStatsRows(stats)}
+          {getRowsComponent(fields)}
         </TableBody>
       </Table>
     </TableContainer>

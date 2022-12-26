@@ -3,14 +3,14 @@ import Head from 'next/head.js'
 
 import ServerStatusTable from 'components/Pages/Index/ServerStatusTable.tsx'
 import ShowDatabases from 'components/Pages/Index/ShowDatabases/index.tsx'
-import { mapMongoDBInfo, mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
+import { mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
 
 interface IndexProps {
   databases: string[]
   messageError: string | null
   noDelete: boolean
   readOnly: boolean
-  stats?: ReturnType<typeof mapMongoDBInfo>
+  stats?: ReturnType<typeof mapMongoDBInfoForTable>
 }
 
 const Index = ({ databases, messageError, noDelete, readOnly, stats }: IndexProps) => {
@@ -40,7 +40,7 @@ const Index = ({ databases, messageError, noDelete, readOnly, stats }: IndexProp
         />
 
         <Box sx={{ my: 2 }}>
-          {stats ? <ServerStatusTable rows={mapMongoDBInfoForTable(stats)} /> : (
+          {stats ? <ServerStatusTable fields={stats} /> : (
             <>
               <Typography component="h4" gutterBottom variant="h4">Server Status</Typography>
 
@@ -61,7 +61,7 @@ export async function getServerSideProps() {
 
   if (global.req.adminDb) {
     const rawInfo = await global.req.adminDb.serverStatus()
-    const stats = mapMongoDBInfo(rawInfo)
+    const stats = mapMongoDBInfoForTable(rawInfo)
     // global.stats = stats
 
     return {

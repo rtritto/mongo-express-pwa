@@ -66,7 +66,7 @@ const DbPage = ({ ctx, dbName, title }: { dbName: string, title: string }) => {
 
         <CollectionTable />
 
-        <DatabaseStatsTable stats={ctx.stats} />
+        <DatabaseStatsTable fields={ctx.stats} />
       </Container>
     </div>
   )

@@ -20,6 +20,13 @@
 
 declare type Info = import('mongodb').Document
 
+declare interface Fields {
+  [key: string]: {
+    label: string
+    value: string | null
+  }
+}
+
 // type of connections<connectionInfo> or clients<{info}>
 interface ClientInfo {
   connectionName: string
