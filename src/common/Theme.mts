@@ -64,6 +64,13 @@ Theme = createTheme(Theme, {
         }
       }
     },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#616161'
+        }
+      }
+    },
     MuiTableCell: {
       styleOverrides: {
         root: {

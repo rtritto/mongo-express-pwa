@@ -15,6 +15,9 @@ const { connect } = loadSync('src/middlewares/db.mts', loadOptions)
 await connect(configDefault)
 console.log('connect OK');
 
+// init session
+global.session = {}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {

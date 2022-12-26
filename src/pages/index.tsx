@@ -1,60 +1,19 @@
-import { Box, Container, Divider, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Alert, Box, Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 
+import ServerStatusTable from 'components/Pages/Index/ServerStatusTable.tsx'
 import ShowDatabases from 'components/Pages/Index/ShowDatabases/index.tsx'
 import { mapMongoDBInfo, mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
 
-const TableCellStyle = {
-  // border: 1,
-  padding: 0.8
-}
-
-const DenseTable = ({ rows }: { rows: ReturnType<typeof mapMongoDBInfoForTable> }) => {
-  return (
-    <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
-      <Table>
-        <TableHead sx={{ px: 1.5, py: 1 }}>
-          <TableRow style={{ backgroundColor: '#616161' }}>
-            <TableCell sx={TableCellStyle} colSpan={4}>
-              <Box margin={0.5}>
-                <Typography component='h6' sx={{ fontWeight: 'bold' }} variant='h6'>
-                  Server Status
-                </Typography>
-              </Box>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {rows.map((row, index) => (
-            <TableRow key={`row${index}`}>
-              {row.length > 0
-                ? row.map((cell) => [
-                  <TableCell key={`cellName${index}`} sx={TableCellStyle}>
-                    <strong>{cell.name}</strong>
-                  </TableCell>,
-                  <TableCell key={`cellValue${index}`} sx={TableCellStyle} id={cell.id}>
-                    {cell.value}
-                  </TableCell>
-                ])
-                : <TableCell key={`cellEmpty${index}`} sx={TableCellStyle} colSpan={4} />
-              }
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  )
-}
-
 interface IndexProps {
   databases: string[]
+  messageError: string | null
   noDelete: boolean
   readOnly: boolean
   stats?: ReturnType<typeof mapMongoDBInfo>
 }
 
-const Index = ({ databases, noDelete, readOnly, stats }: IndexProps) => {
+const Index = ({ databases, messageError, noDelete, readOnly, stats }: IndexProps) => {
   return (
     <div>
       <Head>
@@ -64,6 +23,12 @@ const Index = ({ databases, noDelete, readOnly, stats }: IndexProps) => {
       </Head>
 
       <Container sx={{ p: 1 }}>
+        {messageError && (
+          <Alert severity="error" onClose={() => { }} sx={{ my: 2 }}>
+            {messageError}
+          </Alert>
+        )}
+
         <Typography component="h4" gutterBottom variant="h4">Mongo Express</Typography>
 
         <Divider sx={{ border: 1, my: 1.5 }} />
@@ -75,7 +40,7 @@ const Index = ({ databases, noDelete, readOnly, stats }: IndexProps) => {
         />
 
         <Box sx={{ my: 2 }}>
-          {stats ? <DenseTable rows={mapMongoDBInfoForTable(stats)} /> : (
+          {stats ? <ServerStatusTable rows={mapMongoDBInfoForTable(stats)} /> : (
             <>
               <Typography component="h4" gutterBottom variant="h4">Server Status</Typography>
 
@@ -91,6 +56,8 @@ const Index = ({ databases, noDelete, readOnly, stats }: IndexProps) => {
 export async function getServerSideProps() {
   const { options: { noDelete, readOnly } } = process.env.config
   const { databases } = global.req
+  const { messageError } = global.session
+  delete global.session.messageError
 
   if (global.req.adminDb) {
     const rawInfo = await global.req.adminDb.serverStatus()
@@ -100,6 +67,7 @@ export async function getServerSideProps() {
     return {
       props: {
         databases,
+        ...messageError !== undefined && { messageError },
         noDelete,
         readOnly,
         stats
@@ -110,6 +78,7 @@ export async function getServerSideProps() {
   return {
     props: {
       databases,
+      ...messageError !== undefined && { messageError },
       noDelete,
       readOnly
     }

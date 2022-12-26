@@ -21,13 +21,9 @@ const ShowDatabases = ({ databases = [], showCreateDb = true, showDeleteDatabase
     <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
       <Table>
         <TableHead>
-          <TableRow style={{ backgroundColor: '#616161' }}>
+          <TableRow>
             <TableCell sx={{ borderRight: 'none', p: 1.5, verticalAlign: 'top' }}>
-              <Typography
-                component='h6'
-                variant='h6'
-                sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}
-              >
+              <Typography component='h6' variant='h6' sx={{ fontWeight: 'bold' }}>
                 Databases
               </Typography>
             </TableCell>

@@ -1,3 +1,5 @@
+import * as validators from 'utils/validations.ts'
+
 export const mapMongoDBInfo = (info: Info) => ({
   backgroundFlushing: {
     ...info.backgroundFlushing && {
@@ -92,3 +94,60 @@ export const mapMongoDBInfoForTable = (info: ReturnType<typeof mapMongoDBInfo>) 
     ]
   ]
 }
+
+export const getCtx = (data, dbName: string) => ({
+  databases: global.req.databases,
+  colls: global.req.collections[dbName],
+  // TODO
+  // grids: global.req.gridFSBuckets[dbName],
+  stats: {
+    avgObjSize: {
+      label: 'Avg Obj Size #',
+      value: validators.bytesToSize(data.avgObjSize || 0)
+    },
+    collections: {
+      label: 'Collections (incl. system.namespaces)',
+      value: data.collections
+    },
+    dataFileVersion: {
+      label: 'Data File Version',
+      value: data.dataFileVersion
+        ? `${data.dataFileVersion.major}.${data.dataFileVersion.minor}`
+        : null
+    },
+    dataSize: {
+      label: 'Data Size',
+      value: validators.bytesToSize(data.dataSize)
+    },
+    extentFreeListNum: {
+      label: 'Extents Free List',
+      value: data.extentFreeList ? data.extentFreeList.num : null
+    },
+    fileSize: {
+      label: 'File Size',
+      value: data.fileSize === undefined
+        ? null
+        : validators.bytesToSize(data.fileSize)
+    },
+    indexes: {
+      label: 'Indexes #',
+      value: data.indexes
+    },
+    indexSize: {
+      label: 'Index Size',
+      value: validators.bytesToSize(data.indexSize)
+    },
+    numExtents: {
+      label: 'Extents #',
+      value: data.numExtents ? data.numExtents.toString() : null
+    },
+    objects: {
+      label: 'Objects #',
+      value: data.objects
+    },
+    storageSize: {
+      label: 'Storage Size',
+      value: validators.bytesToSize(data.storageSize)
+    }
+  }
+})
