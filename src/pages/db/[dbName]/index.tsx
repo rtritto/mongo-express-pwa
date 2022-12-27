@@ -43,9 +43,11 @@ const DatabasePage = ({ ctx, dbName, options, title }: DatabasePageProps) => {
 
         <ShowCollections
           collections={ctx.collections}
-          showCreate={readOnly === false}
-          showExport={noExport === false}
-          showDelete={noDelete === false}
+          show={{
+            create: readOnly === false,
+            export: noExport === false,
+            delete: noDelete === false
+          }}
         />
 
         {/* TODO GridFS Buckets */}

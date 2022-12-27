@@ -82,6 +82,19 @@ Theme = createTheme(Theme, {
           // }
         }
       }
+    },
+    MuiTableContainer: {
+      styleOverrides: {
+        root: {
+          borderRadius: Theme.spacing(1),
+          marginBottom: Theme.spacing(2)
+        }
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        startIcon: { margin: 0 }
+      }
     }
   }
 })

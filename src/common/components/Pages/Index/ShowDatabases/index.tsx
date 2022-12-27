@@ -15,8 +15,10 @@ const TableCellStyle = {
 
 declare interface ShowDatabasesProps {
   databases: string[]
-  showCreate: boolean
-  showDelete: boolean
+  show: {
+    create: boolean
+    delete: boolean
+  }
 }
 
 const handleDelete = async (database: string) => {
@@ -28,9 +30,9 @@ const handleDelete = async (database: string) => {
   // })
 }
 
-const ShowDatabases = ({ databases = [], showCreate = true, showDelete = true }: ShowDatabasesProps) => {
+const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
   return (
-    <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
@@ -41,7 +43,7 @@ const ShowDatabases = ({ databases = [], showCreate = true, showDelete = true }:
             </TableCell>
 
             <TableCell sx={{ px: 1.5, py: 1, borderLeft: 'none' }} align="right" colSpan={2}>
-              {showCreate === true && <CreateDatabase />}
+              {show.create === true && <CreateDatabase />}
             </TableCell>
           </TableRow>
         </TableHead>
@@ -64,7 +66,13 @@ const ShowDatabases = ({ databases = [], showCreate = true, showDelete = true }:
                     // Button
                     startIcon={<SvgIcon><path d={Visibility} /></SvgIcon>}
                     variant="contained"
-                    sx={{ backgroundColor: 'rgb(86, 124, 86)', px: 5.5, py: 2 }}
+                    sx={{
+                      backgroundColor: 'rgb(86, 124, 86)',
+                      flexDirection: 'column',
+                      py: 0.5,
+                      textTransform: 'none',
+                      width: '100%'
+                    }}
                   >
                     View
                   </CustomLink>
@@ -92,7 +100,7 @@ const ShowDatabases = ({ databases = [], showCreate = true, showDelete = true }:
                   </CustomLink>
                 </TableCell>
 
-                {showDelete === true && (
+                {show.delete === true && (
                   <TableCell key={`cellDelete${database}`} align="right" sx={TableCellStyle}>
                     <DeleteModalBox
                       value={database}

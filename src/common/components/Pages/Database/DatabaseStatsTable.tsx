@@ -27,7 +27,7 @@ const getRowsComponent = (fields: Fields) => {
 
 const DatabaseStatsTable = ({ fields }: { fields: Fields }) => {
   return (
-    <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+    <TableContainer component={Paper}>
       <Table>
         <TableHead sx={{ px: 1.5, py: 1 }}>
           <TableRow>

@@ -38,11 +38,13 @@ const Index = ({ databases, messageError, options, stats }: IndexProps) => {
 
         <ShowDatabases
           databases={databases}
-          showCreate={readOnly === false}
-          showDelete={noDelete === false && readOnly === false}
+          show={{
+            create: readOnly === false,
+            delete: noDelete === false && readOnly === false
+          }}
         />
 
-        <Box sx={{ my: 2 }}>
+        <Box sx={{ mb: 2 }}>
           {stats ? <ServerStatusTable fields={stats} /> : (
             <>
               <Typography component="h4" gutterBottom variant="h4">Server Status</Typography>

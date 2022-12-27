@@ -1,7 +1,7 @@
 import { Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 
 import { EP_DB } from 'configs/endpoints.mts'
-import { Visibility } from 'common/SvgIcons.mts'
+import { FileUpload, Save, Visibility } from 'common/SvgIcons.mts'
 import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import CreateCollection from 'components/Pages/Database/CreateCollection.tsx'
@@ -13,11 +13,20 @@ const TableCellStyle = {
   p: 0.5
 }
 
+const ButtonExportImportStyle = {
+  backgroundColor: 'rgb(139, 107, 62)',
+  flexDirection: 'column',
+  py: 0.5,
+  textTransform: 'none'
+}
+
 declare interface ShowDatabasesProps {
   collections: string[]
-  showCreate: boolean
-  showDelete: boolean
-  showExport: boolean
+  show: {
+    create: boolean
+    delete: boolean
+    export: boolean
+  }
 }
 
 const handleDelete = async (database: string) => {
@@ -29,9 +38,9 @@ const handleDelete = async (database: string) => {
   // })
 }
 
-const ShowCollections = ({ collections = [], showCreate = true, showDelete = true, showExport = true }: ShowDatabasesProps) => {
+const ShowCollections = ({ collections = [], show }: ShowDatabasesProps) => {
   return (
-    <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
@@ -41,8 +50,8 @@ const ShowCollections = ({ collections = [], showCreate = true, showDelete = tru
               </Typography>
             </TableCell>
 
-            <TableCell sx={{ px: 1.5, py: 1, borderLeft: 'none' }} align="right" colSpan={2}>
-              {showCreate === true && <CreateCollection />}
+            <TableCell sx={{ px: 1.5, py: 1, borderLeft: 'none' }} align="right" colSpan={5}>
+              {show.create === true && <CreateCollection />}
             </TableCell>
           </TableRow>
         </TableHead>
@@ -65,9 +74,69 @@ const ShowCollections = ({ collections = [], showCreate = true, showDelete = tru
                     // Button
                     startIcon={<SvgIcon><path d={Visibility} /></SvgIcon>}
                     variant="contained"
-                    sx={{ backgroundColor: 'rgb(86, 124, 86)', px: 5.5, py: 2 }}
+                    sx={{
+                      backgroundColor: 'rgb(86, 124, 86)',
+                      flexDirection: 'column',
+                      py: 0.5,
+                      textTransform: 'none',
+                      width: '100%'
+                    }}
                   >
                     View
+                  </CustomLink>
+                </TableCell>
+
+                <TableCell key={`cellIcon${collection}`} sx={TableCellStyle}>
+                  <CustomLink
+                    key={collection}
+                    // Link
+                    href={href}
+                    style={{
+                      margin: 1,
+                      textDecoration: 'none'  // remove text underline
+                    }}
+                    // Button
+                    startIcon={<SvgIcon><path d={Save} /></SvgIcon>}
+                    variant="contained"
+                    sx={ButtonExportImportStyle}
+                  >
+                    Export
+                  </CustomLink>
+                </TableCell>
+
+                <TableCell key={`cellIcon${collection}`} sx={TableCellStyle}>
+                  <CustomLink
+                    key={collection}
+                    // Link
+                    href={href}
+                    style={{
+                      margin: 1,
+                      textDecoration: 'none'  // remove text underline
+                    }}
+                    // Button
+                    startIcon={<SvgIcon><path d={Save} /></SvgIcon>}
+                    variant="contained"
+                    sx={ButtonExportImportStyle}
+                  >
+                    [JSON]
+                  </CustomLink>
+                </TableCell>
+
+                <TableCell key={`cellIcon${collection}`} sx={TableCellStyle}>
+                  <CustomLink
+                    key={collection}
+                    // Link
+                    href={href}
+                    style={{
+                      margin: 1,
+                      textDecoration: 'none'  // remove text underline
+                    }}
+                    // Button
+                    startIcon={<SvgIcon><path d={FileUpload} /></SvgIcon>}
+                    variant="contained"
+                    sx={ButtonExportImportStyle}
+                  >
+                    Import
                   </CustomLink>
                 </TableCell>
 
@@ -93,7 +162,7 @@ const ShowCollections = ({ collections = [], showCreate = true, showDelete = tru
                   </CustomLink>
                 </TableCell>
 
-                {showDelete === true && (
+                {show.delete === true && (
                   <TableCell key={`cellDelete${collection}`} align="right" sx={TableCellStyle}>
                     <DeleteModalBox
                       value={collection}

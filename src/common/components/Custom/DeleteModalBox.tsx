@@ -45,7 +45,13 @@ const DeleteModalBox = ({ value, entity, tooltipTitle, handleDelete }: DeleteMod
           startIcon={<SvgIcon><path d={Delete} /></SvgIcon>}
           value={value}
           variant="contained"
-          sx={{ backgroundColor: 'rgb(108, 49, 47)', px: 5.5, py: 2 }}
+          sx={{
+            backgroundColor: 'rgb(108, 49, 47)',
+            flexDirection: 'column',
+            // px: 4,
+            py: 0.5,
+            textTransform: 'none'
+          }}
         >
           Del
         </Button>
