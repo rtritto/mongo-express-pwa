@@ -1,7 +1,6 @@
 import { Box, Button, Divider, Grid, Modal, SvgIcon, TextField, Tooltip, Typography } from '@mui/material'
 import { useState } from 'react'
 
-import { EP_DB } from 'configs/endpoints.mts'
 import { Delete } from 'common/SvgIcons.mts'
 
 const ModalStyle = {
@@ -22,34 +21,29 @@ const BoxStyle = {
   boxShadow: 24,
 }
 
-const callDeleteDB = async (database: string) => {
-  // await fetch(EP_DB, {
-  //   method: 'DELETE',
-  //   body: JSON.stringify({
-  //     database
-  //   })
-  // })
+declare interface DeleteModalBoxProps {
+  value: string
+  entity: string
+  tooltipTitle: string
+  handleDelete: Function
 }
 
-const DeleteModalBox = ({ database }: { database: string }) => {
+const DeleteModalBox = ({ value, entity, tooltipTitle, handleDelete }: DeleteModalBoxProps) => {
   const [open, setOpen] = useState(false)
-  const [inptuDatabase, setInptuDatabase] = useState('')
+  const [input, setinput] = useState('')
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const handleOpen = () => { setOpen(true) }
+  const handleClose = () => { setOpen(false) }
 
-  const handleOnChange = (event) => {
-    const database = event.currentTarget.value
-    setInptuDatabase(database)
-  }
+  const handleOnChange = (event) => { setinput(event.currentTarget.value) }
 
   return (
     <Box>
-      <Tooltip title="Warning! Are you sure you want to delete this database? All collections and documents will be deleted.">
+      <Tooltip title={tooltipTitle}>
         <Button
           onClick={handleOpen}
           startIcon={<SvgIcon><path d={Delete} /></SvgIcon>}
-          value={database}
+          value={value}
           variant="contained"
           sx={{ backgroundColor: 'rgb(108, 49, 47)', px: 5.5, py: 2 }}
         >
@@ -66,17 +60,21 @@ const DeleteModalBox = ({ database }: { database: string }) => {
       >
         <Box sx={BoxStyle}>
           <Typography fontSize={14} sx={{ p: 2 }}>
-            Delete database
+            Delete {entity}
           </Typography>
 
           <Divider />
 
           <Grid sx={{ p: 2 }} >
-            <Typography component='div' fontSize={12} sx={{ mb: 0.5 }}>Be careful! You are about to delete whole <Box fontWeight='fontWeightMedium' display='inline'><strong>{database}</strong></Box> database.</Typography>
+            <Typography component='div' fontSize={12} sx={{ mb: 0.5 }}>
+              Be careful! You are about to delete whole <Box fontWeight='fontWeightMedium' display='inline'>
+                <strong>{value}</strong>
+              </Box> {entity}.
+            </Typography>
 
             <Box alignItems="center" sx={{ py: 1, display: "flex" }}>
               <Typography fontSize={12} sx={{ fontWeight: 'bold', width: '100%' }}>
-                Type the database name to proceed.
+                Type the {entity} name to proceed.
               </Typography>
 
               <TextField
@@ -89,20 +87,14 @@ const DeleteModalBox = ({ database }: { database: string }) => {
             </Box>
           </Grid>
 
-          {/* <FormControl>
-            <InputLabel htmlFor="my-input">Type the database name to proceed.</InputLabel>
-            <Input id="my-input" aria-describedby="my-helper-text" />
-            <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
-          </FormControl> */}
-
           <Divider />
 
           <Grid container justifyContent="flex-end" sx={{ p: 1 }}>
             <Button
               id="delete"
-              onClick={() => inptuDatabase === database && callDeleteDB(inptuDatabase)}
+              onClick={() => input === value && handleDelete(input)}
               size="small"
-              value={database}
+              value={value}
               variant="contained"
               sx={{ backgroundColor: 'rgb(108, 49, 47)', m: 1 }}
             >

@@ -38,8 +38,8 @@ const Index = ({ databases, messageError, options, stats }: IndexProps) => {
 
         <ShowDatabases
           databases={databases}
-          showCreateDatabase={readOnly === false}
-          showDeleteDatabases={noDelete === false && readOnly === false}
+          showCreate={readOnly === false}
+          showDelete={noDelete === false && readOnly === false}
         />
 
         <Box sx={{ my: 2 }}>

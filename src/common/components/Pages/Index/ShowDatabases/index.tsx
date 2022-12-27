@@ -1,9 +1,12 @@
 import { Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 
+import { EP_DB } from 'configs/endpoints.mts'
 import { Visibility } from 'common/SvgIcons.mts'
 import CustomLink from 'components/Custom/CustomLink.tsx'
+import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import CreateDatabase from 'components/Pages/Index/CreateDatabase.tsx'
-import DeleteModalBox from './DeleteModalBox.tsx'
+
+const tooltipTitle = 'Warning! Are you sure you want to delete this database? All collections and documents will be deleted.'
 
 const TableCellStyle = {
   // border: 1,
@@ -12,11 +15,20 @@ const TableCellStyle = {
 
 declare interface ShowDatabasesProps {
   databases: string[]
-  showCreateDatabase: boolean
-  showDeleteDatabases: boolean
+  showCreate: boolean
+  showDelete: boolean
 }
 
-const ShowDatabases = ({ databases = [], showCreateDatabase = true, showDeleteDatabases = true }: ShowDatabasesProps) => {
+const handleDelete = async (database: string) => {
+  // await fetch(EP_DB, {
+  //   method: 'DELETE',
+  //   body: JSON.stringify({
+  //     database
+  //   })
+  // })
+}
+
+const ShowDatabases = ({ databases = [], showCreate = true, showDelete = true }: ShowDatabasesProps) => {
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
       <Table>
@@ -29,21 +41,22 @@ const ShowDatabases = ({ databases = [], showCreateDatabase = true, showDeleteDa
             </TableCell>
 
             <TableCell sx={{ px: 1.5, py: 1, borderLeft: 'none' }} align="right" colSpan={2}>
-              {showCreateDatabase === true && <CreateDatabase />}
+              {showCreate === true && <CreateDatabase />}
             </TableCell>
           </TableRow>
         </TableHead>
 
         <TableBody>
-          {databases.map((db) => {
-            const encodedDb = encodeURIComponent(db)
+          {databases.map((database) => {
+            const encodedDb = encodeURIComponent(database)
+            const href = `${EP_DB}/${encodedDb}`
             return (
-              <TableRow key={`row${db}`}>
-                <TableCell key={`cellIcon${db}`} sx={TableCellStyle}>
+              <TableRow key={`row${database}`}>
+                <TableCell key={`cellIcon${database}`} sx={TableCellStyle}>
                   <CustomLink
-                    key={db}
+                    key={database}
                     // Link
-                    href={`/db/${encodedDb}`}
+                    href={href}
                     style={{
                       margin: 1,
                       textDecoration: 'none'  // remove text underline
@@ -57,11 +70,11 @@ const ShowDatabases = ({ databases = [], showCreateDatabase = true, showDeleteDa
                   </CustomLink>
                 </TableCell>
 
-                <TableCell key={`cellName${db}`} sx={TableCellStyle} width="100%">
+                <TableCell key={`cellName${database}`} sx={TableCellStyle} width="100%">
                   <CustomLink
-                    key={db}
+                    key={database}
                     // Link
-                    href={`/db/${encodedDb}`}
+                    href={href}
                     style={{
                       margin: 1,
                       textDecoration: 'none',  // remove text underline
@@ -75,13 +88,18 @@ const ShowDatabases = ({ databases = [], showCreateDatabase = true, showDeleteDa
                       textTransform: 'none' /* remove uppercase */
                     }}
                   >
-                    <Typography component='h6' variant='h6'>{db}</Typography>
+                    <Typography component='h6' variant='h6'>{database}</Typography>
                   </CustomLink>
                 </TableCell>
 
-                {showDeleteDatabases === true && (
-                  <TableCell key={`cellDelete${db}`} align="right" sx={TableCellStyle}>
-                    <DeleteModalBox database={encodedDb} />
+                {showDelete === true && (
+                  <TableCell key={`cellDelete${database}`} align="right" sx={TableCellStyle}>
+                    <DeleteModalBox
+                      value={database}
+                      entity="database"
+                      tooltipTitle={tooltipTitle}
+                      handleDelete={handleDelete}
+                    />
                   </TableCell>
                 )}
               </TableRow>

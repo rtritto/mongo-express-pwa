@@ -104,7 +104,7 @@ export const mapMongoDBInfoForTable = (info: Info) => ({
 
 export const getCtx = (data, dbName: string) => ({
   databases: global.req.databases,
-  colls: global.req.collections[dbName],
+  collections: global.req.collections[dbName],
   // TODO
   // grids: global.req.gridFSBuckets[dbName],
   stats: {

@@ -42,6 +42,7 @@ const DatabasePage = ({ ctx, dbName, options, title }: DatabasePageProps) => {
         <Divider sx={{ border: 1, my: 1.5 }} />
 
         <ShowCollections
+          collections={ctx.collections}
           showCreate={readOnly === false}
           showExport={noExport === false}
           showDelete={noDelete === false}

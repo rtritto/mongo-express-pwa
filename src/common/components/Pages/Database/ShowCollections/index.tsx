@@ -1,8 +1,12 @@
 import { Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 
+import { EP_DB } from 'configs/endpoints.mts'
 import { Visibility } from 'common/SvgIcons.mts'
-import CreateCollection from 'components/Pages/Database/CreateCollection.tsx'
+import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import CustomLink from 'components/Custom/CustomLink.tsx'
+import CreateCollection from 'components/Pages/Database/CreateCollection.tsx'
+
+const tooltipTitle = 'Are you sure you want to delete this collection? All documents will be deleted.'
 
 const TableCellStyle = {
   // border: 1,
@@ -14,6 +18,15 @@ declare interface ShowDatabasesProps {
   showCreate: boolean
   showDelete: boolean
   showExport: boolean
+}
+
+const handleDelete = async (database: string) => {
+  // await fetch(EP_DB, {
+  //   method: 'DELETE',
+  //   body: JSON.stringify({
+  //     database
+  //   })
+  // })
 }
 
 const ShowCollections = ({ collections = [], showCreate = true, showDelete = true, showExport = true }: ShowDatabasesProps) => {
@@ -35,15 +48,16 @@ const ShowCollections = ({ collections = [], showCreate = true, showDelete = tru
         </TableHead>
 
         <TableBody>
-          {collections.map((db) => {
-            const encodedDb = encodeURIComponent(db)
+          {collections.map((collection) => {
+            const encodedDb = encodeURIComponent(collection)
+            const href = `${EP_DB}/${encodedDb}/${collection}`
             return (
-              <TableRow key={`row${db}`}>
-                <TableCell key={`cellIcon${db}`} sx={TableCellStyle}>
+              <TableRow key={`row${collection}`}>
+                <TableCell key={`cellIcon${collection}`} sx={TableCellStyle}>
                   <CustomLink
-                    key={db}
+                    key={collection}
                     // Link
-                    href={`/db/${encodedDb}`}
+                    href={href}
                     style={{
                       margin: 1,
                       textDecoration: 'none'  // remove text underline
@@ -57,11 +71,11 @@ const ShowCollections = ({ collections = [], showCreate = true, showDelete = tru
                   </CustomLink>
                 </TableCell>
 
-                <TableCell key={`cellName${db}`} sx={TableCellStyle} width="100%">
+                <TableCell key={`cellName${collection}`} sx={TableCellStyle} width="100%">
                   <CustomLink
-                    key={db}
+                    key={collection}
                     // Link
-                    href={`/db/${encodedDb}`}
+                    href={href}
                     style={{
                       margin: 1,
                       textDecoration: 'none',  // remove text underline
@@ -75,13 +89,18 @@ const ShowCollections = ({ collections = [], showCreate = true, showDelete = tru
                       textTransform: 'none' /* remove uppercase */
                     }}
                   >
-                    <Typography component='h6' variant='h6'>{db}</Typography>
+                    <Typography component='h6' variant='h6'>{collection}</Typography>
                   </CustomLink>
                 </TableCell>
 
                 {showDelete === true && (
-                  <TableCell key={`cellDelete${db}`} align="right" sx={TableCellStyle}>
-                    <DeleteModalBox database={encodedDb} />
+                  <TableCell key={`cellDelete${collection}`} align="right" sx={TableCellStyle}>
+                    <DeleteModalBox
+                      value={collection}
+                      entity="collection"
+                      tooltipTitle={tooltipTitle}
+                      handleDelete={handleDelete}
+                    />
                   </TableCell>
                 )}
               </TableRow>
