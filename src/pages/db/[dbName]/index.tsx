@@ -43,6 +43,7 @@ const DatabasePage = ({ ctx, dbName, options, title }: DatabasePageProps) => {
 
         <ShowCollections
           collections={ctx.collections}
+          database={dbName}
           show={{
             create: readOnly === false,
             export: noExport === false,
@@ -50,7 +51,7 @@ const DatabasePage = ({ ctx, dbName, options, title }: DatabasePageProps) => {
           }}
         />
 
-        {/* TODO GridFS Buckets */}
+        {/* TODO GridFS Buckets grids.length && settings.gridFSEnabled */}
 
         {/* TODO Create GridFS Bucket */}
 

@@ -1,6 +1,6 @@
 import { Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 
-import { EP_DB } from 'configs/endpoints.mts'
+import { EP_DB } from 'configs/endpoints.ts'
 import { Visibility } from 'common/SvgIcons.mts'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
@@ -50,15 +50,14 @@ const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
 
         <TableBody>
           {databases.map((database) => {
-            const encodedDb = encodeURIComponent(database)
-            const href = `${EP_DB}/${encodedDb}`
+            const encodedDatabase = encodeURIComponent(database)
+            const hrefView = `${EP_DB}/${encodedDatabase}`
             return (
               <TableRow key={`row${database}`}>
-                <TableCell key={`cellIcon${database}`} sx={TableCellStyle}>
+                <TableCell key={`view${database}`} sx={TableCellStyle}>
                   <CustomLink
-                    key={database}
                     // Link
-                    href={href}
+                    href={hrefView}
                     style={{
                       margin: 1,
                       textDecoration: 'none'  // remove text underline
@@ -78,11 +77,10 @@ const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
                   </CustomLink>
                 </TableCell>
 
-                <TableCell key={`cellName${database}`} sx={TableCellStyle} width="100%">
+                <TableCell key={`detail${database}`} sx={TableCellStyle} width="100%">
                   <CustomLink
-                    key={database}
                     // Link
-                    href={href}
+                    href={hrefView}
                     style={{
                       margin: 1,
                       textDecoration: 'none',  // remove text underline
@@ -101,7 +99,7 @@ const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
                 </TableCell>
 
                 {show.delete === true && (
-                  <TableCell key={`cellDelete${database}`} align="right" sx={TableCellStyle}>
+                  <TableCell key={`delete${database}`} align="right" sx={TableCellStyle}>
                     <DeleteModalBox
                       value={database}
                       entity="database"

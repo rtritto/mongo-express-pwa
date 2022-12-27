@@ -162,7 +162,7 @@ const configDefault = {
     confirmDelete: false,
 
     // noExport: if noExport is set to true, we won't show export buttons
-    noExport: false,
+    noExport: getBoolean(process.env.ME_CONFIG_OPTIONS_NO_EXPORT, false),
 
     // fullwidthLayout: if set to true an alternative page layout is used utilizing full window width
     fullwidthLayout: getBoolean(process.env.ME_CONFIG_OPTIONS_FULLWIDTH_LAYOUT, false),

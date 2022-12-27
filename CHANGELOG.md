@@ -1,0 +1,1 @@
+add env var ME_CONFIG_OPTIONS_NO_EXPORT

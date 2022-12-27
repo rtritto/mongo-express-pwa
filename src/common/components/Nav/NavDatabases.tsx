@@ -1,8 +1,9 @@
 import { FormControl, InputLabel, Select, SelectChangeEvent } from '@mui/material'
 import { useRecoilState, useRecoilValue } from 'recoil'
 
-import { selectedDbState, databasesState } from 'store/globalAtoms.mts'
+import { EP_DB } from 'configs/endpoints.ts'
 import CustomLink from 'components/Custom/CustomLink.tsx'
+import { selectedDbState, databasesState } from 'store/globalAtoms.mts'
 
 const NavDatabases = () => {
   const databases = useRecoilValue<string[]>(databasesState)
@@ -32,7 +33,7 @@ const NavDatabases = () => {
           <CustomLink
             key={database}
             // Link
-            href={`/db/${encodeURIComponent(database)}`}
+            href={`${EP_DB}/${encodeURIComponent(database)}`}
             style={{
               display: 'flex',
               margin: 1,
