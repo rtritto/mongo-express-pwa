@@ -2,7 +2,7 @@ import { Alert, Box, Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 
 import ServerStatusTable from 'components/Pages/Index/ServerStatusTable.tsx'
-import ShowDatabases from 'components/Pages/Index/ShowDatabases/index.tsx'
+import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
 import { mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
 
 interface IndexProps {

@@ -3,7 +3,7 @@ import Head from 'next/head.js'
 import { GetServerSideProps } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 
-import ShowCollections from 'components/Pages/Database/ShowCollections/index.tsx'
+import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
 import DatabaseStatsTable from 'components/Pages/Database/DatabaseStatsTable.tsx'
 import { getCtx } from 'utils/mapFuncs.ts'
 
