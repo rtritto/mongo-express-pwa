@@ -1,10 +1,11 @@
-import { Container, Divider, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 import { GetServerSideProps } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 
-import { getCtx } from 'utils/mapFuncs.ts'
+import ShowCollections from 'components/Pages/Database/ShowCollections/index.tsx'
 import DatabaseStatsTable from 'components/Pages/Database/DatabaseStatsTable.tsx'
+import { getCtx } from 'utils/mapFuncs.ts'
 
 const destination = '/'
 
@@ -12,43 +13,19 @@ declare interface Params extends ParsedUrlQuery {
   dbName: string
 }
 
-const CollectionTable = () => {
-  return (
-    <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ borderRight: 'none', p: 1.5, verticalAlign: 'top' }}>
-              <Typography component='h6' variant='h6' sx={{ fontWeight: 'bold' }}>
-                Collections
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {/* {rows.map((row, index) => (
-              <TableRow key={`row${index}`}>
-                {row.length > 0
-                  ? row.map((cell) => [
-                    <TableCell key={`cellName${index}`} sx={TableCellStyle}>
-                      <strong>{cell.name}</strong>
-                    </TableCell>,
-                    <TableCell key={`cellValue${index}`} sx={TableCellStyle} id={cell.id}>
-                      {cell.value}
-                    </TableCell>
-                  ])
-                  : <TableCell key={`cellEmpty${index}`} sx={TableCellStyle} colSpan={4} />
-                }
-              </TableRow>
-            ))} */}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  )
+declare interface DatabasePageProps {
+  ctx: ReturnType<typeof getCtx>
+  dbName: string
+  options: {
+    noDelete: boolean
+    noExport: boolean
+    readOnly: boolean
+  }
+  title: string
 }
 
-const DbPage = ({ ctx, dbName, title }: { dbName: string, title: string }) => {
+const DatabasePage = ({ ctx, dbName, options, title }: DatabasePageProps) => {
+  const { noDelete, noExport, readOnly } = options
   return (
     <div>
       <Head>
@@ -64,7 +41,15 @@ const DbPage = ({ ctx, dbName, title }: { dbName: string, title: string }) => {
 
         <Divider sx={{ border: 1, my: 1.5 }} />
 
-        <CollectionTable />
+        <ShowCollections
+          showCreate={readOnly === false}
+          showExport={noExport === false}
+          showDelete={noDelete === false}
+        />
+
+        {/* TODO GridFS Buckets */}
+
+        {/* TODO Create GridFS Bucket */}
 
         <DatabaseStatsTable fields={ctx.stats} />
       </Container>
@@ -102,6 +87,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, re
         props: {
           ctx,
           dbName,
+          options: process.env.config.options,
           title: `${dbName} - Mongo Express`
         }
       }
@@ -122,4 +108,4 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, re
   }
 }
 
-export default DbPage
+export default DatabasePage

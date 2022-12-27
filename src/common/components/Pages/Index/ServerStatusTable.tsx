@@ -1,5 +1,3 @@
-import { mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
-
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 
 const TableCellStyle = {

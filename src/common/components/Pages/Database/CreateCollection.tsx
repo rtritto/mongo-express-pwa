@@ -6,17 +6,14 @@ import { EP_DB } from 'configs/endpoints.mts'
 import { Add } from 'common/SvgIcons.mts'
 import * as validators from 'utils/validations.ts'
 
-const CreateDatabase = () => {
-  const [database, setDatabase] = useState<string>('')
+const CreateCollection = () => {
+  const [collection, setCollection] = useState<string>('')
 
   const methods = useForm({ mode: 'onChange' })
 
   const callPostDB = () => {
-    fetch(EP_DB, {
-      method: 'POST',
-      body: JSON.stringify({
-        database
-      })
+    fetch(`${EP_DB}/${collection}`, {
+      method: 'POST'
     })
   }
 
@@ -25,45 +22,42 @@ const CreateDatabase = () => {
       <form method="POST" onSubmit={methods.handleSubmit(callPostDB)}>
         <Controller
           control={methods.control}
-          name="controllerCreateDatabase"
+          name="controllerCreateCollection"
           render={({ field: { onChange } }) => <TextField
-            error={!!database && !validators.isValidDatabaseName(database)}
-            helperText={database && Object.keys(methods.formState.errors).length > 0
-              ? (database.length > 63
-                ? (validators.isValidDatabaseNameRegex(database)
-                  ? 'Database name must have fewer than 64 characters and must not contain /. "$*<>:|?'
-                  : 'Database name must have fewer than 64 characters')
-                : 'Database must not contain /. "$*<>:|?')
+            error={!!collection && Object.keys(methods.formState.errors).length > 0}
+            helperText={collection && Object.keys(methods.formState.errors).length > 0
+              ? 'Collection names must begin with a letter, underscore, hyphen or slash, and can contain only letters, '
+              + 'underscores, hyphens, numbers, dots or slashes'
               : ''
             }
-            name="databaseName"
+            name="collectionName"
             onChange={({ target: { value } }) => {
-              setDatabase(value)
+              setCollection(value)
               onChange(value)
             }}
-            placeholder="Database name"
+            placeholder="Collection name"
             required
             size="small"
             type="string"
             variant="outlined"
           // sx={{ paddingBottom: 0 }}
           />}
-          rules={{ validate: validators.isValidDatabaseName }}
+          rules={{ validate: validators.isValidCollectionName }}
         />
 
         <Button
           type="submit"
           size="small"
           variant="contained"
-          disabled={!database || Object.keys(methods.formState.errors).length > 0}
+          disabled={!collection || Object.keys(methods.formState.errors).length > 0}
           startIcon={<SvgIcon><path d={Add} /></SvgIcon>}
           sx={{ textTransform: 'none', py: 1 }}
         >
-          Create Database
+          Create Collection
         </Button>
       </form>
     </FormGroup>
   )
 }
 
-export default CreateDatabase
+export default CreateCollection

@@ -1,9 +1,8 @@
 import { Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 
 import { Visibility } from 'common/SvgIcons.mts'
+import CreateCollection from 'components/Pages/Database/CreateCollection.tsx'
 import CustomLink from 'components/Custom/CustomLink.tsx'
-import CreateDatabase from 'components/Pages/Index/CreateDatabase.tsx'
-import DeleteModalBox from './DeleteModalBox.tsx'
 
 const TableCellStyle = {
   // border: 1,
@@ -11,12 +10,13 @@ const TableCellStyle = {
 }
 
 declare interface ShowDatabasesProps {
-  databases: string[]
-  showCreateDatabase: boolean
-  showDeleteDatabases: boolean
+  collections: string[]
+  showCreate: boolean
+  showDelete: boolean
+  showExport: boolean
 }
 
-const ShowDatabases = ({ databases = [], showCreateDatabase = true, showDeleteDatabases = true }: ShowDatabasesProps) => {
+const ShowCollections = ({ collections = [], showCreate = true, showDelete = true, showExport = true }: ShowDatabasesProps) => {
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
       <Table>
@@ -24,18 +24,18 @@ const ShowDatabases = ({ databases = [], showCreateDatabase = true, showDeleteDa
           <TableRow>
             <TableCell sx={{ borderRight: 'none', p: 1.5, verticalAlign: 'top' }}>
               <Typography component='h6' variant='h6' sx={{ fontWeight: 'bold' }}>
-                Databases
+                Collections
               </Typography>
             </TableCell>
 
             <TableCell sx={{ px: 1.5, py: 1, borderLeft: 'none' }} align="right" colSpan={2}>
-              {showCreateDatabase === true && <CreateDatabase />}
+              {showCreate === true && <CreateCollection />}
             </TableCell>
           </TableRow>
         </TableHead>
 
         <TableBody>
-          {databases.map((db) => {
+          {collections.map((db) => {
             const encodedDb = encodeURIComponent(db)
             return (
               <TableRow key={`row${db}`}>
@@ -79,7 +79,7 @@ const ShowDatabases = ({ databases = [], showCreateDatabase = true, showDeleteDa
                   </CustomLink>
                 </TableCell>
 
-                {showDeleteDatabases === true && (
+                {showDelete === true && (
                   <TableCell key={`cellDelete${db}`} align="right" sx={TableCellStyle}>
                     <DeleteModalBox database={encodedDb} />
                   </TableCell>
@@ -93,4 +93,4 @@ const ShowDatabases = ({ databases = [], showCreateDatabase = true, showDeleteDa
   )
 }
 
-export default ShowDatabases
+export default ShowCollections

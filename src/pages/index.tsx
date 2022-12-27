@@ -8,12 +8,15 @@ import { mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
 interface IndexProps {
   databases: string[]
   messageError: string | null
-  noDelete: boolean
-  readOnly: boolean
+  options: {
+    noDelete: boolean
+    readOnly: boolean
+  }
   stats?: ReturnType<typeof mapMongoDBInfoForTable>
 }
 
-const Index = ({ databases, messageError, noDelete, readOnly, stats }: IndexProps) => {
+const Index = ({ databases, messageError, options, stats }: IndexProps) => {
+  const { noDelete, readOnly } = options
   return (
     <div>
       <Head>
@@ -35,7 +38,7 @@ const Index = ({ databases, messageError, noDelete, readOnly, stats }: IndexProp
 
         <ShowDatabases
           databases={databases}
-          showCreateDb={readOnly === false}
+          showCreateDatabase={readOnly === false}
           showDeleteDatabases={noDelete === false && readOnly === false}
         />
 
@@ -54,34 +57,24 @@ const Index = ({ databases, messageError, noDelete, readOnly, stats }: IndexProp
 }
 
 export async function getServerSideProps() {
-  const { options: { noDelete, readOnly } } = process.env.config
-  const { databases } = global.req
   const { messageError } = global.session
   delete global.session.messageError
 
+  const props = {
+    databases: global.req.databases,
+    ...messageError !== undefined && { messageError },
+    options: process.env.config.options
+  }
+
   if (global.req.adminDb) {
     const rawInfo = await global.req.adminDb.serverStatus()
-    const stats = mapMongoDBInfoForTable(rawInfo)
+    console.log('rawInfo: ', rawInfo);
+    props.stats = mapMongoDBInfoForTable(rawInfo)
     // global.stats = stats
-
-    return {
-      props: {
-        databases,
-        ...messageError !== undefined && { messageError },
-        noDelete,
-        readOnly,
-        stats
-      }
-    }
   }
 
   return {
-    props: {
-      databases,
-      ...messageError !== undefined && { messageError },
-      noDelete,
-      readOnly
-    }
+    props
   }
 }
 

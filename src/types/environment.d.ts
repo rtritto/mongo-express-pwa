@@ -24,4 +24,8 @@ declare global {
     updateDatabases: () => Promise<void>
   }
   var req: ReturnType<typeof setConnection>
+  var session: {
+    messageError?: string
+    messageSuccess?: string
+  }
 }

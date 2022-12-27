@@ -1,5 +1,6 @@
 import * as validators from 'utils/validations.ts'
 
+// TODO add global lock time stats and replica set stats
 export const mapMongoDBInfoForTable = (info: Info) => ({
   dbHost: {
     label: 'Hostname',
