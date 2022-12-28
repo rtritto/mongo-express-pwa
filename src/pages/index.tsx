@@ -70,7 +70,6 @@ export async function getServerSideProps() {
 
   if (global.req.adminDb) {
     const rawInfo = await global.req.adminDb.serverStatus()
-    console.log('rawInfo: ', rawInfo);
     props.stats = mapMongoDBInfoForTable(rawInfo)
     // global.stats = stats
   }
