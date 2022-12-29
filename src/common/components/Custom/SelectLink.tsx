@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, Select, SelectChangeEvent } from '@mui/material'
+import { FormControl, Select, SelectChangeEvent } from '@mui/material'
 import { useRecoilState } from 'recoil'
 
 import CustomLink from 'components/Custom/CustomLink.tsx'
@@ -11,15 +11,41 @@ const SelectLink = ({ baseUrl, entities = [], label, selectedState }) => {
   }
 
   return (
-    <FormControl sx={{ mx: 1, minWidth: 120, mt: 1, mb: 0.5 }} fullWidth size="small">
-      <InputLabel id={`select-${label}`} size="small">{label}</InputLabel>
+    <FormControl sx={{ display: 'inline', minWidth: 120 }} fullWidth size="small">
+      <CustomLink
+        key={label}
+        // Link
+        href={`${baseUrl}/${encodeURIComponent(selected)}`}
+        style={{
+          textDecoration: 'none',  // remove text underline
+        }}
+        // Button
+        sx={{
+          color: 'rgb(153, 143, 143)',
+          justifyContent: 'flex-start',
+          pl: 0,
+          pr: 0.5,
+          textTransform: 'none',  // remove uppercase
+          ':hover': {
+            color: 'white'
+          }
+        }}
+        variant="text"
+      >
+        {label}:
+      </CustomLink>
 
       <Select
         labelId="select-label"
         id="select"
         value={selected}
-        label={label}
         onChange={handleChange}
+        sx={{
+          color: 'rgb(153, 143, 143)',
+          ':hover': {
+            color: 'white'
+          }
+        }}
         MenuProps={{
           MenuListProps: {
             disablePadding: true
@@ -34,9 +60,7 @@ const SelectLink = ({ baseUrl, entities = [], label, selectedState }) => {
             style={{
               display: 'flex',
               margin: 1,
-              // marginLeft: 20,
               textDecoration: 'none',  // remove text underline
-              // padding: 0, verticalAlign: 'middle',
               ...(selected === entity) && {
                 pointerEvents: 'none'  // disable onClick when selected
               }
@@ -46,9 +70,8 @@ const SelectLink = ({ baseUrl, entities = [], label, selectedState }) => {
             fullWidth
             sx={{
               justifyContent: 'flex-start',
-              // padding: 0,
               paddingLeft: 2,
-              textTransform: 'none' /* remove uppercase */,
+              textTransform: 'none',  // remove uppercase
               background: selected === entity ? 'grey' : 'darkgrey'
             }}
             value={entity}

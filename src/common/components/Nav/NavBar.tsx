@@ -176,8 +176,11 @@ const CustomNavBar = ({ databases, collections, show }: CustomNavBarProps) => {
                 // letterSpacing: '.3rem',
                 px: 1.5,
                 py: 1,
-                color: 'inherit',
+                color: 'rgb(153, 143, 143)',
                 textDecoration: 'none',
+                ':hover': {
+                  color: 'white'
+                }
               }}
             >
               Mongo Express
@@ -187,19 +190,6 @@ const CustomNavBar = ({ databases, collections, show }: CustomNavBarProps) => {
               <NavDatabases databases={databases} />
 
               {show.collections === true && <NavCollections collections={collections} />}
-
-              {/* TODO Update */}
-              <Link
-                key={'title'}
-                href={'/db/test'}
-                passHref
-                style={{
-                  color: 'white',
-                  textDecoration: 'none' /* remove text underline */
-                }}
-              >
-                Test
-              </Link>
             </Breadcrumbs>
 
             {/* {mapNavLinks} */}

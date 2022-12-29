@@ -95,6 +95,11 @@ Theme = createTheme(Theme, {
       styleOverrides: {
         startIcon: { margin: 0 }
       }
+    },
+    MuiSelect: {
+      styleOverrides: {
+        select: { padding: Theme.spacing(1) }
+      }
     }
   }
 })

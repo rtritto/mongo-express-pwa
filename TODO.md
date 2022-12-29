@@ -1,4 +1,4 @@
 - handle PORT as env var
 - handle additional config.mts
 - change Link to router
-- add click to selected db/collection and go to selected db/collection page
+- convert ts to mts
