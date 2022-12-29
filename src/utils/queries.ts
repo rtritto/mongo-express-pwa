@@ -1,5 +1,5 @@
 import mongodb from 'mongodb'
-import * as bson from './bson.mts'
+import * as bson from './bson.ts'
 
 declare interface QueryParameter {
   // mongodb
@@ -83,7 +83,7 @@ export const getQuery = (query: QueryParameter) => {
     }
     throw new Error(`Invalid query type: ${type}`)
   }
-  const { query: jsonQuery } = req.query
+  const { query: jsonQuery } = query
   if (jsonQuery) {
     // if it is a complex query, take it as is
     const result = bson.toSafeBSON(jsonQuery)

@@ -13,14 +13,15 @@ interface IndexProps {
     readOnly: boolean
   }
   stats?: ReturnType<typeof mapMongoDBInfoForTable>
+  title: string
 }
 
-const Index = ({ databases, messageError, options, stats }: IndexProps) => {
+const Index = ({ databases, messageError, options, stats, title }: IndexProps) => {
   const { noDelete, readOnly } = options
   return (
     <div>
       <Head>
-        <title>Home - Mongo Express</title>
+        <title>{title}</title>
 
         <meta key="title" content="Home" property="og:title" />
       </Head>
@@ -65,7 +66,8 @@ export async function getServerSideProps() {
   const props = {
     databases: global.req.databases,
     ...messageError !== undefined && { messageError },
-    options: process.env.config.options
+    options: process.env.config.options,
+    title: 'Home - Mongo Express'
   }
 
   if (global.req.adminDb) {

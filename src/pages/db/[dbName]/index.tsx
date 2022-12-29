@@ -1,4 +1,4 @@
-import { Container, Divider, Typography } from '@mui/material'
+import { Alert, Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 import { GetServerSideProps } from 'next'
 import { ParsedUrlQuery } from 'querystring'
@@ -16,6 +16,7 @@ declare interface Params extends ParsedUrlQuery {
 declare interface DatabasePageProps {
   ctx: ReturnType<typeof getCtx>
   dbName: string
+  messageError: string | null
   options: {
     noDelete: boolean
     noExport: boolean
@@ -24,7 +25,7 @@ declare interface DatabasePageProps {
   title: string
 }
 
-const DatabasePage = ({ ctx, dbName, options, title }: DatabasePageProps) => {
+const DatabasePage = ({ ctx, dbName, messageError, options, title }: DatabasePageProps) => {
   const { noDelete, noExport, readOnly } = options
   return (
     <div>
@@ -35,6 +36,12 @@ const DatabasePage = ({ ctx, dbName, options, title }: DatabasePageProps) => {
       </Head>
 
       <Container sx={{ p: 1 }}>
+        {messageError && (
+          <Alert severity="error" onClose={() => { }} sx={{ my: 2 }}>
+            {messageError}
+          </Alert>
+        )}
+
         <Typography component="h4" gutterBottom variant="h4">
           Viewing Database: {dbName}
         </Typography>
@@ -65,43 +72,40 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, re
   const { dbName } = params as Params
 
   // Make sure database exists
-  if (!(dbName in global.mongo.connections)) {
-    global.session.messageError = `Database "${dbName}" not found!`
-
-    return {
-      redirect: {
-        destination,
-        permanent: false
-      }
-    }
-  }
-
-  // TODO ???
-  // global.req.dbName = dbName
-  // global.req.db = global.mongo.connections[dbName].db
-
-  try {
-    await global.req.updateCollections(global.mongo.connections[dbName])
+  if (dbName in global.mongo.connections) {
+    // TODO ???
+    // global.req.dbName = dbName
+    // global.req.db = global.mongo.connections[dbName].db
 
     try {
-      const data = await global.mongo.connections[dbName].db.stats()
-      const ctx = getCtx(data, dbName)
+      await global.req.updateCollections(global.mongo.connections[dbName])
 
-      return {
-        props: {
-          ctx,
-          dbName,
-          options: process.env.config.options,
-          title: `${dbName} - Mongo Express`
+      try {
+        const data = await global.mongo.connections[dbName].db.stats()
+        const ctx = getCtx(data, dbName)
+
+        const { messageError } = global.session
+        delete global.session.messageError
+
+        return {
+          props: {
+            ctx,
+            dbName,
+            ...messageError !== undefined && { messageError },
+            options: process.env.config.options,
+            title: `${dbName} - Mongo Express`
+          }
         }
+      } catch (error) {
+        console.error(error)
+        global.session.messageError = `Could not get stats. ${error}`
       }
     } catch (error) {
       console.error(error)
-      global.session.messageError = `Could not get stats. ${error}`
+      global.session.messageError = `Could not refresh collections. ${error}`
     }
-  } catch (error) {
-    console.error(error)
-    global.session.messageError = `Could not refresh collections. ${error}`
+  } else {
+    global.session.messageError = `Database "${dbName}" not found!`
   }
 
   return {
