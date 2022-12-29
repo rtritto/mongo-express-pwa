@@ -1,10 +1,12 @@
 import { Button, Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { useSetRecoilState } from 'recoil'
 
 import { EP_DB, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION } from 'configs/endpoints.ts'
 import { FileUpload, Save, Visibility } from 'common/SvgIcons.mts'
 import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import CreateCollection from 'components/Pages/Database/CreateCollection.tsx'
+import { selectedCollectionState } from 'store/globalAtoms.mts'
 
 const tooltipTitle = 'Are you sure you want to delete this collection? All documents will be deleted.'
 
@@ -50,6 +52,7 @@ const handleImport = async (event) => {
 }
 
 const ShowCollections = ({ collections = [], database, show }: ShowDatabasesProps) => {
+  const setSelectedCollectionState = useSetRecoilState(selectedCollectionState)
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -166,6 +169,7 @@ const ShowCollections = ({ collections = [], database, show }: ShowDatabasesProp
                       justifyContent: 'flex-start',
                       textTransform: 'none' /* remove uppercase */
                     }}
+                    onClick={() => setSelectedCollectionState(collection)}
                   >
                     <Typography component='h6' variant='h6'>{collection}</Typography>
                   </CustomLink>

@@ -5,6 +5,8 @@ import { setConnection } from 'middlewares/connection.mts'
 
 export { }
 
+declare type ReqType = ReturnType<typeof setConnection>
+
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -23,7 +25,7 @@ declare global {
     updateCollections: (dbConnection: Connection) => Promise<void>
     updateDatabases: () => Promise<void>
   }
-  var req: ReturnType<typeof setConnection>
+  var req: ReqType
   var session: {
     messageError?: string
     messageSuccess?: string

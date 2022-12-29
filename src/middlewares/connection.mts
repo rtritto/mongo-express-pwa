@@ -1,5 +1,5 @@
 export const setConnection = () => {
-  const req = {
+  global.req = {
     mainClient: global.mongo.mainClient,
     adminDb: global.mongo.mainClient?.adminDb,
     databases: global.mongo.getDatabases(), // List of database names
@@ -10,7 +10,6 @@ export const setConnection = () => {
     updateCollections: global.mongo.updateCollections,
     updateDatabases: global.mongo.updateDatabases
   }
-  global.req = req
 
-  return req
+  return global.req
 }

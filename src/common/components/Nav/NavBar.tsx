@@ -23,6 +23,7 @@ import {
 // import { darkModeState } from 'src/store/Theme/atoms'
 import { Apps, Close, Hamburger, Home, Info, PlayCircleFilledOutlined } from 'common/SvgIcons.mts'
 import NavDatabases from './NavDatabases.tsx'
+import NavCollections from './NavCollections.tsx'
 
 const navLinks = [
   { title: 'Home', path: '/', icon: Home },
@@ -53,7 +54,15 @@ const mapNavLinks = navLinks.map(({ icon, title, path }) => (
   </Link>
 ))
 
-const CustomNavBar = () => {
+declare interface CustomNavBarProps {
+  collections: ReqType.collections
+  databases: ReqType.databases
+  show: {
+    collections: boolean
+  }
+}
+
+const CustomNavBar = ({ databases, collections, show }: CustomNavBarProps) => {
   // const [state, setState] = useState(false)
 
   //#region Theme
@@ -175,7 +184,9 @@ const CustomNavBar = () => {
             </Typography>
 
             <Breadcrumbs aria-label="breadcrumb" separator=">" >
-              <NavDatabases />
+              <NavDatabases databases={databases} />
+
+              {show.collections === true && <NavCollections collections={collections} />}
 
               {/* TODO Update */}
               <Link
