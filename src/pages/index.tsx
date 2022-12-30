@@ -1,7 +1,7 @@
 import { Alert, Box, Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 
-import ServerStatusTable from 'components/Pages/Index/ServerStatusTable.tsx'
+import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
 import { mapMongoDBInfoForTable } from 'utils/mapFuncs.ts'
 
@@ -46,7 +46,7 @@ const Index = ({ databases, messageError, options, stats, title }: IndexProps) =
         />
 
         <Box sx={{ mb: 2 }}>
-          {stats ? <ServerStatusTable fields={stats} /> : (
+          {stats ? <StatsTable label="Server Status" fields={stats} /> : (
             <>
               <Typography component="h4" gutterBottom variant="h4">Server Status</Typography>
 

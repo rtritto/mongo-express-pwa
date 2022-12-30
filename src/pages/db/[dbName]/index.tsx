@@ -3,8 +3,8 @@ import Head from 'next/head.js'
 import { GetServerSideProps } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 
+import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
-import DatabaseStatsTable from 'components/Pages/Database/DatabaseStatsTable.tsx'
 import { getCtx } from 'utils/mapFuncs.ts'
 
 const destination = '/'
@@ -62,7 +62,7 @@ const DatabasePage = ({ ctx, dbName, messageError, options, title }: DatabasePag
 
         {/* TODO Create GridFS Bucket */}
 
-        <DatabaseStatsTable fields={ctx.stats} />
+        <StatsTable label="Database Stats" fields={ctx.stats} />
       </Container>
     </div>
   )

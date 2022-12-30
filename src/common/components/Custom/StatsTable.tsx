@@ -1,19 +1,14 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 
-const TableCellStyle = {
-  // border: 1,
-  padding: 0.8
-}
-
 const getRowsComponent = (fields: Fields) => {
   const outRaw = []
   for (const cell in fields) {
     if (fields[cell].value) {
       outRaw.push([
-        <TableCell key={`cellName${cell}`} sx={TableCellStyle}>
+        <TableCell key={`cellName${cell}`}>
           <strong>{fields[cell].label}</strong>
         </TableCell>,
-        <TableCell key={`cellValue${cell}`} id={cell} sx={TableCellStyle}>
+        <TableCell key={`cellValue${cell}`} id={cell}>
           {fields[cell].value}
         </TableCell>
       ])
@@ -36,15 +31,20 @@ const getRowsComponent = (fields: Fields) => {
   return out
 }
 
-const ServerStatusTable = ({ fields }: { fields: Fields }) => {
+declare interface StatsTableProps {
+  label: string
+  fields: Fields
+}
+
+const StatsTable = ({ label, fields }: StatsTableProps) => {
   return (
     <TableContainer component={Paper}>
-      <Table>
-        <TableHead sx={{ px: 1.5, py: 1 }}>
+      <Table size="small">
+        <TableHead>
           <TableRow>
-            <TableCell sx={TableCellStyle} colSpan={4}>
+            <TableCell colSpan={4}>
               <Typography component='h6' variant='h6' sx={{ fontWeight: 'bold', p: 0.5 }}>
-                Server Status
+                {label}
               </Typography>
             </TableCell>
           </TableRow>
@@ -58,4 +58,4 @@ const ServerStatusTable = ({ fields }: { fields: Fields }) => {
   )
 }
 
-export default ServerStatusTable
+export default StatsTable

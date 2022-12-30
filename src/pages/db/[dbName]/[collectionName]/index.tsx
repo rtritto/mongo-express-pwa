@@ -3,12 +3,11 @@ import Head from 'next/head.js'
 import { GetServerSideProps } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 
+import StatsTable from 'components/Custom/StatsTable.tsx'
 import { EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'utils/bson.ts'
 import * as mapFuncs from 'utils/mapFuncs.ts'
 import * as queries from 'utils/queries.ts'
-import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
-import DatabaseStatsTable from 'components/Pages/Database/DatabaseStatsTable.tsx'
 
 declare interface Params extends ParsedUrlQuery {
   collectionName: string
@@ -64,7 +63,7 @@ const CollectionPage = ({ ctx, collectionName, messageError, options, title }: D
 
         {/* TODO Create GridFS Bucket */}
 
-        {/* <DatabaseStatsTable fields={ctx.stats} /> */}
+        {/* <StatsTable label="" fields={ctx.stats} /> */}
       </Container>
     </div>
   )
