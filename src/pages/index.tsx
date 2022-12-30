@@ -64,14 +64,14 @@ export async function getServerSideProps() {
   delete global.session.messageError
 
   const props = {
-    databases: global.req.databases,
+    databases: global.mongo.databases,
     ...messageError !== undefined && { messageError },
     options: process.env.config.options,
     title: 'Home - Mongo Express'
   }
 
-  if (global.req.adminDb) {
-    const rawInfo = await global.req.adminDb.serverStatus()
+  if (global.mongo.adminDb !== null) {
+    const rawInfo = await global.mongo.adminDb.serverStatus()
     props.stats = mapMongoDBInfoForTable(rawInfo)
     // global.stats = stats
   }

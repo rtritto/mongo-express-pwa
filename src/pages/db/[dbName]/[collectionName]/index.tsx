@@ -80,7 +80,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
     } else {
       // TODO ???
       // global.req.collectionName = collectionName
-      // res.locals.gridFSBuckets = colsToGrid(mongo.global.collections[dbName])
+      // res.locals.gridFSBuckets = colsToGrid(global.mongo.collections[dbName])
       // req.collection = coll
 
       try {
@@ -222,7 +222,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
 
 
   // try {
-  //   await global.req.updateCollections(global.mongo.connections[dbName])
+  //   await global.mongo.updateCollections(global.mongo.connections[dbName])
 
   //   try {
   //     const ctx = getCtx(data, dbName)

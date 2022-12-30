@@ -55,8 +55,8 @@ const mapNavLinks = navLinks.map(({ icon, title, path }) => (
 ))
 
 declare interface CustomNavBarProps {
-  collections: ReqType['collections']
-  databases: ReqType['databases']
+  collections: Mongo['collections']
+  databases: Mongo['databases']
   show: {
     collections: boolean
   }

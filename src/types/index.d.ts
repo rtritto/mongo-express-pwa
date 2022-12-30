@@ -31,7 +31,7 @@ declare interface Fields {
 interface ClientInfo {
   connectionName: string
   client: import('mongodb').MongoClient
-  adminDb: import('mongodb').Admin | undefined
+  adminDb: import('mongodb').Admin | null
   info: import('config.default.mts').MongoDb
 }
 
@@ -45,12 +45,12 @@ interface Connection {
 
 declare type Mongo = {
   clients: Array<ClientInfo>
-  collections?: Object<string, Array<string>>
-  connections?: Object<string, Array<Connection>>
+  collections: Object<string, Array<string>>
+  connections: Object<string, Array<Connection>>
+  databases: Array<string>
   // gridFSBuckets?  TODO
-  mainClient?: {
-    adminDb?: Admin | undefined
-  }
+  mainClient: ClientInfo | null
+  adminDb: ClientInfo['adminDb'] | null
   addConnection: (info: ClientInfo, db: Db, dbName: string) => Connection
   getDatabases: () => Array<string>
   updateCollections: (dbConnection: Connection) => Promise<void>

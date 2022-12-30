@@ -78,7 +78,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, re
     // global.req.db = global.mongo.connections[dbName].db
 
     try {
-      await global.req.updateCollections(global.mongo.connections[dbName])
+      await global.mongo.updateCollections(global.mongo.connections[dbName])
 
       try {
         const data = await global.mongo.connections[dbName].db.stats()

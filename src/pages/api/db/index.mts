@@ -9,10 +9,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       if (!validators.isValidDatabaseName(name)) {
         // TODO: handle error
         console.error('That database name is invalid.')
-        global.req.session.error = 'That database name is invalid.'
+        global.session.messageError = 'That database name is invalid.'
         return res.redirect('back')
       }
-      const ndb = global.req.mainClient.client.db(name)
+      const ndb = global.mongo.mainClient.client.db(name)
 
       await ndb.createCollection('delete_me').then(async () => {
         await global.mongo.updateDatabases().then(() => {
@@ -30,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }).catch((error) => {
         // TODO: handle error
         console.error(`Could not create collection. Err: ${error}`)
-        global.req.session.error = `Could not create collection. Err: ${error}`
+        global.session.messageError = `Could not create collection. Err: ${error}`
         res.redirect('back')
       })
     }

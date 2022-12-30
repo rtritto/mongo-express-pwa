@@ -105,10 +105,10 @@ export const mapMongoDBInfoForTable = (info: Info) => ({
 export declare type getCtxType = ReturnType<typeof getCtx>
 
 export const getCtx = (data, dbName: string) => ({
-  databases: global.req.databases,
-  collections: global.req.collections[dbName],
+  databases: global.mongo.databases,
+  collections: global.mongo.collections[dbName],
   // TODO
-  // grids: global.req.gridFSBuckets[dbName],
+  // grids: global.mongo.gridFSBuckets[dbName],
   stats: {
     avgObjSize: {
       label: 'Avg Obj Size #',

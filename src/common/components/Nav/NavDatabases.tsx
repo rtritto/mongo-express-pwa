@@ -3,7 +3,7 @@ import SelectLink from 'components/Custom/SelectLink.tsx'
 import { selectedDatabaseState } from 'store/globalAtoms.mts'
 
 declare interface NavDatabasesProps {
-  databases: ReqType['databases']
+  databases: Mongo['databases']
 }
 
 const NavDatabases = ({ databases }: NavDatabasesProps) => {

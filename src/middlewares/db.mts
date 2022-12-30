@@ -14,10 +14,12 @@ import type { Config, MongoDb } from 'config.default.mts'
 // if (!connectionData) {
 // connectionData = 
 global.mongo = {
-  // mainClient: {},
   clients: [],
-  // connections: {},
-  // collections: {},
+  collections: {},
+  connections: {},
+  databases: [],
+  mainClient: null,
+  adminDb: null,
   // update the collections list
   getDatabases() { return Object.keys(this.connections).sort() },
   async updateCollections(dbConnection: Connection) {
@@ -75,6 +77,7 @@ global.mongo = {
           const connection = this.addConnection(clientInfo, dbConnection, dbName)
           await this.updateCollections(connection)
         }
+        this.databases = this.getDatabases()
       })
     )
   },
@@ -91,7 +94,7 @@ global.mongo = {
       } = connectionInfo
       try {
         const client = await MongoClient.connect(connectionString, connectionOptions)
-        const adminDb = admin ? client.db().admin() : undefined
+        const adminDb = admin ? client.db().admin() : null
         return {
           adminDb,
           client,
@@ -103,9 +106,10 @@ global.mongo = {
         throw error
       }
     }))
-    if (!this.mainClient) {
+    if (this.mainClient === null) {
       const [client] = this.clients
       this.mainClient = client
+      this.adminDb = client.adminDb
     }
     await this.updateDatabases()
     return this

@@ -5,7 +5,7 @@ import SelectLink from 'components/Custom/SelectLink.tsx'
 import { selectedCollectionState, selectedDatabaseState } from 'store/globalAtoms.mts'
 
 declare interface NavCollectionsProps {
-  collections: ReqType['collections']
+  collections: Mongo['collections']
 }
 
 const NavCollections = ({ collections }: NavCollectionsProps) => {

@@ -8,15 +8,14 @@ import type { AppProps } from 'next/app.js'
 import createEmotionCache from 'common/createEmotionCache.mts'
 import theme from 'common/Theme.mts'
 import NavBar from 'components/Nav/NavBar.tsx'
-import { setConnection } from 'middlewares/connection.mts'
 import { selectedCollectionState, selectedDatabaseState } from 'store/globalAtoms.mts'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
 declare interface MyAppProps extends AppProps {
-  collections: ReqType['collections']
-  databases: ReqType['databases']
+  collections: Mongo['collections']
+  databases: Mongo['databases']
 }
 
 function MyApp(props: MyAppProps) {
@@ -80,18 +79,16 @@ function MyApp(props: MyAppProps) {
 }
 
 MyApp.getInitialProps = async ({ router /* or ctx.req */ }) => {
-  setConnection()
-
-  // if (mongo.adminDb) {
-  //   const rawInfo = await mongo.adminDb.serverStatus()
+  // if (global.mongo.adminDb) {
+  //   const rawInfo = await global.mongo.adminDb.serverStatus()
   //   const info = mapMongoDBInfo(rawInfo)
-  //   // global.info = info
+  //   // global.global.info = info
 
   //   return { info }
   // }
   return {
-    databases: global.req.databases,
-    collections: global.req.collections,
+    databases: global.mongo.databases,
+    collections: global.mongo.collections,
     ...'dbName' in router.query && { dbName: router.query.dbName },
     ...'collectionName' in router.query && { collectionName: router.query.collectionName }
   }
