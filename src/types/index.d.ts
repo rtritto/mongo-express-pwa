@@ -46,7 +46,7 @@ interface Connection {
 declare type Mongo = {
   clients: Array<ClientInfo>
   collections: Object<string, Array<string>>
-  connections: Object<string, Array<Connection>>
+  connections: Object<string, Connection>
   databases: Array<string>
   // gridFSBuckets?  TODO
   mainClient: ClientInfo | null

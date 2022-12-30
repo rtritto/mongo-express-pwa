@@ -4,7 +4,7 @@ const LOG = Math.log(K)
 
 // Given some size in bytes, returns it in a converted, friendly size
 // credits: http://stackoverflow.com/users/1596799/aliceljm
-export const bytesToSize = function bytesToSize(bytes: number) {
+export const bytesToSize = (bytes: number) => {
   if (bytes === 0) return '0 Byte'
   const i = Math.floor(Math.log(bytes) / LOG)
   // eslint-disable-next-line no-restricted-properties
@@ -56,7 +56,7 @@ export const deepmerge = (target: Array<object> | object, src: Array<object> | o
   return deepmergeObject(target as object, src as object)
 }
 
-const recurse = function (value: any, objectList: object[]) {
+const recurse = (value: any, objectList: object[]) => {
   let bytes = 0
 
   if (typeof value === 'boolean') {
@@ -83,6 +83,6 @@ export const roughSizeOfObject = (value: any) => {
   return recurse(value, objectList)
 }
 
-export const addHyphensToUUID = function (hex: string) {
+export const addHyphensToUUID = (hex: string) => {
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`
 }

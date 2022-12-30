@@ -7,6 +7,7 @@ import StatsTable from 'components/Custom/StatsTable.tsx'
 import { EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
 import * as queries from 'lib/queries.ts'
+import { bytesToSize, roughSizeOfObject } from 'lib/utils.ts'
 import type { getCtxType } from 'lib/mapStats.ts'
 
 declare interface Params extends ParsedUrlQuery {
@@ -121,30 +122,30 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
         for (const i in items) {
           // Prep items with stubs so as not to send large info down the wire
           for (const prop in items[i]) {
-            if (utils.roughSizeOfObject(items[i][prop]) > process.env.config.options.maxPropSize) {
+            if (roughSizeOfObject(items[i][prop]) > process.env.config.options.maxPropSize) {
               items[i][prop] = {
                 attribu: prop,
                 display: '*** LARGE PROPERTY ***',
-                humanSz: utils.bytesToSize(utils.roughSizeOfObject(items[i][prop])),
-                maxSize: utils.bytesToSize(process.env.config.options.maxPropSize),
+                humanSz: bytesToSize(roughSizeOfObject(items[i][prop])),
+                maxSize: bytesToSize(process.env.config.options.maxPropSize),
                 preview: JSON.stringify(items[i][prop]).slice(0, 25),
-                roughSz: utils.roughSizeOfObject(items[i][prop]),
+                roughSz: roughSizeOfObject(items[i][prop]),
                 _id: items[i]._id
               }
             }
           }
 
           // If after prepping the row is still too big
-          if (utils.roughSizeOfObject(items[i]) > process.env.config.options.maxRowSize) {
+          if (roughSizeOfObject(items[i]) > process.env.config.options.maxRowSize) {
             for (const prop in items[i]) {
-              if (prop !== '_id' && utils.roughSizeOfObject(items[i][prop]) > 200) {
+              if (prop !== '_id' && roughSizeOfObject(items[i][prop]) > 200) {
                 items[i][prop] = {
                   attribu: prop,
                   display: '*** LARGE ROW ***',
-                  humanSz: utils.bytesToSize(utils.roughSizeOfObject(items[i][prop])),
-                  maxSize: utils.bytesToSize(process.env.config.options.maxRowSize),
+                  humanSz: bytesToSize(roughSizeOfObject(items[i][prop])),
+                  maxSize: bytesToSize(process.env.config.options.maxRowSize),
                   preview: JSON.stringify(items[i][prop]).slice(0, 25),
-                  roughSz: utils.roughSizeOfObject(items[i][prop]),
+                  roughSz: roughSizeOfObject(items[i][prop]),
                   _id: items[i]._id
                 }
               }
