@@ -19,7 +19,7 @@ const BoxStyle = {
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
-}
+} as const
 
 declare interface DeleteModalBoxProps {
   value: string

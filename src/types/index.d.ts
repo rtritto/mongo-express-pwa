@@ -23,7 +23,7 @@ declare type Info = import('mongodb').Document
 declare interface Fields {
   [key: string]: {
     label: string
-    value: string | null
+    value: string | false
   }
 }
 
@@ -41,4 +41,19 @@ interface Connection {
   dbName: string
   fullName: string
   db: import('mongodb').Db
+}
+
+declare type Mongo = {
+  clients: Array<ClientInfo>
+  collections?: Object<string, Array<string>>
+  connections?: Object<string, Array<Connection>>
+  // gridFSBuckets?  TODO
+  mainClient?: {
+    adminDb?: Admin | undefined
+  }
+  addConnection: (info: ClientInfo, db: Db, dbName: string) => Connection
+  getDatabases: () => Array<string>
+  updateCollections: (dbConnection: Connection) => Promise<void>
+  updateDatabases: () => Promise<void>
+  connect: (config: Config) => Promise<Mongo>
 }

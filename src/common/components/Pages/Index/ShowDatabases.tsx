@@ -6,7 +6,7 @@ import { Visibility } from 'common/SvgIcons.mts'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import CreateDatabase from 'components/Pages/Index/CreateDatabase.tsx'
-import { selectedDbState } from 'store/globalAtoms.mts'
+import { selectedDatabaseState } from 'store/globalAtoms.mts'
 
 const tooltipTitle = 'Warning! Are you sure you want to delete this database? All collections and documents will be deleted.'
 
@@ -33,7 +33,7 @@ const handleDelete = async (database: string) => {
 }
 
 const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
-  const setSelectedDbState = useSetRecoilState(selectedDbState)
+  const setselectedDatabaseState = useSetRecoilState(selectedDatabaseState)
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -96,7 +96,7 @@ const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
                       justifyContent: 'flex-start',
                       textTransform: 'none' /* remove uppercase */
                     }}
-                    onClick={() => setSelectedDbState(database)}
+                    onClick={() => setselectedDatabaseState(database)}
                   >
                     <Typography component='h6' variant='h6'>{database}</Typography>
                   </CustomLink>

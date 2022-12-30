@@ -1,9 +1,9 @@
 import { EP_DB } from 'configs/endpoints.ts'
 import SelectLink from 'components/Custom/SelectLink.tsx'
-import { selectedDbState } from 'store/globalAtoms.mts'
+import { selectedDatabaseState } from 'store/globalAtoms.mts'
 
 declare interface NavDatabasesProps {
-  databases: ReqType.databases
+  databases: ReqType['databases']
 }
 
 const NavDatabases = ({ databases }: NavDatabasesProps) => {
@@ -12,7 +12,7 @@ const NavDatabases = ({ databases }: NavDatabasesProps) => {
       baseUrl={EP_DB}
       entities={databases}
       label="Database"
-      selectedState={selectedDbState}
+      selectedState={selectedDatabaseState}
     />
   )
 }

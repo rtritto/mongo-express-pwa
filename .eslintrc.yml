@@ -1,0 +1,31 @@
+env:
+  browser: true
+  es2022: true
+  node: true
+extends:
+  - eslint:recommended
+  - plugin:unicorn/all
+  - plugin:@typescript-eslint/recommended
+  - next
+parser: '@typescript-eslint/parser'
+parserOptions:
+  ecmaFeatures:
+    jsx: true
+  ecmaVersion: 2022
+  sourceType: module
+plugins:
+  - '@typescript-eslint'
+root: true
+rules:
+  # 0 = "off"
+  # 1 = "warn"
+  # 2 = "error"
+
+  #region eslint
+  indent: [2, 2, { SwitchCase: 1 }]
+  #endregion
+
+  #region eslint-plugin-unicorn
+  unicorn/filename-case: 0
+  unicorn/prevent-abbreviations: 0
+  #endregion

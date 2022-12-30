@@ -9,13 +9,24 @@ import createEmotionCache from 'common/createEmotionCache.mts'
 import theme from 'common/Theme.mts'
 import NavBar from 'components/Nav/NavBar.tsx'
 import { setConnection } from 'middlewares/connection.mts'
-import { selectedCollectionState, selectedDbState } from 'store/globalAtoms.mts'
+import { selectedCollectionState, selectedDatabaseState } from 'store/globalAtoms.mts'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
-function MyApp(props: AppProps) {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+declare interface MyAppProps extends AppProps {
+  collections: ReqType['collections']
+  databases: ReqType['databases']
+}
+
+function MyApp(props: MyAppProps) {
+  const {
+    collections,
+    databases,
+    Component,
+    emotionCache = clientSideEmotionCache,
+    pageProps
+  } = props
   // const router = useRouter()
 
   // useEffect(() => {
@@ -40,7 +51,7 @@ function MyApp(props: AppProps) {
       key="init"
       initializeState={({ set }) => {
         if ('dbName' in props) {
-          set(selectedDbState, props.dbName)
+          set(selectedDatabaseState, props.dbName)
         }
         if ('collectionName' in props) {
           set(selectedCollectionState, props.collectionName)
@@ -56,8 +67,8 @@ function MyApp(props: AppProps) {
           <CssBaseline />
 
           <NavBar
-            collections={props.collections}
-            databases={props.databases}
+            collections={collections}
+            databases={databases}
             show={{ collections: 'collectionName' in props }}
           />
 
@@ -69,7 +80,7 @@ function MyApp(props: AppProps) {
 }
 
 MyApp.getInitialProps = async ({ router /* or ctx.req */ }) => {
-  const mongo = setConnection()
+  setConnection()
 
   // if (mongo.adminDb) {
   //   const rawInfo = await mongo.adminDb.serverStatus()

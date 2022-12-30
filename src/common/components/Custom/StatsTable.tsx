@@ -15,15 +15,15 @@ const getRowsComponent = (fields: Fields) => {
     }
   }
   const out = []
-  for (let i = 0, len = outRaw.length; i < len; i = i + 2) {
+  for (let index = 0, length_ = outRaw.length; index < length_; index += 2) {
     const tableRow = [
-      ...outRaw[i],
-      ...i + 1 < len
-        ? [...outRaw[i + 1]]
-        : []
+      ...outRaw[index]
     ]
+    if (index + 1 < length_) {
+      tableRow.push(...outRaw[index + 1])
+    }
     out.push(
-      <TableRow key={`row${i}`}>
+      <TableRow key={`row${index}`}>
         {tableRow}
       </TableRow>
     )

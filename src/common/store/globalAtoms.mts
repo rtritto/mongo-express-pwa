@@ -1,7 +1,7 @@
 import { atom } from 'recoil'
 
-export const selectedDbState = atom({
-  key: 'selectedDbState',
+export const selectedDatabaseState = atom({
+  key: 'selectedDatabaseState',
   default: ''
 })
 

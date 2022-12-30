@@ -1,6 +1,6 @@
 export const EP_DB = '/db'
-export const EP_DATABASE = (db: string) => `${EP_DB}/${db}`
-export const EP_DATABASE_COLLECTION = (db: string, collection: string) => `${EP_DB}/${db}/${collection}`
-export const EP_EXPORT_COLLECTION = (db: string, collection: string) => `${EP_DB}/${db}/export/${collection}`
-export const EP_EXPORT_ARRAY_COLLECTION = (db: string, collection: string) => `${EP_DB}/${db}/exportArray/${collection}`
-export const EP_IMPORT_COLLECTION = (db: string, collection: string) => `${EP_DB}/${db}/import/${collection}`
+export const EP_DATABASE = (database: string) => `${EP_DB}/${database}`
+export const EP_DATABASE_COLLECTION = (database: string, collection: string) => `${EP_DB}/${database}/${collection}`
+export const EP_EXPORT_COLLECTION = (database: string, collection: string) => `${EP_DB}/${database}/export/${collection}`
+export const EP_EXPORT_ARRAY_COLLECTION = (database: string, collection: string) => `${EP_DB}/${database}/exportArray/${collection}`
+export const EP_IMPORT_COLLECTION = (database: string, collection: string) => `${EP_DB}/${database}/import/${collection}`
