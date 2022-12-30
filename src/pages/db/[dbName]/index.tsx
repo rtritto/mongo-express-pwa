@@ -5,7 +5,7 @@ import { ParsedUrlQuery } from 'querystring'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
-import { getCtx } from 'utils/mapFuncs.ts'
+import { getCtx, getCtxType } from 'utils/mapStats.ts'
 
 const destination = '/'
 
@@ -14,7 +14,7 @@ declare interface Params extends ParsedUrlQuery {
 }
 
 declare interface DatabasePageProps {
-  ctx: ReturnType<typeof getCtx>
+  ctx: getCtxType
   dbName: string
   messageError: string | null
   options: {

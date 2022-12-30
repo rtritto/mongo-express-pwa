@@ -6,8 +6,8 @@ import { ParsedUrlQuery } from 'querystring'
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import { EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'utils/bson.ts'
-import * as mapFuncs from 'utils/mapFuncs.ts'
 import * as queries from 'utils/queries.ts'
+import type { getCtxType } from 'utils/mapStats.ts'
 
 declare interface Params extends ParsedUrlQuery {
   collectionName: string
@@ -16,7 +16,7 @@ declare interface Params extends ParsedUrlQuery {
 
 declare interface DatabasePageProps {
   collectionName: string
-  ctx: ReturnType<typeof mapFuncs.getCtx>
+  ctx: getCtxType
   messageError: string | null
   options: {
     noDelete: boolean
