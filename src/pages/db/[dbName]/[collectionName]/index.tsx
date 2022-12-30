@@ -7,6 +7,7 @@ import StatsTable from 'components/Custom/StatsTable.tsx'
 import { EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
 import * as queries from 'lib/queries.ts'
+// TODO move utils import and related logic that use it to lib/map
 import { bytesToSize, roughSizeOfObject } from 'lib/utils.ts'
 import type { getCtxType } from 'lib/mapStats.ts'
 
@@ -64,7 +65,7 @@ const CollectionPage = ({ ctx, collectionName, messageError, options, title }: D
 
         {/* TODO Create GridFS Bucket */}
 
-        {/* <StatsTable label="" fields={ctx.stats} /> */}
+        <StatsTable label="Collection Stats" fields={ctx.stats} />
       </Container>
     </div>
   )
@@ -170,40 +171,32 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
         const { limit, skip, sort } = queryOptions
         const pagination = count > limit
 
-        // determine default key
-        const defaultKey = (process.env.config.defaultKeyNames[dbName] && process.env.config.defaultKeyNames[dbName][collectionName])
-          ? process.env.config.defaultKeyNames[dbName][collectionName]
-          : '_id'
-
-        // const ctx = {
-        //   title: 'Viewing Collection: ' + req.collectionName,
-        //   documents: items, // Docs converted to strings
-        //   docs,       // Original docs
-        //   columns, // All used columns
-        //   count, // total number of docs returned by the query
-        //   stats,
-        //   editorTheme: config.options.editorTheme,
-        //   limit,
-        //   skip,
-        //   sort,
-        //   pagination,
-        //   key: reqQuery.key,
-        //   value: reqQuery.value,
-        //   // value: type === 'O' ? ['ObjectId("', value, '")'].join('') : value,
-        //   type: reqQuery.type,
-        //   query: reqQuery.query,
-        //   projection: reqQuery.projection,
-        //   runAggregate: reqQuery.runAggregate === 'on',
-        //   defaultKey,
-        //   edKey,
-        //   indexes
-        // }
+        const ctx = {
+          title: `Viewing Collection: ${collectionName}`,
+          // documents: items, // Docs converted to strings
+          // docs,       // Original docs
+          columns, // All used columns
+          count, // total number of docs returned by the query
+          // stats,
+          editorTheme: process.env.config.options.editorTheme,
+          // limit,
+          // skip,
+          // sort,
+          pagination,
+          // key: reqQuery.key,
+          // value: reqQuery.value,  // value: type === 'O' ? ['ObjectId("', value, '")'].join('') : value,
+          // type: reqQuery.type,
+          // query: reqQuery.query,
+          // projection: reqQuery.projection,
+          runAggregate: reqQuery.runAggregate === 'on',
+          indexes
+        }
         const { messageError } = global.session
         delete global.session.messageError
 
         return {
           props: {
-            // ctx,
+            ctx,
             // dbName,
             collectionName,
             ...messageError !== undefined && { messageError },
