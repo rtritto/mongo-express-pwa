@@ -11,6 +11,51 @@ export const bytesToSize = function bytesToSize(bytes: number) {
   return (bytes / (K ** i)).toPrecision(3) + ' ' + SIZES[i]
 }
 
+const deepmergeArray = (target: Array<object>, src: Array<object>) => {
+  const dst = [...(target || [])]
+  for (const [i, e] of src.entries()) {
+    if (dst[i] === undefined) {
+      dst[i] = e
+    } else if (typeof e === 'object') {
+      dst[i] = deepmerge(target[i], e)
+    } else if (!target.includes(e)) {
+      dst.push(e)
+    }
+  }
+  return dst
+}
+
+interface IObject {
+  [key: string]: any
+}
+
+const deepmergeObject = (target: IObject, src: IObject) => {
+  const dst: IObject = {}
+  if (target && typeof target === 'object') {
+    for (const key of Object.keys(target)) {
+      dst[key as keyof IObject] = target[key]
+    }
+  }
+  for (const key of Object.keys(src)) {
+    if (typeof src[key] !== 'object' || !src[key]) {
+      dst[key] = src[key]
+    } else if (target[key]) {
+      dst[key] = deepmerge(target[key], src[key])
+    } else {
+      dst[key] = src[key]
+    }
+  }
+  return dst
+}
+
+export const deepmerge = (target: Array<object> | object, src: Array<object> | object) => {
+  if (Array.isArray(src)) {
+    return deepmergeArray(target as Array<object>, src as Array<object>)
+  }
+
+  return deepmergeObject(target as object, src as object)
+}
+
 const recurse = function (value: any, objectList: object[]) {
   let bytes = 0
 
@@ -32,8 +77,12 @@ const recurse = function (value: any, objectList: object[]) {
   return bytes
 }
 
-export const roughSizeOfObject = function (value: any) {
+export const roughSizeOfObject = (value: any) => {
   const objectList: object[] = []
 
   return recurse(value, objectList)
+}
+
+export const addHyphensToUUID = function (hex: string) {
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`
 }
