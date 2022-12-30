@@ -7,13 +7,11 @@ const loadOptions = {
 }
 
 const { default: configDefault } = loadSync('config.default.mts', loadOptions)
-const { connect } = loadSync('src/middlewares/db.mts', loadOptions)
+loadSync('src/middlewares/db.mts', loadOptions)
 
 // const isDev = process.env.NODE_ENV === 'development'
 
-// const mongodb = 
-await connect(configDefault)
-console.log('connect OK');
+await global.mongo.connect(configDefault)
 
 // init session
 global.session = {}
@@ -22,7 +20,6 @@ global.session = {}
 const nextConfig = {
   env: {
     config: configDefault,
-    // mongodb
   },
   reactStrictMode: true,
   swcMinify: true,

@@ -15,7 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const ndb = global.req.mainClient.client.db(name)
 
       await ndb.createCollection('delete_me').then(async () => {
-        await req.updateDatabases().then(() => {
+        await global.mongo.updateDatabases().then(() => {
           res.redirect(res.locals.baseHref)
         })
 

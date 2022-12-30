@@ -21,9 +21,11 @@ declare global {
     mainClient?: {
       adminDb?: Admin | undefined
     }
+    addConnection: (info: ClientInfo, db: Db, dbName: string) => Connection
     getDatabases: () => Array<string>
     updateCollections: (dbConnection: Connection) => Promise<void>
     updateDatabases: () => Promise<void>
+    connect: (config: Config) => Promise  // TODO globalThis.mongo not work
   }
   var req: ReqType
   var session: {
