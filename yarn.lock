@@ -6409,6 +6409,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lib@link:./src/lib::locator=mongo-express-pwa%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "lib@link:./src/lib::locator=mongo-express-pwa%40workspace%3A."
+  languageName: node
+  linkType: soft
+
 "lines-and-columns@npm:^1.1.6":
   version: 1.2.4
   resolution: "lines-and-columns@npm:1.2.4"
@@ -6798,6 +6804,7 @@ __metadata:
     eslint-import-resolver-typescript: "npm:^3.5.2"
     eslint-plugin-import: "npm:^2.26.0"
     eslint-plugin-unicorn: "npm:^45.0.2"
+    lib: "link:./src/lib"
     middlewares: "link:./src/middlewares"
     mongodb: "npm:^4.13.0"
     mongodb-query-parser: "npm:^2.4.6"
@@ -6812,7 +6819,6 @@ __metadata:
     store: "link:./src/common/store"
     ts-import: "npm:^4.0.0-beta.10"
     typescript: "npm:^4.9.4"
-    utils: "link:./src/utils"
   languageName: unknown
   linkType: soft
 
@@ -8879,12 +8885,6 @@ __metadata:
   checksum: 6a88ed8344d07f2324b304ee36def365d967953b5a9c15baa3213eb3909e86a7da1ee70a4c2133e80c23d6c1987590e9c3c57d874e20a124f9e41620b462fa57
   languageName: node
   linkType: hard
-
-"utils@link:./src/utils::locator=mongo-express-pwa%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "utils@link:./src/utils::locator=mongo-express-pwa%40workspace%3A."
-  languageName: node
-  linkType: soft
 
 "uuid@npm:^8.3.2":
   version: 8.3.2

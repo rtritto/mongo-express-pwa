@@ -5,7 +5,7 @@ import { ParsedUrlQuery } from 'querystring'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
-import { getCtx, getCtxType } from 'utils/mapStats.ts'
+import { getCtx, getCtxType } from 'lib/mapStats.ts'
 
 const destination = '/'
 

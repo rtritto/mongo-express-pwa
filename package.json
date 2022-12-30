@@ -17,6 +17,7 @@
     "components": "link:./src/common/components",
     "config.default.mts": "link:./config.default.mts",
     "configs": "link:./src/configs",
+    "lib": "link:./src/lib",
     "middlewares": "link:./src/middlewares",
     "mongodb": "^4.13.0",
     "mongodb-query-parser": "^2.4.6",
@@ -29,8 +30,7 @@
     "recoil": "^0.7.6",
     "recoil-persist": "^4.2.0",
     "store": "link:./src/common/store",
-    "ts-import": "^4.0.0-beta.10",
-    "utils": "link:./src/utils"
+    "ts-import": "^4.0.0-beta.10"
   },
   "devDependencies": {
     "@babel/core": "^7.20.7",

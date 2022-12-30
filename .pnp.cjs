@@ -49,6 +49,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-import-resolver-typescript", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:3.5.2"],\
           ["eslint-plugin-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.26.0"],\
           ["eslint-plugin-unicorn", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:45.0.2"],\
+          ["lib", "link:./src/lib::locator=mongo-express-pwa%40workspace%3A."],\
           ["middlewares", "link:./src/middlewares::locator=mongo-express-pwa%40workspace%3A."],\
           ["mongodb", "npm:4.13.0"],\
           ["mongodb-query-parser", "npm:2.4.6"],\
@@ -62,8 +63,7 @@ const RAW_RUNTIME_STATE =
           ["recoil-persist", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.2.0"],\
           ["store", "link:./src/common/store::locator=mongo-express-pwa%40workspace%3A."],\
           ["ts-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.0.0-beta.10"],\
-          ["typescript", "patch:typescript@npm%3A4.9.4#optional!builtin<compat/typescript>::version=4.9.4&hash=ad5954"],\
-          ["utils", "link:./src/utils::locator=mongo-express-pwa%40workspace%3A."]\
+          ["typescript", "patch:typescript@npm%3A4.9.4#optional!builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -8543,6 +8543,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["lib", [\
+      ["link:./src/lib::locator=mongo-express-pwa%40workspace%3A.", {\
+        "packageLocation": "./src/lib/",\
+        "packageDependencies": [\
+          ["lib", "link:./src/lib::locator=mongo-express-pwa%40workspace%3A."]\
+        ],\
+        "linkType": "SOFT",\
+        "discardFromLookup": true\
+      }]\
+    ]],\
     ["lines-and-columns", [\
       ["npm:1.2.4", {\
         "packageLocation": "../../Users/Computer/AppData/Local/Yarn/Berry/cache/lines-and-columns-npm-1.2.4-d6c7cc5799-9.zip/node_modules/lines-and-columns/",\
@@ -8982,6 +8992,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-import-resolver-typescript", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:3.5.2"],\
           ["eslint-plugin-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.26.0"],\
           ["eslint-plugin-unicorn", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:45.0.2"],\
+          ["lib", "link:./src/lib::locator=mongo-express-pwa%40workspace%3A."],\
           ["middlewares", "link:./src/middlewares::locator=mongo-express-pwa%40workspace%3A."],\
           ["mongodb", "npm:4.13.0"],\
           ["mongodb-query-parser", "npm:2.4.6"],\
@@ -8995,8 +9006,7 @@ const RAW_RUNTIME_STATE =
           ["recoil-persist", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.2.0"],\
           ["store", "link:./src/common/store::locator=mongo-express-pwa%40workspace%3A."],\
           ["ts-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.0.0-beta.10"],\
-          ["typescript", "patch:typescript@npm%3A4.9.4#optional!builtin<compat/typescript>::version=4.9.4&hash=ad5954"],\
-          ["utils", "link:./src/utils::locator=mongo-express-pwa%40workspace%3A."]\
+          ["typescript", "patch:typescript@npm%3A4.9.4#optional!builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -11398,16 +11408,6 @@ const RAW_RUNTIME_STATE =
           ["util-deprecate", "npm:1.0.2"]\
         ],\
         "linkType": "HARD"\
-      }]\
-    ]],\
-    ["utils", [\
-      ["link:./src/utils::locator=mongo-express-pwa%40workspace%3A.", {\
-        "packageLocation": "./src/utils/",\
-        "packageDependencies": [\
-          ["utils", "link:./src/utils::locator=mongo-express-pwa%40workspace%3A."]\
-        ],\
-        "linkType": "SOFT",\
-        "discardFromLookup": true\
       }]\
     ]],\
     ["uuid", [\

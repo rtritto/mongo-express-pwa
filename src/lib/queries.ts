@@ -1,5 +1,5 @@
 import mongodb from 'mongodb'
-import * as bson from './bson.ts'
+import * as bson from './bson.ts.js'
 
 declare interface QueryParameter {
   // mongodb

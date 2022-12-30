@@ -3,7 +3,7 @@ import Head from 'next/head.js'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
-import { mapMongoDBInfoForTable } from 'utils/mapStats.ts'
+import { mapMongoDBInfoForTable } from 'lib/mapStats.ts'
 
 interface IndexProps {
   databases: string[]

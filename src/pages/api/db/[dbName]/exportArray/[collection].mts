@@ -1,5 +1,5 @@
-import * as bson from 'utils/bson.ts'
-import * as queries from 'utils/queries.ts'
+import * as bson from 'lib/bson.ts'
+import * as queries from 'lib/queries.ts'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

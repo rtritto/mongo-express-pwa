@@ -5,9 +5,9 @@ import { ParsedUrlQuery } from 'querystring'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import { EP_DATABASE } from 'configs/endpoints.ts'
-import * as bson from 'utils/bson.ts'
-import * as queries from 'utils/queries.ts'
-import type { getCtxType } from 'utils/mapStats.ts'
+import * as bson from 'lib/bson.ts'
+import * as queries from 'lib/queries.ts'
+import type { getCtxType } from 'lib/mapStats.ts'
 
 declare interface Params extends ParsedUrlQuery {
   collectionName: string

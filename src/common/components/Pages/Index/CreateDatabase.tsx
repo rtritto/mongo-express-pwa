@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form'
 
 import { EP_DB } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
-import * as validators from 'utils/validations.ts'
+import * as validators from 'lib/validations.ts'
 
 const CreateDatabase = () => {
   const [database, setDatabase] = useState<string>('')

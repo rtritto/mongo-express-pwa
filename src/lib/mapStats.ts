@@ -1,4 +1,4 @@
-import { bytesToSize } from 'utils/mapFuncs.ts'
+import { bytesToSize } from 'lib/mapFuncs.ts'
 
 // TODO add global lock time stats and replica set stats
 export const mapMongoDBInfoForTable = (info: Info) => ({
