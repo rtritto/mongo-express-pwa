@@ -5,7 +5,7 @@ import { ParsedUrlQuery } from 'querystring'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
-import { getCtx, getCtxType } from 'lib/mapStats.ts'
+import { getDatabaseStats } from 'lib/mapStats.ts'
 
 const destination = '/'
 
@@ -14,7 +14,7 @@ declare interface Params extends ParsedUrlQuery {
 }
 
 declare interface DatabasePageProps {
-  ctx: getCtxType
+  collections: Collections
   dbName: string
   messageError: string | null
   options: {
@@ -22,10 +22,11 @@ declare interface DatabasePageProps {
     noExport: boolean
     readOnly: boolean
   }
+  stats: ReturnType<typeof getDatabaseStats>
   title: string
 }
 
-const DatabasePage = ({ ctx, dbName, messageError, options, title }: DatabasePageProps) => {
+const DatabasePage = ({ collections, dbName, messageError, options, stats, title }: DatabasePageProps) => {
   const { noDelete, noExport, readOnly } = options
   return (
     <div>
@@ -49,7 +50,7 @@ const DatabasePage = ({ ctx, dbName, messageError, options, title }: DatabasePag
         <Divider sx={{ border: 1, my: 1.5 }} />
 
         <ShowCollections
-          collections={ctx.collections}
+          collections={collections}
           database={dbName}
           show={{
             create: readOnly === false,
@@ -62,13 +63,13 @@ const DatabasePage = ({ ctx, dbName, messageError, options, title }: DatabasePag
 
         {/* TODO Create GridFS Bucket */}
 
-        <StatsTable label="Database Stats" fields={ctx.stats} />
+        <StatsTable label="Database Stats" fields={stats} />
       </Container>
     </div>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params, query, req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { dbName } = params as Params
 
   // Make sure database exists
@@ -82,17 +83,19 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, re
 
       try {
         const data = await global.mongo.connections[dbName].db.stats()
-        const ctx = getCtx(data, dbName)
+        const stats = getDatabaseStats(data, dbName)
 
         const { messageError } = global.session
         delete global.session.messageError
 
         return {
           props: {
-            ctx,
+            collections: global.mongo.collections[dbName],
             dbName,
+            // TODO grids: global.mongo.gridFSBuckets[dbName],
             ...messageError !== undefined && { messageError },
             options: process.env.config.options,
+            stats,
             title: `${dbName} - Mongo Express`
           }
         }

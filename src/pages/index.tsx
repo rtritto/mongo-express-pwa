@@ -3,7 +3,7 @@ import Head from 'next/head.js'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
-import { mapMongoDBInfoForTable } from 'lib/mapStats.ts'
+import { getServerStatus } from 'lib/mapStats.ts'
 
 interface IndexProps {
   databases: string[]
@@ -12,7 +12,7 @@ interface IndexProps {
     noDelete: boolean
     readOnly: boolean
   }
-  stats?: ReturnType<typeof mapMongoDBInfoForTable>
+  stats?: ReturnType<typeof getServerStatus>
   title: string
 }
 
@@ -72,7 +72,7 @@ export async function getServerSideProps() {
 
   if (global.mongo.adminDb !== null) {
     const rawInfo = await global.mongo.adminDb.serverStatus()
-    props.stats = mapMongoDBInfoForTable(rawInfo)
+    props.stats = getServerStatus(rawInfo)
     // global.stats = stats
   }
 

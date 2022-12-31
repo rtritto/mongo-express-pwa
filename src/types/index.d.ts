@@ -1,52 +1,110 @@
-// import type { MongoDb } from 'config.default.mts'
-// import type { Db as MongoDbDb } from 'mongodb'
-// export declare type Db = MongoDbDb
-// import type { MongoClient } from 'mongodb';
+type Admin = import('mongodb').Admin
+type MongoClient = import('mongodb').MongoClient
+type Document = import('mongodb').Document
+type Db = import('mongodb').Db
 
-// class Db from import('mongodb').Db { }
+// https://www.mongodb.com/docs/manual/reference/command/serverStatus
+type Info = Document & {
+  host: string
+  version: string
+  uptime: number
+  localTime: Date
+  connections: {
+    current: number
+    available: number
+  }
+  globalLock: {
+    activeClients: {
+      readers: number
+      total: number
+      writers: number
+    }
+    currentQueue: {
+      readers: number
+      total: number
+      writers: number
+    }
+  }
+  opcounters: {
+    insert: number
+    query: number
+    update: number
+    delete: number
+  }
+  // deprecated
+  backgroundFlushing: {
+    flushes: number
+    last_finished: Date
+    total_ms: number
+    average_ms: number
+  }
+}
 
-// declare class Db extends import('mongodb').Db { }
+// https://www.mongodb.com/docs/manual/reference/command/dbStats
+interface DbStats extends Document {
+  db: string
+  collections: number
+  view: number
+  objects: number
+  avgObjSize: number // float
+  dataSize: number
+  storageSize: number
+  freeStorageSize: number
+  indexes: number
+  indexSize: number
+  indexFreeStorageSize: number
+  totalSize: number
+  totalFreeStorageSize: number
+  scaleFactor: number
+  fsUsedSize: number
+  fsTotalSize: number
+  ok: number
+  // deprecated from some MongoDB versions
+  fileSize: number
+  dataFileVersion: {
+    major: number
+    minor: number
+  }
+  extentFreeList: {
+    num: number
+  }
+  numExtents: number
+}
 
-// Db = typeof import('mongodb').Db
-
-// interface ConnectionInfo {
-//   connectionString
-//   connectionName
-//   admin
-//   connectionOptions
-//   blacklist: Array<string>
-//   whitelist: Array<string>
-// }
-
-declare type Info = import('mongodb').Document
-
-declare interface Fields {
-  [key: string]: {
+interface Fields {
+  [field: string]: {
     label: string
-    value: string | false
+    value: string | null
   }
 }
 
 // type of connections<connectionInfo> or clients<{info}>
 interface ClientInfo {
   connectionName: string
-  client: import('mongodb').MongoClient
-  adminDb: import('mongodb').Admin | null
+  client: MongoClient
+  adminDb: Admin | null
   info: import('config.default.mts').MongoDb
 }
 
+interface Collections {
+  [dbName: string]: Array<string>
+}
 
 interface Connection {
   info: ClientInfo
   dbName: string
   fullName: string
-  db: import('mongodb').Db
+  db: Db
 }
 
-declare type Mongo = {
+interface Connections {
+  [key: string]: Connection
+}
+
+type Mongo = {
   clients: Array<ClientInfo>
-  collections: Object<string, Array<string>>
-  connections: Object<string, Connection>
+  collections: Collections
+  connections: Connections
   databases: Array<string>
   // gridFSBuckets?  TODO
   mainClient: ClientInfo | null
