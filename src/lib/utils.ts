@@ -1,6 +1,17 @@
-const SIZES = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 const K = 1000
 const LOG = Math.log(K)
+const BYTES_MAP = {
+  Bytes: 1024,
+  KB: 1024 * 1024,
+  MB: 1024 * 1024 * 1024,
+  GB: 1024 * 1024 * 1024 * 1024,
+  TB: 1024 * 1024 * 1024 * 1024 * 1024,
+  PB: 1024 * 1024 * 1024 * 1024 * 1024 * 1024,
+  EB: 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024,
+  ZB: 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024,
+  YB: 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024,
+} as const
+const SIZES = Object.keys(BYTES_MAP)
 
 // Given some size in bytes, returns it in a converted, friendly size
 // credits: http://stackoverflow.com/users/1596799/aliceljm
@@ -9,6 +20,41 @@ export const bytesToSize = (bytes: number) => {
   const i = Math.floor(Math.log(bytes) / LOG)
   // eslint-disable-next-line no-restricted-properties
   return (bytes / (K ** i)).toPrecision(3) + ' ' + SIZES[i]
+}
+
+export const convertBytes = (input: number | undefined) => {
+  if (input === undefined) {
+    return '0 Byte'
+  }
+  if (input < BYTES_MAP.Bytes) {
+    return `${input} Bytes`
+  }
+  if (input < BYTES_MAP.KB) {
+    // Convert to KB and keep 2 decimal values
+    return `${Math.round((input / BYTES_MAP.Bytes) * 100) / 100} KB`
+  }
+  if (input < BYTES_MAP.MB) {
+    return `${Math.round((input / BYTES_MAP.KB) * 100) / 100} MB`
+  }
+  if (input < BYTES_MAP.GB) {
+    return `${Math.round((input / BYTES_MAP.MB) * 100) / 100} GB`
+  }
+  if (input < BYTES_MAP.TB) {
+    return `${Math.round((input / BYTES_MAP.GB) * 100) / 100} TB`
+  }
+  if (input < BYTES_MAP.PB) {
+    return `${Math.round((input / BYTES_MAP.TB) * 100) / 100} PB`
+  }
+  if (input < BYTES_MAP.EB) {
+    return `${Math.round((input / BYTES_MAP.PB) * 100) / 100} EB`
+  }
+  if (input < BYTES_MAP.ZB) {
+    return `${Math.round((input / BYTES_MAP.EB) * 100) / 100} ZB`
+  }
+  if (input < BYTES_MAP.YB) {
+    return `${Math.round((input / BYTES_MAP.ZB) * 100) / 100} YB`
+  }
+  return `${input} Bytes`
 }
 
 const deepmergeArray = (target: Array<object>, src: Array<object>) => {

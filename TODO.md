@@ -1,4 +1,9 @@
 - handle PORT as env var
 - handle additional config.mts
 - change Link to router
-- convert ts to mts
+- deprecated status/stats fields that aren't in doc should they be removed?
+- Typescript:
+  - convert files .ts to .mts
+  - understand use Type vs Interface https://stackoverflow.com/questions/37233735/interfaces-vs-types-in-typescript
+  - understand declare statement use
+- collection.indexes isn't in doc, it should be replaced with collection.listIndexes?

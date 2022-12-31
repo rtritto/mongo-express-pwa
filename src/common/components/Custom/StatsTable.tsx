@@ -3,16 +3,14 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 const getRowsComponent = (fields: Fields) => {
   const outRaw = []
   for (const cell in fields) {
-    if (fields[cell].value) {
-      outRaw.push([
-        <TableCell key={`cellName${cell}`}>
-          <strong>{fields[cell].label}</strong>
-        </TableCell>,
-        <TableCell key={`cellValue${cell}`} id={cell}>
-          {fields[cell].value}
-        </TableCell>
-      ])
-    }
+    outRaw.push([
+      <TableCell key={`cellName${cell}`}>
+        <strong>{fields[cell].label}</strong>
+      </TableCell>,
+      <TableCell key={`cellValue${cell}`} id={cell}>
+        {fields[cell].value}
+      </TableCell>
+    ])
   }
   const out = []
   for (let index = 0, length_ = outRaw.length; index < length_; index += 2) {

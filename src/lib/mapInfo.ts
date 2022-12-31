@@ -1,4 +1,4 @@
-import { bytesToSize } from 'lib/utils.ts'
+import { bytesToSize, convertBytes } from 'lib/utils.ts'
 
 // TODO add global lock time stats and replica set stats
 export const mapServerStatus = (serverStatus: ServerStatus) => ({
@@ -66,28 +66,28 @@ export const mapServerStatus = (serverStatus: ServerStatus) => ({
       }
     }
   },
-  /* deprecated */ ...'backgroundFlushing' in serverStatus && {
+  /* deprecated? */ ...'backgroundFlushing' in serverStatus && {
     diskFlushes: {
       label: 'Disk Flushes',
       value: serverStatus.backgroundFlushing.flushes
     },
-    lastFlush: {
-      label: 'Last Flush',
-      value: 'last_finished' in serverStatus.backgroundFlushing
-        ? serverStatus.backgroundFlushing.last_finished.toDateString()
-        : null
+    ...'last_finished' in serverStatus.backgroundFlushing && {
+      lastFlush: {
+        label: 'Last Flush',
+        value: serverStatus.backgroundFlushing.last_finished.toDateString()
+      }
     },
-    timeSpentFlushing: {
-      label: 'Time Spent Flushing',
-      value: 'total_ms' in serverStatus.backgroundFlushing
-        ? `${serverStatus.backgroundFlushing.total_ms} ms`
-        : null
+    ...'total_ms' in serverStatus.backgroundFlushing && {
+      timeSpentFlushing: {
+        label: 'Time Spent Flushing',
+        value: `${serverStatus.backgroundFlushing.total_ms} ms`
+      }
     },
-    averageFlushTime: {
-      label: 'Average Flush Time',
-      value: 'average_ms' in serverStatus.backgroundFlushing
-        ? `${serverStatus.backgroundFlushing.average_ms} ms`
-        : null
+    ...'average_ms' in serverStatus.backgroundFlushing && {
+      averageFlushTime: {
+        label: 'Average Flush Time',
+        value: `${serverStatus.backgroundFlushing.average_ms} ms`
+      }
     }
   },
   totalInserts: {
@@ -117,23 +117,27 @@ export const mapDatabaseStats = (dbStats: DbStats) => ({
     label: 'Collections (incl. system.namespaces)',
     value: dbStats.collections
   },
-  /* deprecated */ dataFileVersion: {
-    label: 'Data File Version',
-    value: 'dataFileVersion' in dbStats
-      ? `${dbStats.dataFileVersion.major}.${dbStats.dataFileVersion.minor}`
-      : null
+  /* deprecated? */ ...'dataFileVersion' in dbStats && {
+    dataFileVersion: {
+      label: 'Data File Version',
+      value: `${dbStats.dataFileVersion.major}.${dbStats.dataFileVersion.minor}`
+    }
   },
   dataSize: {
     label: 'Data Size',
     value: bytesToSize(dbStats.dataSize)
   },
-  /* deprecated */ extentFreeListNum: {
-    label: 'Extents Free List',
-    value: 'extentFreeList' in dbStats ? dbStats.extentFreeList.num : null
+  /* deprecated? */ ...'extentFreeList' in dbStats && {
+    extentFreeListNum: {
+      label: 'Extents Free List',
+      value: dbStats.extentFreeList.num
+    }
   },
-  /* deprecated */ fileSize: {
-    label: 'File Size',
-    value: 'fileSize' in dbStats ? bytesToSize(dbStats.fileSize) : null
+  /* deprecated? */ ...'fileSize' in dbStats && {
+    fileSize: {
+      label: 'File Size',
+      value: bytesToSize(dbStats.fileSize)
+    }
   },
   indexes: {
     label: 'Indexes #',
@@ -143,9 +147,11 @@ export const mapDatabaseStats = (dbStats: DbStats) => ({
     label: 'Index Size',
     value: bytesToSize(dbStats.indexSize)
   },
-  /* deprecated */ numExtents: {
-    label: 'Extents #',
-    value: 'numExtents' in dbStats ? dbStats.numExtents.toString() : null
+  /* deprecated? */ ...'numExtents' in dbStats && {
+    numExtents: {
+      label: 'Extents #',
+      value: dbStats.numExtents.toString()
+    }
   },
   objects: {
     label: 'Objects #',
@@ -154,5 +160,44 @@ export const mapDatabaseStats = (dbStats: DbStats) => ({
   storageSize: {
     label: 'Storage Size',
     value: bytesToSize(dbStats.storageSize)
+  }
+})
+
+export const mapCollectionStats = (collStats: CollStats) => ({
+  count: {
+    label: 'Documents',
+    value: collStats.count
+  },
+  size: {
+    label: 'Total doc size',
+    value: convertBytes(collStats.size)
+  },
+  avgObjSize: {
+    label: 'Average doc size',
+    value: convertBytes(collStats.avgObjSize)
+  },
+  storageSize: {
+    label: 'Pre-allocated size',
+    value: convertBytes(collStats.storageSize)
+  },
+  nindexes: {
+    label: 'Indexes',
+    value: collStats.nindexes
+  },
+  totalIndexSize: {
+    label: 'Total index size',
+    value: convertBytes(collStats.totalIndexSize)
+  },
+  /* deprecated? */ ...'paddingFactor' in collStats && {
+    paddingFactor: {
+      label: 'Padding factor',
+      value: collStats.paddingFactor
+    }
+  },
+  /* deprecated? */ ...'numExtents' in collStats && {
+    numExtents: {
+      label: 'Extents',
+      value: collStats.numExtents
+    }
   }
 })

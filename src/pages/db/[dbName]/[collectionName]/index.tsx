@@ -4,12 +4,13 @@ import { GetServerSideProps } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
+import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
 import { EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
 import * as queries from 'lib/queries.ts'
-// TODO move utils import and related logic that use it to lib/map
+import { mapCollectionStats } from 'lib/mapInfo.ts'
+// TODO move utils import and related logic that use it to lib/mapInfo.ts
 import { bytesToSize, roughSizeOfObject } from 'lib/utils.ts'
-import type { getCtxType } from 'lib/mapStats.ts'
 
 declare interface Params extends ParsedUrlQuery {
   collectionName: string
@@ -18,7 +19,8 @@ declare interface Params extends ParsedUrlQuery {
 
 declare interface DatabasePageProps {
   collectionName: string
-  ctx: getCtxType
+  collectionStats: ReturnType<typeof mapCollectionStats>
+  indexes: Indexes
   messageError: string | null
   options: {
     noDelete: boolean
@@ -28,7 +30,7 @@ declare interface DatabasePageProps {
   title: string
 }
 
-const CollectionPage = ({ ctx, collectionName, messageError, options, title }: DatabasePageProps) => {
+const CollectionPage = ({ collectionName, collectionStats, indexes, messageError, options, title }: DatabasePageProps) => {
   const { noDelete, noExport, readOnly } = options
   return (
     <div>
@@ -52,7 +54,7 @@ const CollectionPage = ({ ctx, collectionName, messageError, options, title }: D
         {/* <Divider sx={{ border: 1, my: 1.5 }} />
 
         <ShowCollections
-          collections={ctx.collections}
+          collections={collections}
           database={dbName}
           show={{
             create: readOnly === false,
@@ -65,7 +67,9 @@ const CollectionPage = ({ ctx, collectionName, messageError, options, title }: D
 
         {/* TODO Create GridFS Bucket */}
 
-        <StatsTable label="Collection Stats" fields={ctx.stats} />
+        <StatsTable label="Collection Stats" fields={collectionStats} />
+
+        <IndexesTable indexes={indexes} show={{ delete: readOnly === false && noDelete === false }} />
       </Container>
     </div>
   )
@@ -117,6 +121,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
           collection.indexes()
         ])
 
+        // Add index size
+        const { indexSizes } = stats
+        for (let index = 0, length_ = indexes.length; index < length_; index++) {
+          indexes[index].size = indexSizes[indexes[index].name]
+        }
+
         const docs: object[] = []
         let columns = []
 
@@ -158,11 +168,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
           items[i] = bson.toString(items[i])
         }
 
-        const { indexSizes } = stats;
-        for (let n = 0, nn = indexes.length; n < nn; n++) {
-          indexes[n].size = indexSizes[indexes[n].name]
-        }
-
         // Generate an array of columns used by all documents visible on this page
         columns = columns.flat()
         columns = columns.filter((value, index, array) => array.indexOf(value) === index)
@@ -177,7 +182,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
           // docs,       // Original docs
           columns, // All used columns
           count, // total number of docs returned by the query
-          // stats,
           editorTheme: process.env.config.options.editorTheme,
           // limit,
           // skip,
@@ -188,17 +192,20 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
           // type: reqQuery.type,
           // query: reqQuery.query,
           // projection: reqQuery.projection,
-          runAggregate: reqQuery.runAggregate === 'on',
-          indexes
+          runAggregate: reqQuery.runAggregate === 'on'
         }
         const { messageError } = global.session
         delete global.session.messageError
 
+        const collectionStats = mapCollectionStats(stats)
+
         return {
           props: {
-            ctx,
+            // ctx,
             // dbName,
             collectionName,
+            collectionStats,
+            indexes,
             ...messageError !== undefined && { messageError },
             options: process.env.config.options,
             title: `${collectionName} - Mongo Express`

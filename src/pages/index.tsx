@@ -3,7 +3,7 @@ import Head from 'next/head.js'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
-import { mapServerStatus } from 'lib/mapStats.ts'
+import { mapServerStatus } from 'lib/mapInfo.ts'
 
 interface IndexProps {
   databases: string[]

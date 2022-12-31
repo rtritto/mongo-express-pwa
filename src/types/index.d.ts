@@ -1,9 +1,17 @@
 type Admin = import('mongodb').Admin
-type MongoClient = import('mongodb').MongoClient
+/**
+ * @public
+ * @see https://docs.mongodb.org/manual/reference/command/collStats
+ */
+type CollStats = import('mongodb').CollStats
 type Document = import('mongodb').Document
 type Db = import('mongodb').Db
+type MongoClient = import('mongodb').MongoClient
 
-// https://www.mongodb.com/docs/manual/reference/command/serverStatus
+/**
+ * Type definition is missing in mongodb
+ * @see https://www.mongodb.com/docs/manual/reference/command/serverStatus
+ */
 type ServerStatus = Document & {
   host: string
   version: string
@@ -31,7 +39,7 @@ type ServerStatus = Document & {
     update: number
     delete: number
   }
-  // deprecated
+  // missing in doc, are they deprecated?
   backgroundFlushing: {
     flushes: number
     last_finished: Date
@@ -40,7 +48,10 @@ type ServerStatus = Document & {
   }
 }
 
-// https://www.mongodb.com/docs/manual/reference/command/dbStats
+/**
+ * Type definition is missing in mongodb
+ * @see https://www.mongodb.com/docs/manual/reference/command/dbStats
+ */
 type DbStats = Document & {
   db: string
   collections: number
@@ -59,7 +70,7 @@ type DbStats = Document & {
   fsUsedSize: number
   fsTotalSize: number
   ok: number
-  // deprecated from some MongoDB versions
+  // missing in doc, are they deprecated?
   fileSize: number
   dataFileVersion: {
     major: number
@@ -71,10 +82,21 @@ type DbStats = Document & {
   numExtents: number
 }
 
+type Index = {
+  v: number
+  key: {
+    [name: string]: number
+  }
+  name: string
+  size: number
+}
+
+type Indexes = Array<Index>
+
 type Fields = {
   [field: string]: {
     label: string
-    value: string | null
+    value: string | undefined
   }
 }
 
