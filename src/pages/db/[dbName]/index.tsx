@@ -5,7 +5,7 @@ import { ParsedUrlQuery } from 'querystring'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
-import { getDatabaseStats } from 'lib/mapStats.ts'
+import { mapDatabaseStats } from 'lib/mapStats.ts'
 
 const destination = '/'
 
@@ -22,11 +22,11 @@ declare interface DatabasePageProps {
     noExport: boolean
     readOnly: boolean
   }
-  stats: ReturnType<typeof getDatabaseStats>
+  databaseStats: ReturnType<typeof mapDatabaseStats>
   title: string
 }
 
-const DatabasePage = ({ collections, dbName, messageError, options, stats, title }: DatabasePageProps) => {
+const DatabasePage = ({ collections, dbName, messageError, options, databaseStats, title }: DatabasePageProps) => {
   const { noDelete, noExport, readOnly } = options
   return (
     <div>
@@ -63,7 +63,7 @@ const DatabasePage = ({ collections, dbName, messageError, options, stats, title
 
         {/* TODO Create GridFS Bucket */}
 
-        <StatsTable label="Database Stats" fields={stats} />
+        <StatsTable label="Database Stats" fields={databaseStats} />
       </Container>
     </div>
   )
@@ -82,8 +82,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       await global.mongo.updateCollections(global.mongo.connections[dbName])
 
       try {
-        const data = await global.mongo.connections[dbName].db.stats()
-        const stats = getDatabaseStats(data, dbName)
+        const dbStats = await global.mongo.connections[dbName].db.stats()
+        const databaseStats = mapDatabaseStats(dbStats)
 
         const { messageError } = global.session
         delete global.session.messageError
@@ -91,11 +91,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
         return {
           props: {
             collections: global.mongo.collections[dbName],
+            databaseStats,
             dbName,
             // TODO grids: global.mongo.gridFSBuckets[dbName],
             ...messageError !== undefined && { messageError },
             options: process.env.config.options,
-            stats,
             title: `${dbName} - Mongo Express`
           }
         }

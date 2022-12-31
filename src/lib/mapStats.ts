@@ -1,19 +1,19 @@
 import { bytesToSize } from 'lib/utils.ts'
 
 // TODO add global lock time stats and replica set stats
-export const getServerStatus = (info: Info) => ({
+export const mapServerStatus = (serverStatus: ServerStatus) => ({
   dbHost: {
     label: 'Hostname',
-    value: info.host
+    value: serverStatus.host
   },
   dbVersion: {
     label: 'MongoDB Version',
-    value: info.version
+    value: serverStatus.version
   },
   uptime: {
     label: 'Uptime',
-    value: `${info.uptime} seconds ${info.uptime > 86400
-      ? `(${Math.floor(info.uptime / 86400)} days)`
+    value: `${serverStatus.uptime} seconds ${serverStatus.uptime > 86400
+      ? `(${Math.floor(serverStatus.uptime / 86400)} days)`
       : ''}`
   },
   nodeVersion: {
@@ -22,7 +22,7 @@ export const getServerStatus = (info: Info) => ({
   },
   serverTime: {
     label: 'Server Time',
-    value: info.localTime.toUTCString()
+    value: serverStatus.localTime.toUTCString()
   },
   v8Version: {
     label: 'V8 Version',
@@ -30,129 +30,129 @@ export const getServerStatus = (info: Info) => ({
   },
   currentConnections: {
     label: 'Current Connections',
-    value: info.connections.current
+    value: serverStatus.connections.current
   },
   availableConnections: {
     label: 'Available Connections',
-    value: info.connections.available
+    value: serverStatus.connections.available
   },
-  ...'globalLock' in info && {
-    ...'activeClients' in info.globalLock && {
+  ...'globalLock' in serverStatus && {
+    ...'activeClients' in serverStatus.globalLock && {
       activeClients: {
         label: 'Active Clients',
-        value: info.globalLock.activeClients.total
+        value: serverStatus.globalLock.activeClients.total
       },
       clientsReading: {
         label: 'Clients Reading',
-        value: info.globalLock.activeClients.readers
+        value: serverStatus.globalLock.activeClients.readers
       },
       clientsWriting: {
         label: 'Clients Writing',
-        value: info.globalLock.activeClients.writers
+        value: serverStatus.globalLock.activeClients.writers
       }
     },
-    ...'currentQueue' in info.globalLock && {
+    ...'currentQueue' in serverStatus.globalLock && {
       queuedOperations: {
         label: 'Queued Operations',
-        value: info.globalLock.currentQueue.total
+        value: serverStatus.globalLock.currentQueue.total
       },
       readLockQueue: {
         label: 'Read Lock Queue',
-        value: info.globalLock.currentQueue.readers
+        value: serverStatus.globalLock.currentQueue.readers
       },
       writeLockQueue: {
         label: 'Write Lock Queue',
-        value: info.globalLock.currentQueue.writers
+        value: serverStatus.globalLock.currentQueue.writers
       }
     }
   },
-  /* deprecated */ ...'backgroundFlushing' in info && {
+  /* deprecated */ ...'backgroundFlushing' in serverStatus && {
     diskFlushes: {
       label: 'Disk Flushes',
-      value: info.backgroundFlushing.flushes
+      value: serverStatus.backgroundFlushing.flushes
     },
     lastFlush: {
       label: 'Last Flush',
-      value: 'last_finished' in info.backgroundFlushing
-        ? info.backgroundFlushing.last_finished.toDateString()
+      value: 'last_finished' in serverStatus.backgroundFlushing
+        ? serverStatus.backgroundFlushing.last_finished.toDateString()
         : null
     },
     timeSpentFlushing: {
       label: 'Time Spent Flushing',
-      value: 'total_ms' in info.backgroundFlushing
-        ? `${info.backgroundFlushing.total_ms} ms`
+      value: 'total_ms' in serverStatus.backgroundFlushing
+        ? `${serverStatus.backgroundFlushing.total_ms} ms`
         : null
     },
     averageFlushTime: {
       label: 'Average Flush Time',
-      value: 'average_ms' in info.backgroundFlushing
-        ? `${info.backgroundFlushing.average_ms} ms`
+      value: 'average_ms' in serverStatus.backgroundFlushing
+        ? `${serverStatus.backgroundFlushing.average_ms} ms`
         : null
     }
   },
   totalInserts: {
     label: 'Total Inserts',
-    value: info.opcounters.insert
+    value: serverStatus.opcounters.insert
   },
   totalQueries: {
     label: 'Total Queries',
-    value: info.opcounters.query
+    value: serverStatus.opcounters.query
   },
   totalUpdates: {
     label: 'Total Updates',
-    value: info.opcounters.update
+    value: serverStatus.opcounters.update
   },
   totalDeletes: {
     label: 'Total Deletes',
-    value: info.opcounters.delete
+    value: serverStatus.opcounters.delete
   }
 })
 
-export const getDatabaseStats = (data: DbStats) => ({
+export const mapDatabaseStats = (dbStats: DbStats) => ({
   avgObjSize: {
     label: 'Avg Obj Size #',
-    value: bytesToSize(data.avgObjSize || 0)
+    value: bytesToSize(dbStats.avgObjSize || 0)
   },
   collections: {
     label: 'Collections (incl. system.namespaces)',
-    value: data.collections
+    value: dbStats.collections
   },
   /* deprecated */ dataFileVersion: {
     label: 'Data File Version',
-    value: 'dataFileVersion' in data
-      ? `${data.dataFileVersion.major}.${data.dataFileVersion.minor}`
+    value: 'dataFileVersion' in dbStats
+      ? `${dbStats.dataFileVersion.major}.${dbStats.dataFileVersion.minor}`
       : null
   },
   dataSize: {
     label: 'Data Size',
-    value: bytesToSize(data.dataSize)
+    value: bytesToSize(dbStats.dataSize)
   },
   /* deprecated */ extentFreeListNum: {
     label: 'Extents Free List',
-    value: 'extentFreeList' in data ? data.extentFreeList.num : null
+    value: 'extentFreeList' in dbStats ? dbStats.extentFreeList.num : null
   },
   /* deprecated */ fileSize: {
     label: 'File Size',
-    value: 'fileSize' in data ? bytesToSize(data.fileSize) : null
+    value: 'fileSize' in dbStats ? bytesToSize(dbStats.fileSize) : null
   },
   indexes: {
     label: 'Indexes #',
-    value: data.indexes
+    value: dbStats.indexes
   },
   indexSize: {
     label: 'Index Size',
-    value: bytesToSize(data.indexSize)
+    value: bytesToSize(dbStats.indexSize)
   },
   /* deprecated */ numExtents: {
     label: 'Extents #',
-    value: 'numExtents' in data ? data.numExtents.toString() : null
+    value: 'numExtents' in dbStats ? dbStats.numExtents.toString() : null
   },
   objects: {
     label: 'Objects #',
-    value: data.objects
+    value: dbStats.objects
   },
   storageSize: {
     label: 'Storage Size',
-    value: bytesToSize(data.storageSize)
+    value: bytesToSize(dbStats.storageSize)
   }
 })

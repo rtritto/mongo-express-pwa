@@ -4,7 +4,7 @@ type Document = import('mongodb').Document
 type Db = import('mongodb').Db
 
 // https://www.mongodb.com/docs/manual/reference/command/serverStatus
-type Info = Document & {
+type ServerStatus = Document & {
   host: string
   version: string
   uptime: number
@@ -41,7 +41,7 @@ type Info = Document & {
 }
 
 // https://www.mongodb.com/docs/manual/reference/command/dbStats
-interface DbStats extends Document {
+type DbStats = Document & {
   db: string
   collections: number
   view: number
@@ -71,7 +71,7 @@ interface DbStats extends Document {
   numExtents: number
 }
 
-interface Fields {
+type Fields = {
   [field: string]: {
     label: string
     value: string | null
@@ -79,25 +79,25 @@ interface Fields {
 }
 
 // type of connections<connectionInfo> or clients<{info}>
-interface ClientInfo {
+type ClientInfo = {
   connectionName: string
   client: MongoClient
   adminDb: Admin | null
   info: import('config.default.mts').MongoDb
 }
 
-interface Collections {
+type Collections = {
   [dbName: string]: Array<string>
 }
 
-interface Connection {
+type Connection = {
   info: ClientInfo
   dbName: string
   fullName: string
   db: Db
 }
 
-interface Connections {
+type Connections = {
   [key: string]: Connection
 }
 
