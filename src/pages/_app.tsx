@@ -68,7 +68,10 @@ function MyApp(props: MyAppProps) {
           <NavBar
             collections={collections}
             databases={databases}
-            show={{ collections: 'collectionName' in props }}
+            show={{
+              databases: 'dbName' in props,
+              collections: 'collectionName' in props
+            }}
           />
 
           <Component {...pageProps} />

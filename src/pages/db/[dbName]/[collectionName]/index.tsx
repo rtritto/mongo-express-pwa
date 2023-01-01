@@ -5,6 +5,7 @@ import { ParsedUrlQuery } from 'querystring'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
+import RenameCollection from 'components/Pages/Collection/RenameCollection.tsx'
 import { EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
 import * as queries from 'lib/queries.ts'
@@ -20,6 +21,9 @@ declare interface Params extends ParsedUrlQuery {
 declare interface DatabasePageProps {
   collectionName: string
   collectionStats: ReturnType<typeof mapCollectionStats>
+  count: number
+  dbName: string
+  documents: Array<Document>
   indexes: Indexes
   messageError: string | null
   options: {
@@ -27,10 +31,11 @@ declare interface DatabasePageProps {
     noExport: boolean
     readOnly: boolean
   }
+  pagination: boolean
   title: string
 }
 
-const CollectionPage = ({ collectionName, collectionStats, indexes, messageError, options, title }: DatabasePageProps) => {
+const CollectionPage = ({ collectionName, collectionStats, count, dbName, documents, indexes, messageError, options, pagination, title }: DatabasePageProps) => {
   const { noDelete, noExport, readOnly } = options
   return (
     <div>
@@ -51,21 +56,52 @@ const CollectionPage = ({ collectionName, collectionStats, indexes, messageError
           Viewing Collection: {collectionName}
         </Typography>
 
-        {/* <Divider sx={{ border: 1, my: 1.5 }} />
+        {readOnly === false && (
+          <p>
+            <button type="button" data-toggle="modal" data-target="#addDocument">
+              New Document
+            </button>
+            <button type="button" data-toggle="modal" data-target="#addIndex">
+              New Index
+            </button>
+          </p>
+        )}
 
-        <ShowCollections
-          collections={collections}
-          database={dbName}
-          show={{
-            create: readOnly === false,
-            export: noExport === false,
-            delete: noDelete === false
-          }}
-        /> */}
+        <ul id="tabs" data-tabs="tabs">
+          <li><a href="#simple" data-toggle="tab">Simple</a></li>
+          <li><a href="#advanced" data-toggle="tab">Advanced</a></li>
+        </ul>
 
-        {/* TODO GridFS Buckets grids.length && settings.gridFSEnabled */}
+        {readOnly === false && noDelete === false && count > 0 && (
+          <p>
+            {/* <form id="deleteListForm" method="POST"> */}
+            <button type="button" data-toggle="modal" data-target="#deleteListModal">
+              Delete all {count} documents
+            </button>
+            {/* </form> */}
+          </p>
+        )}
 
-        {/* TODO Create GridFS Bucket */}
+        {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}
+
+        {documents.length === 0 ? (
+          <p>No documents found.</p>
+        ) : (
+          <>
+            {/* TODO */}
+            {pagination === true && <div>Pagination Top</div>}
+
+            {/* TODO */}
+            Show Docs
+
+            {/* TODO */}
+            {pagination === true && <div>Pagination Bottom</div>}
+          </>
+        )}
+
+        {readOnly === false && <RenameCollection collectionName={collectionName} dbName={dbName} />}
+
+        {/* TODO Tools */}
 
         <StatsTable label="Collection Stats" fields={collectionStats} />
 
@@ -177,16 +213,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
         const pagination = count > limit
 
         const ctx = {
-          title: `Viewing Collection: ${collectionName}`,
-          // documents: items, // Docs converted to strings
           // docs,       // Original docs
           columns, // All used columns
-          count, // total number of docs returned by the query
           editorTheme: process.env.config.options.editorTheme,
           // limit,
           // skip,
           // sort,
-          pagination,
           // key: reqQuery.key,
           // value: reqQuery.value,  // value: type === 'O' ? ['ObjectId("', value, '")'].join('') : value,
           // type: reqQuery.type,
@@ -202,13 +234,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
         return {
           props: {
             // ctx,
-            // dbName,
             collectionName,
             collectionStats,
+            count, // total number of docs returned by the query
+            dbName,
+            documents: items, // Docs converted to strings
             indexes,
             ...messageError !== undefined && { messageError },
             options: process.env.config.options,
-            title: `${collectionName} - Mongo Express`
+            pagination,
+            title: `Viewing Collection: ${collectionName}`
           }
         }
       } catch (error) {

@@ -72,13 +72,13 @@ const DeleteModalBox = ({ value, entity, tooltipTitle, handleDelete }: DeleteMod
           <Divider />
 
           <Grid sx={{ p: 2 }} >
-            <Typography component='div' fontSize={12} sx={{ mb: 0.5 }}>
+            <Typography component='div' fontSize={12} gutterBottom>
               Be careful! You are about to delete whole <Box fontWeight='fontWeightMedium' display='inline'>
                 <strong>{value}</strong>
               </Box> {entity}.
             </Typography>
 
-            <Box alignItems="center" sx={{ py: 1, display: "flex" }}>
+            <Box alignItems="center" sx={{ py: 0.5, display: "flex" }}>
               <Typography fontSize={12} sx={{ fontWeight: 'bold', width: '100%' }}>
                 Type the {entity} name to proceed.
               </Typography>
@@ -86,6 +86,7 @@ const DeleteModalBox = ({ value, entity, tooltipTitle, handleDelete }: DeleteMod
               <TextField
                 fullWidth
                 onChange={handleOnChange}
+                placeholder={value}
                 size="small"
                 type="string"
                 variant="outlined"

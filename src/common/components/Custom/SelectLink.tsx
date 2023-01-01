@@ -1,9 +1,16 @@
-import { FormControl, Select, SelectChangeEvent } from '@mui/material'
-import { useRecoilState } from 'recoil'
+import { FormControl, InputLabel, Select, SelectChangeEvent } from '@mui/material'
+import { RecoilState, useRecoilState } from 'recoil'
 
 import CustomLink from 'components/Custom/CustomLink.tsx'
 
-const SelectLink = ({ baseUrl, entities = [], label, selectedState }) => {
+interface SelectLinkProps {
+  baseUrl: string
+  entities: string[]
+  label: string
+  selectedState: RecoilState<string>
+}
+
+const SelectLink = ({ baseUrl, entities = [], label, selectedState }: SelectLinkProps) => {
   const [selected, setSelected] = useRecoilState<string>(selectedState)
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -11,33 +18,38 @@ const SelectLink = ({ baseUrl, entities = [], label, selectedState }) => {
   }
 
   return (
-    <FormControl sx={{ display: 'inline', minWidth: 120 }} fullWidth size="small">
-      <CustomLink
-        key={label}
-        // Link
-        href={`${baseUrl}/${encodeURIComponent(selected)}`}
-        style={{
-          textDecoration: 'none',  // remove text underline
-        }}
-        // Button
-        sx={{
-          color: 'rgb(153, 143, 143)',
-          justifyContent: 'flex-start',
-          pl: 0,
-          pr: 0.5,
-          textTransform: 'none',  // remove uppercase
-          ':hover': {
-            color: 'white'
-          }
-        }}
-        variant="text"
-      >
-        {label}:
-      </CustomLink>
+    <FormControl sx={{ display: selected ? 'inline' : 'inline-flex', minWidth: 120 }} fullWidth size="small">
+      {selected && (
+        <CustomLink
+          key={label}
+          // Link
+          href={`${baseUrl}/${encodeURIComponent(selected)}`}
+          style={{
+            textDecoration: 'none',  // remove text underline
+          }}
+          // Button
+          sx={{
+            color: 'rgb(153, 143, 143)',
+            justifyContent: 'flex-start',
+            pl: 0,
+            pr: 0.5,
+            textTransform: 'none',  // remove uppercase
+            ':hover': {
+              color: 'white'
+            }
+          }}
+          variant="text"
+        >
+          {label}:
+        </CustomLink>
+      )}
 
       <Select
-        labelId="select-label"
-        id="select"
+        id={`select${label}`}
+        displayEmpty
+        renderValue={(value: string): React.ReactNode =>
+          (value === '' ? label : value) as string
+        }
         value={selected}
         onChange={handleChange}
         sx={{

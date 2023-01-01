@@ -58,6 +58,7 @@ declare interface CustomNavBarProps {
   collections: Mongo['collections']
   databases: Mongo['databases']
   show: {
+    databases: boolean
     collections: boolean
   }
 }
@@ -187,7 +188,7 @@ const CustomNavBar = ({ databases, collections, show }: CustomNavBarProps) => {
             </Typography>
 
             <Breadcrumbs aria-label="breadcrumb" separator=">" >
-              <NavDatabases databases={databases} />
+              {show.databases === true && <NavDatabases databases={databases} />}
 
               {show.collections === true && <NavCollections collections={collections} />}
             </Breadcrumbs>

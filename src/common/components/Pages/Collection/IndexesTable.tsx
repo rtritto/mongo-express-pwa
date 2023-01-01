@@ -16,7 +16,7 @@ const Headers = () => {
   const headers = []
   for (const field of HEADER_FIELDS) {
     headers.push(
-      <TableCell key={`headerCell${field}`} sx={{ p: 0.5 }}>
+      <TableCell key={`headerCell${field}`} sx={{ px: 1.5, py: 0.5 }}>
         <b>{field}</b>
       </TableCell>
     )
@@ -49,7 +49,7 @@ const IndexesTable = ({ indexes, show }: StatsTableProps) => {
         <TableHead>
           <TableRow>
             <TableCell colSpan={5}>
-              <Typography component='h6' variant='h6' sx={{ fontWeight: 'bold', p: 0.5 }}>
+              <Typography component='h6' variant='h6' sx={{ fontWeight: 'bold', pt: 0.5 }}>
                 Indexes
               </Typography>
             </TableCell>

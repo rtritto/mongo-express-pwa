@@ -41,7 +41,7 @@ const StatsTable = ({ label, fields }: StatsTableProps) => {
         <TableHead>
           <TableRow>
             <TableCell colSpan={4}>
-              <Typography component='h6' variant='h6' sx={{ fontWeight: 'bold', p: 0.5 }}>
+              <Typography component='h6' variant='h6' sx={{ fontWeight: 'bold', pt: 0.5 }}>
                 {label}
               </Typography>
             </TableCell>
