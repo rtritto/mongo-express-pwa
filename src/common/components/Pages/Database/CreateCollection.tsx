@@ -23,34 +23,33 @@ const CreateCollection = () => {
         <Controller
           control={methods.control}
           name="controllerCreateCollection"
-          render={({ field: { onChange } }) => <TextField
-            error={!!collection && Object.keys(methods.formState.errors).length > 0}
-            helperText={collection && Object.keys(methods.formState.errors).length > 0
-              ? 'Collection names must begin with a letter, underscore, hyphen or slash, and can contain only letters, '
-              + 'underscores, hyphens, numbers, dots or slashes'
-              : ''
-            }
-            name="collectionName"
-            onChange={({ target: { value } }) => {
-              setCollection(value)
-              onChange(value)
-            }}
-            placeholder="Collection name"
-            required
-            size="small"
-            type="string"
-            variant="outlined"
-          // sx={{ paddingBottom: 0 }}
-          />}
-          rules={{ validate: isValidCollectionName }}
+          render={({ field: { onChange } }) => (
+            <TextField
+              id="newCollectionName"
+              error={collection !== '' && 'controllerCreateCollection' in methods.formState.errors}
+              helperText={collection !== '' && (methods.formState.errors.controllerCreateCollection?.message || '')}
+              name="collectionName"
+              onChange={({ target: { value } }) => {
+                setCollection(value)
+                onChange(value)
+              }}
+              placeholder="Collection name"
+              required
+              size="small"
+              type="string"
+              variant="outlined"
+            // sx={{ paddingBottom: 0 }}
+            />
+          )}
+          rules={{ validate: (value) => isValidCollectionName(value).error }}
         />
 
         <Button
-          type="submit"
+          disabled={!collection || 'controllerCreateCollection' in methods.formState.errors}
           size="small"
-          variant="contained"
-          disabled={!collection || Object.keys(methods.formState.errors).length > 0}
           startIcon={<SvgIcon><path d={Add} /></SvgIcon>}
+          type="submit"
+          variant="contained"
           sx={{ textTransform: 'none', py: 1 }}
         >
           Create Collection

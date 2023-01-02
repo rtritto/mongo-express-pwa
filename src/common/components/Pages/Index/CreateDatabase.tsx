@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form'
 
 import { EP_DB } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
-import { isValidDatabaseName, isValidDatabaseNameRegex } from 'lib/validations.ts'
+import { isValidDatabaseName } from 'lib/validations.ts'
 
 const CreateDatabase = () => {
   const [database, setDatabase] = useState<string>('')
@@ -26,37 +26,33 @@ const CreateDatabase = () => {
         <Controller
           control={methods.control}
           name="controllerCreateDatabase"
-          render={({ field: { onChange } }) => <TextField
-            error={!!database && !isValidDatabaseName(database)}
-            helperText={database && Object.keys(methods.formState.errors).length > 0
-              ? (database.length > 63
-                ? (isValidDatabaseNameRegex(database)
-                  ? 'Database name must have fewer than 64 characters and must not contain /. "$*<>:|?'
-                  : 'Database name must have fewer than 64 characters')
-                : 'Database must not contain /. "$*<>:|?')
-              : ''
-            }
-            name="databaseName"
-            onChange={({ target: { value } }) => {
-              setDatabase(value)
-              onChange(value)
-            }}
-            placeholder="Database name"
-            required
-            size="small"
-            type="string"
-            variant="outlined"
-          // sx={{ paddingBottom: 0 }}
-          />}
-          rules={{ validate: isValidDatabaseName }}
+          render={({ field: { onChange } }) => (
+            <TextField
+              id="newDatabaseName"
+              error={database !== '' && 'controllerCreateDatabase' in methods.formState.errors}
+              helperText={database !== '' && (methods.formState.errors.controllerCreateDatabase?.message || '')}
+              name="databaseName"
+              onChange={({ target: { value } }) => {
+                setDatabase(value)
+                onChange(value)
+              }}
+              placeholder="Database name"
+              required
+              size="small"
+              type="string"
+              variant="outlined"
+            // sx={{ paddingBottom: 0 }}
+            />
+          )}
+          rules={{ validate: (value) => isValidDatabaseName(value).error }}
         />
 
         <Button
-          type="submit"
+          disabled={!database || 'controllerCreateDatabase' in methods.formState.errors}
           size="small"
-          variant="contained"
-          disabled={!database || Object.keys(methods.formState.errors).length > 0}
           startIcon={<SvgIcon><path d={Add} /></SvgIcon>}
+          type="submit"
+          variant="contained"
           sx={{ textTransform: 'none', py: 1 }}
         >
           Create Database

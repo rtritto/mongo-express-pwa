@@ -16,11 +16,11 @@ const handler = async (req: CustomNextApiRequest, res: NextApiResponse) => {
       global.session.messageError = `Collection "${collectionName}" not found!`
       // TODO return getRedirect(dbName)
     }
-    // TODO const validation = isValidCollectionName(collection)
-    // if ('error' in validation) {
-    //   global.session.messageError = validation.error
-    //   return res.redirect('back')
-    // }
+    const validation = isValidCollectionName(collection)
+    if ('error' in validation) {
+      global.session.messageError = validation.error
+      // TODO return res.redirect('back')
+    }
 
     try {
       const client = await global.mongo.connect()

@@ -6,21 +6,33 @@ export const isValidCollectionName = (name: string) => {
   // Collection names must begin with a letter, underscore, hyphen or slash, (tested v3.2.4)
   // and can contain only letters, underscores, hyphens, numbers, dots or slashes
   if (!/^[/A-Z_a-z-][\w./-]*$/.test(name)) {
-    return false
+    return {
+      error: 'Collection names must begin with a letter, underscore, hyphen or'
+        + ' slash, and can contain only letters,'
+        + ' underscores, hyphens, numbers, dots or slashes'
+    }
   }
-
-  return true
+  return {}
 }
 
 // https://docs.mongodb.com/manual/reference/limits/#naming-restrictions
 export const isValidDatabaseNameRegex = (name: string) => {
-  return /[ "$*./:<>?|]/.test(name) === false
+  if (/[ "$*./:<>?|]/.test(name) === true) {
+    return {
+      error: 'Database must not contain /. "$*<>:|?'
+    }
+  }
+  return {}
 }
 
-export const isValidDatabaseName = (name: string | undefined) => {
-  if (!name || name.length > 63) {
-    return false
+export const isValidDatabaseName = (name: string = '') => {
+  if (name.length > 63) {
+    const validation = isValidDatabaseNameRegex(name)
+    return {
+      error: 'error' in validation
+        ? 'Database name must have fewer than 64 characters and must not contain /. "$*<>:|?'
+        : 'Database name must have fewer than 64 characters'
+    }
   }
-
   return isValidDatabaseNameRegex(name)
 }
