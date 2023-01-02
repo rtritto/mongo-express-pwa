@@ -1,5 +1,3 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-
 import * as validators from 'lib/validations.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

@@ -1,12 +1,21 @@
+// export type { Mongo } from 'middlewares/db.mts'
+type ParsedUrlQuery = import('querystring').ParsedUrlQuery
+
 type Admin = import('mongodb').Admin
 /**
  * @public
  * @see https://docs.mongodb.org/manual/reference/command/collStats
  */
 type CollStats = import('mongodb').CollStats
-type Document = import('mongodb').Document
 type Db = import('mongodb').Db
+type Document = import('mongodb').Document
 type MongoClient = import('mongodb').MongoClient
+
+type NextApiRequest = import('next').NextApiRequest
+type NextApiResponse = import('next').NextApiResponse
+
+type Config = import('config.default.mts').Config
+type MongoDb = import('config.default.mts').MongoDb
 
 /**
  * Type definition is missing in mongodb
@@ -105,7 +114,7 @@ type ClientInfo = {
   connectionName: string
   client: MongoClient
   adminDb: Admin | null
-  info: import('config.default.mts').MongoDb
+  info: MongoDb
 }
 
 type Collections = {
@@ -135,5 +144,14 @@ type Mongo = {
   getDatabases: () => Array<string>
   updateCollections: (dbConnection: Connection) => Promise<void>
   updateDatabases: () => Promise<void>
-  connect: (config: Config) => Promise<Mongo>
+  connect: (config?: Config) => Promise<MongoClient>
+}
+
+interface Params extends ParsedUrlQuery {
+  collectionName: string
+  dbName: string
+}
+
+interface CustomNextApiRequest extends NextApiRequest {
+  query: Params
 }

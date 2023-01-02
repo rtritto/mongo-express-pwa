@@ -7,7 +7,6 @@ import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
 import { mapDatabaseStats } from 'lib/mapInfo.ts'
 
-const destination = '/'
 
 declare interface Params extends ParsedUrlQuery {
   dbName: string
@@ -25,6 +24,13 @@ declare interface DatabasePageProps {
   databaseStats: ReturnType<typeof mapDatabaseStats>
   title: string
 }
+
+const getRedirect = () => ({
+  redirect: {
+    destination: '/',
+    permanent: false
+  }
+})
 
 const DatabasePage = ({ collections, dbName, messageError, options, databaseStats, title }: DatabasePageProps) => {
   const { noDelete, noExport, readOnly } = options
@@ -73,49 +79,44 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { dbName } = params as Params
 
   // Make sure database exists
-  if (dbName in global.mongo.connections) {
-    // TODO ???
-    // global.req.dbName = dbName
-    // global.req.db = global.mongo.connections[dbName].db
-
-    try {
-      await global.mongo.updateCollections(global.mongo.connections[dbName])
-
-      try {
-        const dbStats = await global.mongo.connections[dbName].db.stats()
-        const databaseStats = mapDatabaseStats(dbStats)
-
-        const { messageError } = global.session
-        delete global.session.messageError
-
-        return {
-          props: {
-            collections: global.mongo.collections[dbName],
-            databaseStats,
-            dbName,
-            // TODO grids: global.mongo.gridFSBuckets[dbName],
-            ...messageError !== undefined && { messageError },
-            options: process.env.config.options,
-            title: `${dbName} - Mongo Express`
-          }
-        }
-      } catch (error) {
-        console.error(error)
-        global.session.messageError = `Could not get stats. ${error}`
-      }
-    } catch (error) {
-      console.error(error)
-      global.session.messageError = `Could not refresh collections. ${error}`
-    }
-  } else {
+  if (!(dbName in global.mongo.connections)) {
     global.session.messageError = `Database "${dbName}" not found!`
+    return getRedirect()
+  }
+  // TODO ???
+  // global.req.dbName = dbName
+  // global.req.db = global.mongo.connections[dbName].db
+
+  try {
+    await global.mongo.updateCollections(global.mongo.connections[dbName])
+  } catch (error) {
+    console.error(error)
+    global.session.messageError = `Could not refresh collections. ${error}`
+    return getRedirect()
   }
 
-  return {
-    redirect: {
-      destination,
-      permanent: false
+  try {
+    const dbStats = await global.mongo.connections[dbName].db.stats()
+    const databaseStats = mapDatabaseStats(dbStats)
+
+    const { messageError } = global.session
+    delete global.session.messageError
+
+    return {
+      props: {
+        collections: global.mongo.collections[dbName],
+        databaseStats,
+        dbName,
+        // TODO grids: global.mongo.gridFSBuckets[dbName],
+        ...messageError !== undefined && { messageError },
+        options: process.env.config.options,
+        title: `${dbName} - Mongo Express`
+      }
     }
+  } catch (error) {
+    console.error(error)
+    global.session.messageError = `Could not get stats. ${error}`
+    return getRedirect()
   }
 }
 

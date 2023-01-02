@@ -1,5 +1,4 @@
 import { EJSON } from 'bson'
-import { NextApiRequest, NextApiResponse } from 'next'
 
 const ALLOWED_MIME_TYPES = new Set([
   'text/csv',

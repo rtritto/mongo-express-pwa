@@ -2,25 +2,24 @@
 // import runtimeCaching from 'next-pwa/cache.js'
 import { loadSync } from 'ts-import'
 
-const loadOptions = {
-  compiledJsExtension: '.cjs'
-}
+// const isDev = process.env.NODE_ENV === 'development'
+
+const loadOptions = { compiledJsExtension: '.cjs' }
 
 const { default: configDefault } = loadSync('config.default.mts', loadOptions)
 loadSync('src/middlewares/db.mts', loadOptions)
 
-// const isDev = process.env.NODE_ENV === 'development'
+// TODO handle custom config
+const config = configDefault
 
-await global.mongo.connect(configDefault)
+await global.mongo.connect(config)
 
 // init session
 global.session = {}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  env: {
-    config: configDefault,
-  },
+  env: { config },
   reactStrictMode: true,
   swcMinify: true,
   typescript: {

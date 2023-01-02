@@ -9,7 +9,8 @@ import type { Config, MongoDb } from 'config.default.mts'
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
-// let connectionData = global.mongo
+let mongoClient: MongoClient
+//  = global.mongo
 
 // if (!connectionData) {
 // connectionData = 
@@ -81,10 +82,10 @@ global.mongo = {
       })
     )
   },
-  async connect(config: Config) {
-    // if (connectionData) {
-    //   return connectionData
-    // }
+  async connect(config: Config = process.env.config) {
+    if (mongoClient !== undefined) {
+      return mongoClient
+    }
 
     // database connections
     const connections = Array.isArray(config.mongodb) ? config.mongodb : [config.mongodb]
@@ -110,9 +111,16 @@ global.mongo = {
       const [client] = this.clients
       this.mainClient = client
       this.adminDb = client.adminDb
+      mongoClient = client.client
     }
     await this.updateDatabases()
-    return this
+
+    return mongoClient
+    // return this
   }
 }
 // }
+
+// global.mongo = mongo
+
+// export type Mongo = typeof mongo
