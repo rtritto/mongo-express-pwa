@@ -1,9 +1,9 @@
-import * as validators from 'lib/validations.ts'
+import { isValidDatabaseName } from 'lib/validations.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {  // addDatabase
     const name = req.body.database
-    if (!validators.isValidDatabaseName(name)) {
+    if (!isValidDatabaseName(name)) {
       // TODO: handle error
       console.error('That database name is invalid.')
       global.session.messageError = 'That database name is invalid.'

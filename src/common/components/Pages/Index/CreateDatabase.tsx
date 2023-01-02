@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form'
 
 import { EP_DB } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
-import * as validators from 'lib/validations.ts'
+import { isValidDatabaseName, isValidDatabaseNameRegex } from 'lib/validations.ts'
 
 const CreateDatabase = () => {
   const [database, setDatabase] = useState<string>('')
@@ -27,10 +27,10 @@ const CreateDatabase = () => {
           control={methods.control}
           name="controllerCreateDatabase"
           render={({ field: { onChange } }) => <TextField
-            error={!!database && !validators.isValidDatabaseName(database)}
+            error={!!database && !isValidDatabaseName(database)}
             helperText={database && Object.keys(methods.formState.errors).length > 0
               ? (database.length > 63
-                ? (validators.isValidDatabaseNameRegex(database)
+                ? (isValidDatabaseNameRegex(database)
                   ? 'Database name must have fewer than 64 characters and must not contain /. "$*<>:|?'
                   : 'Database name must have fewer than 64 characters')
                 : 'Database must not contain /. "$*<>:|?')
@@ -48,7 +48,7 @@ const CreateDatabase = () => {
             variant="outlined"
           // sx={{ paddingBottom: 0 }}
           />}
-          rules={{ validate: validators.isValidDatabaseName }}
+          rules={{ validate: isValidDatabaseName }}
         />
 
         <Button

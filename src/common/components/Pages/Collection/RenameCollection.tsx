@@ -37,6 +37,7 @@ const RenameCollection = ({ collectionName, dbName }: { collectionName: string, 
                       </SvgIcon>}
                       type="submit"
                       variant="contained"
+                      sx={{ textTransform: 'none',  /* remove uppercase */ }}
                     >
                       Rename
                     </Button>

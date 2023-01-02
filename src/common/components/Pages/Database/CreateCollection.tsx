@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form'
 
 import { EP_DB } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
-import * as validators from 'lib/validations.ts'
+import { isValidCollectionName } from 'lib/validations.ts'
 
 const CreateCollection = () => {
   const [collection, setCollection] = useState<string>('')
@@ -42,7 +42,7 @@ const CreateCollection = () => {
             variant="outlined"
           // sx={{ paddingBottom: 0 }}
           />}
-          rules={{ validate: validators.isValidCollectionName }}
+          rules={{ validate: isValidCollectionName }}
         />
 
         <Button
