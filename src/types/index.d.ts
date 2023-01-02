@@ -1,4 +1,3 @@
-// export type { Mongo } from 'middlewares/db.mts'
 type ParsedUrlQuery = import('querystring').ParsedUrlQuery
 
 type Admin = import('mongodb').Admin
@@ -13,9 +12,15 @@ type MongoClient = import('mongodb').MongoClient
 
 type NextApiRequest = import('next').NextApiRequest
 type NextApiResponse = import('next').NextApiResponse
+type NextApiHandler = import('next').NextApiHandler
 
 type Config = import('config.default.mts').Config
 type MongoDb = import('config.default.mts').MongoDb
+
+type CustomApiError = (any | Error) & {
+  message: string
+  status: number
+}
 
 /**
  * Type definition is missing in mongodb
@@ -132,6 +137,7 @@ type Connections = {
   [key: string]: Connection
 }
 
+// type Mongo = import('middlewares/db.mts').Mongo
 type Mongo = {
   clients: Array<ClientInfo>
   collections: Collections

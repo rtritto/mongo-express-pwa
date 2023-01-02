@@ -1,7 +1,8 @@
 import { MongoClient } from 'mongodb'
-import type { Db } from 'mongodb'
 
+import type { Db } from 'mongodb'
 import type { Config, MongoDb } from 'config.default.mts'
+
 // const { config } = process.env
 
 /**

@@ -2351,9 +2351,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/eslintrc@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "@eslint/eslintrc@npm:1.4.0"
+"@eslint/eslintrc@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "@eslint/eslintrc@npm:1.4.1"
   dependencies:
     ajv: "npm:^6.12.4"
     debug: "npm:^4.3.2"
@@ -2364,7 +2364,7 @@ __metadata:
     js-yaml: "npm:^4.1.0"
     minimatch: "npm:^3.1.2"
     strip-json-comments: "npm:^3.1.1"
-  checksum: 64daa4d53d1861d2a810766c5bd239192fb5a8655b25774fbc49ebe40fde1c6172bcc306ac13453ec3306a036694de8b2159e5562535d8f5e0f4feabade31598
+  checksum: 4e469ed508c3154078503b1f22b9d7f2498e76e770ff3f8c61c9961a16760c817e977f2f00b02201d1e91d6a4ebc766c1c67aae9189b00d5c1fe2e7205b6ad72
   languageName: node
   linkType: hard
 
@@ -2485,20 +2485,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/core-downloads-tracker@npm:^5.11.2":
-  version: 5.11.2
-  resolution: "@mui/core-downloads-tracker@npm:5.11.2"
-  checksum: 8f89227305e8a084541b09b5650f7f0b24d5260d845d25000691ebcdaa06c0d749fa37d3a8b8ce5ae551736881131b178c88224ad4b4f8c6b2ebe77d038986cc
+"@mui/core-downloads-tracker@npm:^5.11.3":
+  version: 5.11.3
+  resolution: "@mui/core-downloads-tracker@npm:5.11.3"
+  checksum: 23bd9a42d38ab46f03d99e04981a8b30af31030317350baa262fb7b1a308b703f878f01b8e5d0d8e8cd4f926a8454fbf5eedc39c84de08c4fcd6b2179f49f178
   languageName: node
   linkType: hard
 
-"@mui/material@npm:^5.11.2":
-  version: 5.11.2
-  resolution: "@mui/material@npm:5.11.2"
+"@mui/material@npm:^5.11.3":
+  version: 5.11.3
+  resolution: "@mui/material@npm:5.11.3"
   dependencies:
     "@babel/runtime": "npm:^7.20.7"
     "@mui/base": "npm:5.0.0-alpha.112"
-    "@mui/core-downloads-tracker": "npm:^5.11.2"
+    "@mui/core-downloads-tracker": "npm:^5.11.3"
     "@mui/system": "npm:^5.11.2"
     "@mui/types": "npm:^7.2.3"
     "@mui/utils": "npm:^5.11.2"
@@ -2521,7 +2521,7 @@ __metadata:
       optional: true
     "@types/react":
       optional: true
-  checksum: 6ac40f529d405984b68df3eb625424a05f661b33d7d8e87bdc021e1da80b25dd8ac8ab8b147b45063fcd041d91117cbb48105d92cf1908e05b44da7ae5724cfc
+  checksum: 47301f5c6fa52d9c8ea375316ca43ea925adb5491d78cb965cbe3f89d0ec8ea376f571164b8ce05427fb8bf7869d0f1bf1c72a1db95003d7965cf74650cea1b2
   languageName: node
   linkType: hard
 
@@ -4728,6 +4728,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"errors@link:./src/lib/errors::locator=mongo-express-pwa%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "errors@link:./src/lib/errors::locator=mongo-express-pwa%40workspace%3A."
+  languageName: node
+  linkType: soft
+
 "es-abstract@npm:^1.19.0, es-abstract@npm:^1.20.4":
   version: 1.20.4
   resolution: "es-abstract@npm:1.20.4"
@@ -5022,11 +5028,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.30.0":
-  version: 8.30.0
-  resolution: "eslint@npm:8.30.0"
+"eslint@npm:^8.31.0":
+  version: 8.31.0
+  resolution: "eslint@npm:8.31.0"
   dependencies:
-    "@eslint/eslintrc": "npm:^1.4.0"
+    "@eslint/eslintrc": "npm:^1.4.1"
     "@humanwhocodes/config-array": "npm:^0.11.8"
     "@humanwhocodes/module-importer": "npm:^1.0.1"
     "@nodelib/fs.walk": "npm:^1.2.8"
@@ -5067,7 +5073,7 @@ __metadata:
     text-table: "npm:^0.2.0"
   bin:
     eslint: bin/eslint.js
-  checksum: d6a2208422d76cac6934b1e17038236e85e18e662b0c0525b84164b90cafd81d23812d1a481e10a8cc1bd900e363b88cf005baca8e976c418125e3457f1ed6cc
+  checksum: 2d789efa2ef8b2ae27111107e1796dd78302006618322835e7135afb3e0af5118ba6d2294feb95befe00a3d5feb5c4e1b53435dff15b3e2e91b07016eecc3586
   languageName: node
   linkType: hard
 
@@ -5202,6 +5208,13 @@ __metadata:
   bin:
     fxparser: src/cli/cli.js
   checksum: 8101732a7e65cfbd341870a7ace727747aca4ae1045a4b6cb4a70aecdb7a717922b4696a8f94f5324b0cb2bc8971bf942b18cf8d9de894e6a9084f1b2e11dac9
+  languageName: node
+  linkType: hard
+
+"fastest-validator@npm:^1.16.0":
+  version: 1.16.0
+  resolution: "fastest-validator@npm:1.16.0"
+  checksum: 9871bd22f1fc6b63574d3398b77513bb872ce2ed04f5d78ccdeabb65536882452a47d26b3c68b0f90c17e5da62a831f37910ee9631a92e9fd9840bd0878a591c
   languageName: node
   linkType: hard
 
@@ -6751,7 +6764,7 @@ __metadata:
     "@emotion/react": "npm:^11.10.5"
     "@emotion/server": "npm:^11.10.0"
     "@emotion/styled": "npm:^11.10.5"
-    "@mui/material": "npm:^5.11.2"
+    "@mui/material": "npm:^5.11.3"
     "@next/font": "npm:^13.1.1"
     "@types/node": "npm:^18.11.18"
     "@types/react": "npm:^18.0.26"
@@ -6764,11 +6777,13 @@ __metadata:
     components: "link:./src/common/components"
     config.default.mts: "link:./config.default.mts"
     configs: "link:./src/configs"
-    eslint: "npm:^8.30.0"
+    errors: "link:./src/lib/errors"
+    eslint: "npm:^8.31.0"
     eslint-config-next: "npm:^13.1.1"
     eslint-import-resolver-typescript: "npm:^3.5.2"
     eslint-plugin-import: "npm:^2.26.0"
     eslint-plugin-unicorn: "npm:^45.0.2"
+    fastest-validator: "npm:^1.16.0"
     lib: "link:./src/lib"
     middlewares: "link:./src/middlewares"
     mongodb: "npm:^4.13.0"
@@ -6778,7 +6793,7 @@ __metadata:
     pages: "link:./pages"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
-    react-hook-form: "npm:^7.41.2"
+    react-hook-form: "npm:^7.41.3"
     recoil: "npm:^0.7.6"
     recoil-persist: "npm:^4.2.0"
     store: "link:./src/common/store"
@@ -7532,12 +7547,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.41.2":
-  version: 7.41.2
-  resolution: "react-hook-form@npm:7.41.2"
+"react-hook-form@npm:^7.41.3":
+  version: 7.41.3
+  resolution: "react-hook-form@npm:7.41.3"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18
-  checksum: ad47e32077f46597d72bea71436b26e9022ba45ae97559629aa77f87efc7ee07937eb06ef0e541187e2072829d964cdf14e4a3b542cedc2476fa4fb21d590a73
+  checksum: f2c79eb86c4c57d9fcab79815b3b5eecd72630dce12b0bedbe58219369a84686d6f9b4e8ec14fa4e19fd0e929aed81b15de1d773a1a8cda82221c69853d4bb96
   languageName: node
   linkType: hard
 

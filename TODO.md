@@ -7,3 +7,4 @@
   - understand use Type vs Interface https://stackoverflow.com/questions/37233735/interfaces-vs-types-in-typescript
   - understand declare statement use
 - collection.indexes isn't in doc, it should be replaced with collection.listIndexes?
+- test instance of connection

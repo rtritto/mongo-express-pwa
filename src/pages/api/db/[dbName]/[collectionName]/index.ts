@@ -1,40 +1,44 @@
 import { isValidCollectionName } from 'lib/validations.ts'
+import { withExceptionFilter } from 'middlewares/api.ts'
+import { MandatoryReqBody, MandatoryReqBodyParam } from 'errors/index.mts'
 
 const handler = async (req: CustomNextApiRequest, res: NextApiResponse) => {
   if (req.method === 'PUT') {  // renameCollection
-    const {
-      body: { collection },
-      query: { collectionName, dbName }
-    } = req
+    const { collectionName, dbName } = req.query
+    if (req.body === '') {
+      throw new MandatoryReqBody()
+    }
+    let collection
+    try {
+      collection = req.body.collection
+    } catch (error) {
+      throw new MandatoryReqBodyParam('collection')
+    }
     // Make sure database exists
     if (!(dbName in global.mongo.connections)) {
-      global.session.messageError = `Database "${dbName}" not found!`
-      // TODO return getRedirect(dbName)
+      throw new Error(`Database '${dbName}' not found!`)
     }
     // Make sure collection exists
     if (!global.mongo.collections[dbName].includes(collectionName)) {
-      global.session.messageError = `Collection "${collectionName}" not found!`
-      // TODO return getRedirect(dbName)
+      throw new Error(`Collection '${collectionName}' not found!`)
     }
     const validation = isValidCollectionName(collection)
     if ('error' in validation) {
-      global.session.messageError = validation.error
-      // TODO return res.redirect('back')
+      throw new Error(validation.error)
     }
-
     try {
       const client = await global.mongo.connect()
       await client.db(dbName).collection(collectionName).rename(collection)
       await global.mongo.updateCollections(global.mongo.connections[dbName])
-      global.session.messageSuccess = 'Collection renamed!'
-      //   res.redirect(utils.buildCollectionURL(res.locals.baseHref, req.query.dbName, collection))
-      return res.json({})
+      // res.redirect(utils.buildCollectionURL(res.locals.baseHref, req.query.dbName, collection))
+      res.end()
+      return
     } catch (error) {
       console.error(error)
-      global.session.messageError = `Something went wrong: ${error}`
-      res.redirect('back')
+      throw new Error(`Something went wrong: ${error.message}`)
     }
   }
+  res.status(405).end(`Method ${req.method} Not Allowed!`)
 }
 
-export default handler
+export default withExceptionFilter(handler)

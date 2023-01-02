@@ -1,21 +1,19 @@
-import { Alert, Container, Divider, Typography } from '@mui/material'
+import { Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 import { GetServerSideProps } from 'next'
-import { ParsedUrlQuery } from 'querystring'
+import { RecoilRoot } from 'recoil'
 
+import AlertMessages from 'components/Custom/AlertMessages.tsx'
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
 import { mapDatabaseStats } from 'lib/mapInfo.ts'
-
-
-declare interface Params extends ParsedUrlQuery {
-  dbName: string
-}
+import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 declare interface DatabasePageProps {
   collections: Collections
   dbName: string
-  messageError: string | null
+  messageError: string | undefined
+  messageSuccess: string | undefined
   options: {
     noDelete: boolean
     noExport: boolean
@@ -32,8 +30,13 @@ const getRedirect = () => ({
   }
 })
 
-const DatabasePage = ({ collections, dbName, messageError, options, databaseStats, title }: DatabasePageProps) => {
-  const { noDelete, noExport, readOnly } = options
+const DatabasePage = (props: DatabasePageProps) => {
+  const {
+    collections, dbName,
+    options: { noDelete, noExport, readOnly },
+    databaseStats,
+    title
+  } = props
   return (
     <div>
       <Head>
@@ -43,33 +46,41 @@ const DatabasePage = ({ collections, dbName, messageError, options, databaseStat
       </Head>
 
       <Container sx={{ p: 1 }}>
-        {messageError && (
-          <Alert severity="error" onClose={() => { }} sx={{ my: 2 }}>
-            {messageError}
-          </Alert>
-        )}
-
-        <Typography component="h4" gutterBottom variant="h4">
-          Viewing Database: {dbName}
-        </Typography>
-
-        <Divider sx={{ border: 1, my: 1.5 }} />
-
-        <ShowCollections
-          collections={collections}
-          database={dbName}
-          show={{
-            create: readOnly === false,
-            export: noExport === false,
-            delete: noDelete === false
+        <RecoilRoot
+          key="init"
+          initializeState={({ set }) => {
+            if ('messageError' in props) {
+              set(messageErrorState, props.messageError)
+            }
+            if ('messageSuccess' in props) {
+              set(messageSuccessState, props.messageSuccess)
+            }
           }}
-        />
+        >
+          <AlertMessages />
 
-        {/* TODO GridFS Buckets grids.length && settings.gridFSEnabled */}
+          <Typography component="h4" gutterBottom variant="h4">
+            Viewing Database: <strong>{dbName}</strong>
+          </Typography>
 
-        {/* TODO Create GridFS Bucket */}
+          <Divider sx={{ border: 1, my: 1.5 }} />
 
-        <StatsTable label="Database Stats" fields={databaseStats} />
+          <ShowCollections
+            collections={collections}
+            database={dbName}
+            show={{
+              create: readOnly === false,
+              export: noExport === false,
+              delete: noDelete === false
+            }}
+          />
+
+          {/* TODO GridFS Buckets grids.length && settings.gridFSEnabled */}
+
+          {/* TODO Create GridFS Bucket */}
+
+          <StatsTable label="Database Stats" fields={databaseStats} />
+        </RecoilRoot>
       </Container>
     </div>
   )
@@ -80,7 +91,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   // Make sure database exists
   if (!(dbName in global.mongo.connections)) {
-    global.session.messageError = `Database "${dbName}" not found!`
+    global.session.messageError = `Database '${dbName}' not found!`
     return getRedirect()
   }
   // TODO ???
@@ -99,8 +110,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     const dbStats = await global.mongo.connections[dbName].db.stats()
     const databaseStats = mapDatabaseStats(dbStats)
 
-    const { messageError } = global.session
+    const { messageError, messageSuccess } = global.session
     delete global.session.messageError
+    delete global.session.messageSuccess
 
     return {
       props: {
@@ -108,6 +120,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
         databaseStats,
         dbName,
         // TODO grids: global.mongo.gridFSBuckets[dbName],
+        ...messageSuccess !== undefined && { messageSuccess },
         ...messageError !== undefined && { messageError },
         options: process.env.config.options,
         title: `${dbName} - Mongo Express`

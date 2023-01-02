@@ -1,19 +1,32 @@
 import { Button, FormControl, Grid, Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import { useSetRecoilState } from 'recoil'
 
-import { EP_DATABASE_COLLECTION } from 'configs/endpoints.ts'
+import { EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import { Edit } from 'common/SvgIcons.mts'
 import { isValidCollectionName } from 'lib/validations.ts'
+import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 const RenameCollection = ({ collectionName, dbName }: { collectionName: string, dbName: string }) => {
   const [collection, setCollection] = useState<string>('')
   const methods = useForm({ mode: 'onChange' })
+  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
+  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
 
-  const callPutCollection = () => {
-    fetch(EP_DATABASE_COLLECTION(dbName, collectionName), {
+  const callPutCollection = async () => {
+    await fetch(EP_API_DATABASE_COLLECTION(dbName, collectionName), {
       body: JSON.stringify({ collection }),
-      method: 'PUT',
+      method: 'PUT'
+    }).then(async (res) => {
+      if (res.ok === true) {
+        setSuccess('Collection renamed!')
+      } else {
+        const { error } = await res.json()
+        setError(error)
+      }
+    }).catch((reason) => {
+      setError(reason.message)
     })
   }
 
@@ -76,6 +89,7 @@ const RenameCollection = ({ collectionName, dbName }: { collectionName: string, 
                       )}
                       type="submit"
                       variant="contained"
+                      onClick={callPutCollection}
                       sx={{ textTransform: 'none'  /* remove uppercase */ }}
                     >
                       Rename

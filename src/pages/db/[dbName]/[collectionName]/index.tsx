@@ -1,7 +1,9 @@
-import { Alert, Container, Divider, Typography } from '@mui/material'
+import { Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 import { GetServerSideProps } from 'next'
+import { RecoilRoot } from 'recoil'
 
+import AlertMessages from 'components/Custom/AlertMessages.tsx'
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
 import RenameCollection from 'components/Pages/Collection/RenameCollection.tsx'
@@ -9,6 +11,7 @@ import { EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
 import * as queries from 'lib/queries.ts'
 import { mapCollectionStats } from 'lib/mapInfo.ts'
+import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 // TODO move utils import and related logic that use it to lib/mapInfo.ts
 import { bytesToSize, roughSizeOfObject } from 'lib/utils.ts'
 
@@ -19,7 +22,8 @@ declare interface DatabasePageProps {
   dbName: string
   documents: Array<Document>
   indexes: Indexes
-  messageError: string | null
+  messageError: string | undefined
+  messageSuccess: string | undefined
   options: {
     noDelete: boolean
     noExport: boolean
@@ -36,8 +40,14 @@ const getRedirect = (dbName: string) => ({
   }
 })
 
-const CollectionPage = ({ collectionName, collectionStats, count, dbName, documents, indexes, messageError, options, pagination, title }: DatabasePageProps) => {
-  const { noDelete, noExport, readOnly } = options
+const CollectionPage = (props: DatabasePageProps) => {
+  const {
+    collectionName, collectionStats, dbName,
+    count, documents, indexes, pagination,
+    options: { noDelete, noExport, readOnly },
+    title
+  } = props
+
   return (
     <div>
       <Head>
@@ -47,87 +57,95 @@ const CollectionPage = ({ collectionName, collectionStats, count, dbName, docume
       </Head>
 
       <Container sx={{ p: 1 }}>
-        {messageError && (
-          <Alert severity="error" onClose={() => { }} sx={{ my: 2 }}>
-            {messageError}
-          </Alert>
-        )}
+        <RecoilRoot
+          key="initCollectionPage"
+          initializeState={({ set }) => {
+            if ('messageError' in props) {
+              set(messageErrorState, props.messageError)
+            }
+            if ('messageSuccess' in props) {
+              set(messageSuccessState, props.messageSuccess)
+            }
+          }}
+        >
+          <AlertMessages />
 
-        <Typography component="h4" gutterBottom variant="h4">
-          Viewing Collection: {collectionName}
-        </Typography>
+          <Typography component="h4" gutterBottom variant="h4">
+            Viewing Collection: <strong>{collectionName}</strong>
+          </Typography>
 
-        {readOnly === false && (
-          <p>
-            <button type="button" data-toggle="modal" data-target="#addDocument">
-              New Document
-            </button>
-            <button type="button" data-toggle="modal" data-target="#addIndex">
-              New Index
-            </button>
-          </p>
-        )}
+          {readOnly === false && (
+            <p>
+              <button type="button" data-toggle="modal" data-target="#addDocument">
+                New Document
+              </button>
+              <button type="button" data-toggle="modal" data-target="#addIndex">
+                New Index
+              </button>
+            </p>
+          )}
 
-        <ul id="tabs" data-tabs="tabs">
-          <li><a href="#simple" data-toggle="tab">Simple</a></li>
-          <li><a href="#advanced" data-toggle="tab">Advanced</a></li>
-        </ul>
+          <ul id="tabs" data-tabs="tabs">
+            <li><a href="#simple" data-toggle="tab">Simple</a></li>
+            <li><a href="#advanced" data-toggle="tab">Advanced</a></li>
+          </ul>
 
-        {readOnly === false && noDelete === false && count > 0 && (
-          <p>
-            {/* <form id="deleteListForm" method="POST"> */}
-            <button type="button" data-toggle="modal" data-target="#deleteListModal">
-              Delete all {count} documents
-            </button>
-            {/* </form> */}
-          </p>
-        )}
+          {readOnly === false && noDelete === false && count > 0 && (
+            <p>
+              {/* <form id="deleteListForm" method="POST"> */}
+              <button type="button" data-toggle="modal" data-target="#deleteListModal">
+                Delete all {count} documents
+              </button>
+              {/* </form> */}
+            </p>
+          )}
 
-        {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}
+          {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}
 
-        {documents.length === 0 ? (
-          <p>No documents found.</p>
-        ) : (
-          <>
-            {/* TODO */}
-            {pagination === true && <div>Pagination Top</div>}
+          {documents.length === 0 ? (
+            <p>No documents found.</p>
+          ) : (
+            <>
+              {/* TODO */}
+              {pagination === true && <div>Pagination Top</div>}
 
-            {/* TODO */}
-            Show Docs
+              {/* TODO */}
+              Show Docs
 
-            {/* TODO */}
-            {pagination === true && <div>Pagination Bottom</div>}
-          </>
-        )}
+              {/* TODO */}
+              {pagination === true && <div>Pagination Bottom</div>}
+            </>
+          )}
 
-        {readOnly === false && <RenameCollection collectionName={collectionName} dbName={dbName} />}
+          {readOnly === false && <RenameCollection collectionName={collectionName} dbName={dbName} />}
 
-        {/* TODO Tools */}
+          {/* TODO Tools */}
 
-        <StatsTable label="Collection Stats" fields={collectionStats} />
+          <StatsTable label="Collection Stats" fields={collectionStats} />
 
-        <IndexesTable indexes={indexes} show={{ delete: readOnly === false && noDelete === false }} />
+          <IndexesTable indexes={indexes} show={{ delete: readOnly === false && noDelete === false }} />
+        </RecoilRoot>
       </Container>
     </div>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params, query: reqQuery, req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, query: reqQuery }) => {
   const { collectionName, dbName } = params as Params
 
   // Make sure database exists
   if (!(dbName in global.mongo.connections)) {
-    global.session.messageError = `Database "${dbName}" not found!`
+    global.session.messageError = `Database '${dbName}' not found!`
     return getRedirect(dbName)
   }
   // Make sure collection exists
   if (!global.mongo.collections[dbName].includes(collectionName)) {
-    global.session.messageError = `Collection "${collectionName}" not found!`
+    global.session.messageError = `Collection '${collectionName}' not found!`
     return getRedirect(dbName)
   }
   const collection = global.mongo.connections[dbName].db.collection(collectionName)
   if (collection === null) {
-    global.session.messageError = `Collection "${collectionName}" not found!`
+    global.session.messageError = `Collection '${collectionName}' not found!`
     return getRedirect(dbName)
   }
   // TODO ???
@@ -236,8 +254,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
       // projection: reqQuery.projection,
       runAggregate: reqQuery.runAggregate === 'on'
     }
-    const { messageError } = global.session
+    const { messageError, messageSuccess } = global.session
     delete global.session.messageError
+    delete global.session.messageSuccess
 
     const collectionStats = mapCollectionStats(stats)
 
@@ -250,6 +269,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
         dbName,
         documents: items, // Docs converted to strings
         indexes,
+        ...messageSuccess !== undefined && { messageSuccess },
         ...messageError !== undefined && { messageError },
         options: process.env.config.options,
         pagination,
