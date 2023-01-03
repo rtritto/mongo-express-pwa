@@ -1,4 +1,4 @@
-import { Button, FormControl, Grid, Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
+import { Box, Button, Grid, Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useSetRecoilState } from 'recoil'
@@ -8,16 +8,22 @@ import { Edit } from 'common/SvgIcons.mts'
 import { isValidCollectionName } from 'lib/validations.ts'
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
-const RenameCollection = ({ collectionName, dbName }: { collectionName: string, dbName: string }) => {
+interface RenameCollectionProps {
+  collectionName: string
+  dbName: string
+}
+
+const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => {
   const [collection, setCollection] = useState<string>('')
-  const methods = useForm({ mode: 'onChange' })
   const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
   const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
+  const methods = useForm({ mode: 'onChange' })
 
-  const callPutCollection = async () => {
+  const handleRenameCollection = async () => {
     await fetch(EP_API_DATABASE_COLLECTION(dbName, collectionName), {
+      method: 'PUT',
       body: JSON.stringify({ collection }),
-      method: 'PUT'
+      headers: { 'Content-Type': 'application/json' }
     }).then(async (res) => {
       if (res.ok === true) {
         setSuccess('Collection renamed!')
@@ -46,8 +52,8 @@ const RenameCollection = ({ collectionName, dbName }: { collectionName: string, 
         <TableBody>
           <TableRow>
             <TableCell>
-              <FormControl sx={{ p: 0.5 }}>
-                <Grid container sx={{ alignItems: 'center' }}>
+              <Box>
+                <Grid container sx={{ alignItems: 'center', p: 0.5 }}>
                   <Grid item >
                     <Typography noWrap variant="subtitle2">{dbName} . </Typography>
                   </Grid>
@@ -87,16 +93,16 @@ const RenameCollection = ({ collectionName, dbName }: { collectionName: string, 
                           <path d={Edit} />
                         </SvgIcon>
                       )}
-                      type="submit"
+                      // type="submit"
                       variant="contained"
-                      onClick={callPutCollection}
+                      onClick={handleRenameCollection}
                       sx={{ textTransform: 'none'  /* remove uppercase */ }}
                     >
                       Rename
                     </Button>
                   </Grid>
                 </Grid>
-              </FormControl>
+              </Box>
             </TableCell>
           </TableRow>
         </TableBody>

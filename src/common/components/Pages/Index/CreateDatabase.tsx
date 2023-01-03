@@ -1,37 +1,48 @@
-import { Button, FormGroup, SvgIcon, TextField } from '@mui/material'
+import { Box, Button, FormGroup, SvgIcon, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import { useSetRecoilState } from 'recoil'
 
-import { EP_DB } from 'configs/endpoints.ts'
+import { EP_API_DB } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
 import { isValidDatabaseName } from 'lib/validations.ts'
+import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 const CreateDatabase = () => {
   const [database, setDatabase] = useState<string>('')
-
+  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
+  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
   const methods = useForm({ mode: 'onChange' })
 
-  const callPostDB = () => {
-    fetch(EP_DB, {
+  const handleCreateDatabase = async () => {
+    await fetch(EP_API_DB, {
       method: 'POST',
-      body: JSON.stringify({
-        database
-      })
+      body: JSON.stringify({ database }),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(async (res) => {
+      if (res.ok === true) {
+        setSuccess(`Database '${database}' created!`)
+      } else {
+        const { error } = await res.json()
+        setError(error)
+      }
+    }).catch((reason) => {
+      setError(reason.message)
     })
   }
 
   return (
     <FormGroup>
-      <form method="POST" onSubmit={methods.handleSubmit(callPostDB)}>
+      <Box>
         <Controller
           control={methods.control}
           name="controllerCreateDatabase"
           render={({ field: { onChange } }) => (
             <TextField
-              id="newDatabaseName"
+              id="database"
               error={database !== '' && 'controllerCreateDatabase' in methods.formState.errors}
               helperText={database !== '' && (methods.formState.errors.controllerCreateDatabase?.message || '')}
-              name="databaseName"
+              name="database"
               onChange={({ target: { value } }) => {
                 setDatabase(value)
                 onChange(value)
@@ -51,13 +62,14 @@ const CreateDatabase = () => {
           disabled={!database || 'controllerCreateDatabase' in methods.formState.errors}
           size="small"
           startIcon={<SvgIcon><path d={Add} /></SvgIcon>}
-          type="submit"
+          // type="submit"
           variant="contained"
+          onClick={handleCreateDatabase}
           sx={{ textTransform: 'none', py: 1 }}
         >
           Create Database
         </Button>
-      </form>
+      </Box>
     </FormGroup>
   )
 }

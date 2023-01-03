@@ -1,12 +1,12 @@
 import { Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useSetRecoilState } from 'recoil'
 
-import { EP_DB } from 'configs/endpoints.ts'
+import { EP_DB, EP_API_DATABASE } from 'configs/endpoints.ts'
 import { Visibility } from 'common/SvgIcons.mts'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import CreateDatabase from 'components/Pages/Index/CreateDatabase.tsx'
-import { selectedDatabaseState } from 'store/globalAtoms.mts'
+import { messageErrorState, messageSuccessState, selectedDatabaseState } from 'store/globalAtoms.mts'
 
 const tooltipTitle = 'Warning! Are you sure you want to delete this database? All collections and documents will be deleted.'
 
@@ -23,17 +23,26 @@ declare interface ShowDatabasesProps {
   }
 }
 
-const handleDelete = async (database: string) => {
-  // await fetch(EP_DB, {
-  //   method: 'DELETE',
-  //   body: JSON.stringify({
-  //     database
-  //   })
-  // })
-}
-
 const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
-  const setselectedDatabaseState = useSetRecoilState(selectedDatabaseState)
+  const setSelectedDatabaseState = useSetRecoilState(selectedDatabaseState)
+  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
+  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
+
+  const handleDelete = async (database: string) => {
+    await fetch(EP_API_DATABASE(database), {
+      method: 'DELETE'
+    }).then(async (res) => {
+      if (res.ok === true) {
+        setSuccess('Database created!')
+      } else {
+        const { error } = await res.json()
+        setError(error)
+      }
+    }).catch((reason) => {
+      setError(reason.message)
+    })
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -86,7 +95,7 @@ const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
                     href={hrefView}
                     style={{
                       margin: 1,
-                      textDecoration: 'none',  // remove text underline
+                      textDecoration: 'none'  // remove text underline
                     }}
                     // Button
                     fullWidth
@@ -94,9 +103,9 @@ const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
                     sx={{
                       // py: 2,
                       justifyContent: 'flex-start',
-                      textTransform: 'none' /* remove uppercase */
+                      textTransform: 'none' // remove uppercase
                     }}
-                    onClick={() => setselectedDatabaseState(database)}
+                    onClick={() => setSelectedDatabaseState(database)}
                   >
                     <Typography component='h6' variant='h6'>{database}</Typography>
                   </CustomLink>
@@ -108,7 +117,7 @@ const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
                       value={database}
                       entity="database"
                       tooltipTitle={tooltipTitle}
-                      handleDelete={handleDelete}
+                      handleDelete={() => handleDelete(database)}
                     />
                   </TableCell>
                 )}

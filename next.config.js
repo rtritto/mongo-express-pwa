@@ -14,9 +14,6 @@ const config = configDefault
 
 await global.mongo.connect(config)
 
-// init session
-global.session = {}
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: { config },

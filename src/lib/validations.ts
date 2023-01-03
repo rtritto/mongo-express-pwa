@@ -36,3 +36,35 @@ export const isValidDatabaseName = (name: string = '') => {
   }
   return isValidDatabaseNameRegex(name)
 }
+
+export const checkDatabase = (dbName: string) => {
+  if (!(dbName in global.mongo.connections)) {
+    throw new Error(`Database '${dbName}' not found!`)
+  }
+}
+
+export const checkCollection = (dbName: string, collectionName: string) => {
+  if (!global.mongo.collections[dbName].includes(collectionName)) {
+    throw new Error(`Collection '${collectionName}' not found!`)
+  }
+}
+
+export const checkOption = (option: string, value: any) => {
+  if (process.env.config.options[option] === value) {
+    throw new Error(`Error: config.options.${option} is set to ${value}`)
+  }
+}
+
+export const validateDatabase = (database: string) => {
+  const validation = isValidDatabaseName(database)
+  if ('error' in validation) {
+    throw new Error(validation.error)
+  }
+}
+
+export const validateCollection = (collection: string) => {
+  const validation = isValidCollectionName(collection)
+  if ('error' in validation) {
+    throw new Error(validation.error)
+  }
+}

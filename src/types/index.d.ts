@@ -158,7 +158,3 @@ interface Params extends ParsedUrlQuery {
   collectionName: string
   dbName: string
 }
-
-interface CustomNextApiRequest extends NextApiRequest {
-  query: Params
-}

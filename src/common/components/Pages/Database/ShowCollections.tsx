@@ -1,12 +1,12 @@
 import { Button, Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useSetRecoilState } from 'recoil'
 
-import { EP_DB, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION } from 'configs/endpoints.ts'
+import { EP_DB, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION, EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import { FileUpload, Save, Visibility } from 'common/SvgIcons.mts'
 import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import CreateCollection from 'components/Pages/Database/CreateCollection.tsx'
-import { selectedCollectionState } from 'store/globalAtoms.mts'
+import { messageErrorState, messageSuccessState, selectedCollectionState } from 'store/globalAtoms.mts'
 
 const tooltipTitle = 'Are you sure you want to delete this collection? All documents will be deleted.'
 
@@ -24,21 +24,12 @@ const ButtonExportImportStyle = {
 
 declare interface ShowDatabasesProps {
   collections: string[]
-  database: string
+  dbName: string
   show: {
     create: boolean
     delete: boolean
     export: boolean
   }
-}
-
-const handleDelete = async (database: string) => {
-  // await fetch(EP_DB, {
-  //   method: 'DELETE',
-  //   body: JSON.stringify({
-  //     database
-  //   })
-  // })
 }
 
 const handleImport = async (event) => {
@@ -51,8 +42,26 @@ const handleImport = async (event) => {
   // })
 }
 
-const ShowCollections = ({ collections = [], database, show }: ShowDatabasesProps) => {
+const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps) => {
   const setSelectedCollectionState = useSetRecoilState(selectedCollectionState)
+  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
+  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
+
+  const handleDelete = async (database: string, collection: string) => {
+    await fetch(EP_API_DATABASE_COLLECTION(database, collection), {
+      method: 'DELETE'
+    }).then(async (res) => {
+      if (res.ok === true) {
+        setSuccess(`Collection '${collection}' deleted!`)
+      } else {
+        const { error } = await res.json()
+        setError(error)
+      }
+    }).catch((reason) => {
+      setError(reason.message)
+    })
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -65,14 +74,14 @@ const ShowCollections = ({ collections = [], database, show }: ShowDatabasesProp
             </TableCell>
 
             <TableCell sx={{ px: 1.5, py: 1, borderLeft: 'none' }} align="right" colSpan={5}>
-              {show.create === true && <CreateCollection />}
+              {show.create === true && <CreateCollection dbName={dbName} />}
             </TableCell>
           </TableRow>
         </TableHead>
 
         <TableBody>
           {collections.map((collection) => {
-            const encodedDatabase = encodeURIComponent(database)
+            const encodedDatabase = encodeURIComponent(dbName)
             const encodedCollection = encodeURIComponent(collection)
             const hrefView = `${EP_DB}/${encodedDatabase}/${encodedCollection}`
             const hrefExport = EP_EXPORT_COLLECTION(encodedDatabase, encodedCollection)
@@ -181,7 +190,7 @@ const ShowCollections = ({ collections = [], database, show }: ShowDatabasesProp
                       value={collection}
                       entity="collection"
                       tooltipTitle={tooltipTitle}
-                      handleDelete={handleDelete}
+                      handleDelete={() => handleDelete(dbName, collection)}
                     />
                   </TableCell>
                 )}

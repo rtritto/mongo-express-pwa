@@ -99,8 +99,9 @@ const DeleteModalBox = ({ value, entity, tooltipTitle, handleDelete }: DeleteMod
           <Grid container justifyContent="flex-end" sx={{ p: 1 }}>
             <Button
               id="delete"
-              onClick={() => input === value && handleDelete(input)}
+              onClick={() => input === value && handleDelete(input) && handleClose()}
               size="small"
+              // type="submit"
               value={value}
               variant="contained"
               sx={{ backgroundColor: 'rgb(108, 49, 47)', m: 1 }}

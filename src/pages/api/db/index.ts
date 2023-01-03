@@ -1,36 +1,40 @@
-import { isValidDatabaseName } from 'lib/validations.ts'
+import { MandatoryReqBody, MandatoryReqBodyParam } from 'errors/index.mts'
+import { validateDatabase } from 'lib/validations.ts'
+import { withExceptionHandler } from 'middlewares/api.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {  // addDatabase
-    const name = req.body.database
-    if (!isValidDatabaseName(name)) {
-      // TODO: handle error
-      console.error('That database name is invalid.')
-      global.session.messageError = 'That database name is invalid.'
-      return res.redirect('back')
+    if (req.body === '') {
+      throw new MandatoryReqBody()
     }
-    const ndb = global.mongo.mainClient.client.db(name)
+    let database: string
+    try {
+      database = req.body.database
+    } catch (error) {
+      throw new MandatoryReqBodyParam('database')
+    }
+    validateDatabase(database)
 
-    await ndb.createCollection('delete_me').then(async () => {
-      await global.mongo.updateDatabases().then(() => {
-        res.redirect(res.locals.baseHref)
-      })
+    const client = await global.mongo.connect()
+    const ndb = client.db(database)
 
-      // await ndb.dropCollection('delete_me').then(() => {
-      //   res.redirect(res.locals.baseHref + 'db/' + name)
-      // }).catch((error) => {
-      //   //TODO: handle error
-      //   console.error('Could not delete collection.')
-      //   req.session.error = 'Could not delete collection. Err:' + error
-      //   res.redirect('back')
-      // })
-    }).catch((error) => {
-      // TODO: handle error
-      console.error(`Could not create collection. Err: ${error}`)
-      global.session.messageError = `Could not create collection. Err: ${error}`
-      res.redirect('back')
+    await ndb.createCollection('delete_me').catch((error) => {
+      console.debug(error)
+      throw new Error(`Could not create collection. ${error.message}`)
     })
+    await global.mongo.updateDatabases()
+    await ndb.dropCollection('delete_me')/* .then(() => {
+      res.redirect(res.locals.baseHref + 'db/' + name)
+    }) */.catch((/* error */) => {
+      // Comment to prevent permission error:
+      // MongoServerError: user is not allowed to do action [dropDatabase] on [<database>.]
+      // console.debug(error)
+      // throw new Error(`Could not delete collection. ${error.message}`)
+    })
+    res.end()
+    return
   }
+  res.status(405).end(`Method ${req.method} Not Allowed!`)
 }
 
-export default handler
+export default withExceptionHandler(handler)

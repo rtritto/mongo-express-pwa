@@ -69,7 +69,7 @@ const DatabasePage = (props: DatabasePageProps) => {
 
         <ShowCollections
           collections={collections}
-          database={dbName}
+          dbName={dbName}
           show={{
             create: readOnly === false,
             export: noExport === false,

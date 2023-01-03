@@ -7,8 +7,6 @@ declare global {
     }
   }
   var mongo: Mongo
-  var session: {
-    messageError?: string
-    messageSuccess?: string
-  }
+  var messageError: string | undefined
+  var messageSuccess: string | undefined
 }
