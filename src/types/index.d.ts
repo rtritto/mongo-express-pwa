@@ -13,6 +13,7 @@ type MongoClient = import('mongodb').MongoClient
 type NextApiRequest = import('next').NextApiRequest
 type NextApiResponse = import('next').NextApiResponse
 type NextApiHandler = import('next').NextApiHandler
+type Redirect = import('next').Redirect
 
 type Config = import('config.default.mts').Config
 type MongoDb = import('config.default.mts').MongoDb

@@ -1,13 +1,18 @@
 import { Alert, Box, Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
+import { useEffect } from 'react'
+import { useSetRecoilState } from 'recoil'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
 import { mapServerStatus } from 'lib/mapInfo.ts'
+import { getGlobalValueAndReset } from 'lib/GlobalRef.ts'
+import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 interface IndexProps {
   databases: string[]
   messageError: string | null
+  messageSuccess: string | null
   options: {
     noDelete: boolean
     readOnly: boolean
@@ -16,8 +21,28 @@ interface IndexProps {
   title: string
 }
 
-const Index = ({ databases, messageError, options, serverStatus, title }: IndexProps) => {
-  const { noDelete, readOnly } = options
+const Index = (props: IndexProps) => {
+  const {
+    databases,
+    messageError,
+    options: { noDelete, readOnly },
+    serverStatus,
+    title
+  } = props
+
+  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
+  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
+
+  // Show alerts if messages exist
+  useEffect(() => {
+    if ('messageError' in props) {
+      setError(props.messageError)
+    }
+    if ('messageSuccess' in props) {
+      setSuccess(props.messageSuccess)
+    }
+  }, [props.messageError, props.messageSuccess])
+
   return (
     <div>
       <Head>
@@ -60,12 +85,14 @@ const Index = ({ databases, messageError, options, serverStatus, title }: IndexP
 }
 
 export async function getServerSideProps() {
-  const { messageError } = global.session
-  delete global.session.messageError
+  // Get messages from redirect
+  const messageError = getGlobalValueAndReset('messageError')
+  const messageSuccess = getGlobalValueAndReset('messageSuccess')
 
   const props = {
     databases: global.mongo.databases,
     ...messageError !== undefined && { messageError },
+    ...messageSuccess !== undefined && { messageSuccess },
     options: process.env.config.options,
     title: 'Home - Mongo Express'
   }

@@ -1,12 +1,13 @@
 import { Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 import { GetServerSideProps } from 'next'
-import { RecoilRoot } from 'recoil'
+import { useEffect } from 'react'
+import { useSetRecoilState } from 'recoil'
 
-import AlertMessages from 'components/Custom/AlertMessages.tsx'
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
 import { mapDatabaseStats } from 'lib/mapInfo.ts'
+import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 declare interface DatabasePageProps {
@@ -23,7 +24,7 @@ declare interface DatabasePageProps {
   title: string
 }
 
-const getRedirect = () => ({
+const getRedirect = (): { redirect: Redirect } => ({
   redirect: {
     destination: '/',
     permanent: false
@@ -37,6 +38,20 @@ const DatabasePage = (props: DatabasePageProps) => {
     databaseStats,
     title
   } = props
+
+  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
+  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
+
+  // Show alerts if messages exist
+  useEffect(() => {
+    if ('messageError' in props) {
+      setError(props.messageError)
+    }
+    if ('messageSuccess' in props) {
+      setSuccess(props.messageSuccess)
+    }
+  }, [props.messageError, props.messageSuccess])
+
   return (
     <div>
       <Head>
@@ -46,52 +61,38 @@ const DatabasePage = (props: DatabasePageProps) => {
       </Head>
 
       <Container sx={{ p: 1 }}>
-        <RecoilRoot
-          key="init"
-          initializeState={({ set }) => {
-            if ('messageError' in props) {
-              set(messageErrorState, props.messageError)
-            }
-            if ('messageSuccess' in props) {
-              set(messageSuccessState, props.messageSuccess)
-            }
+        <Typography component="h4" gutterBottom variant="h4">
+          Viewing Database: <strong>{dbName}</strong>
+        </Typography>
+
+        <Divider sx={{ border: 1, my: 1.5 }} />
+
+        <ShowCollections
+          collections={collections}
+          database={dbName}
+          show={{
+            create: readOnly === false,
+            export: noExport === false,
+            delete: noDelete === false
           }}
-        >
-          <AlertMessages />
+        />
 
-          <Typography component="h4" gutterBottom variant="h4">
-            Viewing Database: <strong>{dbName}</strong>
-          </Typography>
+        {/* TODO GridFS Buckets grids.length && settings.gridFSEnabled */}
 
-          <Divider sx={{ border: 1, my: 1.5 }} />
+        {/* TODO Create GridFS Bucket */}
 
-          <ShowCollections
-            collections={collections}
-            database={dbName}
-            show={{
-              create: readOnly === false,
-              export: noExport === false,
-              delete: noDelete === false
-            }}
-          />
-
-          {/* TODO GridFS Buckets grids.length && settings.gridFSEnabled */}
-
-          {/* TODO Create GridFS Bucket */}
-
-          <StatsTable label="Database Stats" fields={databaseStats} />
-        </RecoilRoot>
+        <StatsTable label="Database Stats" fields={databaseStats} />
       </Container>
     </div>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, res }) => {
   const { dbName } = params as Params
 
   // Make sure database exists
   if (!(dbName in global.mongo.connections)) {
-    global.session.messageError = `Database '${dbName}' not found!`
+    setGlobalValue('messageError', `Database '${dbName}' not found!`)
     return getRedirect()
   }
   // TODO ???
@@ -102,34 +103,35 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     await global.mongo.updateCollections(global.mongo.connections[dbName])
   } catch (error) {
     console.error(error)
-    global.session.messageError = `Could not refresh collections. ${error}`
+    setGlobalValue('messageError', `Could not refresh collections. ${error}`)
     return getRedirect()
   }
 
+  let databaseStats
   try {
     const dbStats = await global.mongo.connections[dbName].db.stats()
-    const databaseStats = mapDatabaseStats(dbStats)
-
-    const { messageError, messageSuccess } = global.session
-    delete global.session.messageError
-    delete global.session.messageSuccess
-
-    return {
-      props: {
-        collections: global.mongo.collections[dbName],
-        databaseStats,
-        dbName,
-        // TODO grids: global.mongo.gridFSBuckets[dbName],
-        ...messageSuccess !== undefined && { messageSuccess },
-        ...messageError !== undefined && { messageError },
-        options: process.env.config.options,
-        title: `${dbName} - Mongo Express`
-      }
-    }
+    databaseStats = mapDatabaseStats(dbStats)
   } catch (error) {
     console.error(error)
-    global.session.messageError = `Could not get stats. ${error}`
+    setGlobalValue('messageError', `Could not get stats. ${error}`)
     return getRedirect()
+  }
+
+  // Get messages from redirect
+  const messageError = getGlobalValueAndReset('messageError')
+  const messageSuccess = getGlobalValueAndReset('messageSuccess')
+
+  return {
+    props: {
+      collections: global.mongo.collections[dbName],
+      databaseStats,
+      dbName,
+      // TODO grids: global.mongo.gridFSBuckets[dbName],
+      ...messageSuccess !== undefined && { messageSuccess },
+      ...messageError !== undefined && { messageError },
+      options: process.env.config.options,
+      title: `${dbName} - Mongo Express`
+    }
   }
 }
 

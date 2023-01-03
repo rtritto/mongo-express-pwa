@@ -7,6 +7,7 @@ import type { AppProps } from 'next/app.js'
 
 import createEmotionCache from 'common/createEmotionCache.mts'
 import theme from 'common/Theme.mts'
+import AlertMessages from 'components/Custom/AlertMessages.tsx'
 import NavBar from 'components/Nav/NavBar.tsx'
 import { selectedCollectionState, selectedDatabaseState } from 'store/globalAtoms.mts'
 
@@ -74,6 +75,8 @@ function MyApp(props: MyAppProps) {
             }}
           />
 
+          <AlertMessages />
+
           <Component {...pageProps} />
         </ThemeProvider>
       </CacheProvider>
@@ -89,6 +92,7 @@ MyApp.getInitialProps = async ({ router /* or ctx.req */ }) => {
 
   //   return { info }
   // }
+
   return {
     databases: global.mongo.databases,
     collections: global.mongo.collections,

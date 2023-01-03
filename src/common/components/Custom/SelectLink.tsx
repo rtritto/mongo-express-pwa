@@ -1,7 +1,8 @@
-import { FormControl, InputLabel, Select, SelectChangeEvent } from '@mui/material'
-import { RecoilState, useRecoilState } from 'recoil'
+import { FormControl, Select, SelectChangeEvent } from '@mui/material'
+import { RecoilState, useRecoilState, useSetRecoilState } from 'recoil'
 
 import CustomLink from 'components/Custom/CustomLink.tsx'
+import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 interface SelectLinkProps {
   baseUrl: string
@@ -12,9 +13,14 @@ interface SelectLinkProps {
 
 const SelectLink = ({ baseUrl, entities = [], label, selectedState }: SelectLinkProps) => {
   const [selected, setSelected] = useRecoilState<string>(selectedState)
+  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
+  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelected(event.target.value)
+    // reset Alerts
+    setSuccess(null)
+    setError(null)
   }
 
   return (
@@ -25,9 +31,14 @@ const SelectLink = ({ baseUrl, entities = [], label, selectedState }: SelectLink
           // Link
           href={`${baseUrl}/${encodeURIComponent(selected)}`}
           style={{
-            textDecoration: 'none',  // remove text underline
+            textDecoration: 'none'  // remove text underline
           }}
           // Button
+          onClick={() => {
+            // reset Alerts
+            setSuccess(null)
+            setError(null)
+          }}
           sx={{
             color: 'rgb(153, 143, 143)',
             justifyContent: 'flex-start',
