@@ -54,17 +54,3 @@ export const checkOption = (option: string, value: any) => {
     throw new Error(`Error: config.options.${option} is set to ${value}`)
   }
 }
-
-export const validateDatabase = (database: string) => {
-  const validation = isValidDatabaseName(database)
-  if ('error' in validation) {
-    throw new Error(validation.error)
-  }
-}
-
-export const validateCollection = (collection: string) => {
-  const validation = isValidCollectionName(collection)
-  if ('error' in validation) {
-    throw new Error(validation.error)
-  }
-}

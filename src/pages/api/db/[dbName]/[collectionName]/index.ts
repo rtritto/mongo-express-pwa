@@ -1,20 +1,12 @@
-import { MandatoryReqBodyError, MandatoryReqBodyParamError } from 'errors/index.mts'
 import { getQuery } from 'lib/queries.ts'
-import { checkDatabase, checkCollection, checkOption, validateCollection } from 'lib/validations.ts'
+import { checkDatabase, checkCollection, checkOption } from 'lib/validations.ts'
+import { validateCollectionReqBody } from 'lib/validationsReq.ts'
 import { withExceptionHandler } from 'middlewares/api.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'PUT') {  // renameCollection
-    if (req.body === '') {
-      throw new MandatoryReqBodyError()
-    }
-    let collection: string
-    try {
-      collection = req.body.collection
-    } catch (error) {
-      throw new MandatoryReqBodyParamError('collection')
-    }
-    validateCollection(collection)
+    await validateCollectionReqBody(req.body)
+    const { collection } = req.body
     const { collectionName, dbName } = req.query as Params
     checkDatabase(dbName)
     checkCollection(dbName, collectionName)

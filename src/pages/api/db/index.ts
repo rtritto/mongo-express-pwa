@@ -1,19 +1,10 @@
-import { MandatoryReqBodyError, MandatoryReqBodyParamError } from 'errors/index.mts'
-import { validateDatabase } from 'lib/validations.ts'
+import { validateDatabaseReqBody } from 'lib/validationsReq.ts'
 import { withExceptionHandler } from 'middlewares/api.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {  // addDatabase
-    if (req.body === '') {
-      throw new MandatoryReqBodyError()
-    }
-    let database: string
-    try {
-      database = req.body.database
-    } catch (error) {
-      throw new MandatoryReqBodyParamError('database')
-    }
-    validateDatabase(database)
+    await validateDatabaseReqBody(req.body)
+    const { database } = req.body
 
     const client = await global.mongo.connect()
     const ndb = client.db(database)
