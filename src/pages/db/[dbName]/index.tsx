@@ -2,16 +2,15 @@ import { Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 import { GetServerSideProps } from 'next'
 import { useEffect } from 'react'
-import { useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
 import { mapDatabaseStats } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
-import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { collectionsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 declare interface DatabasePageProps {
-  collections: Collections
   dbName: string
   messageError: string | undefined
   messageSuccess: string | undefined
@@ -33,21 +32,22 @@ const getRedirect = (): { redirect: Redirect } => ({
 
 const DatabasePage = (props: DatabasePageProps) => {
   const {
-    collections, dbName,
+    dbName,
     options: { noDelete, noExport, readOnly },
     databaseStats,
     title
   } = props
 
-  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
-  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
+  const collections = useRecoilValue<Mongo['collections']>(collectionsState)
+  const [error, setError] = useRecoilState<string | undefined>(messageErrorState)
+  const [success, setSuccess] = useRecoilState<string | undefined>(messageSuccessState)
 
   // Show alerts if messages exist
   useEffect(() => {
-    if ('messageError' in props) {
+    if (error !== props.messageError) {
       setError(props.messageError)
     }
-    if ('messageSuccess' in props) {
+    if (success !== props.messageSuccess) {
       setSuccess(props.messageSuccess)
     }
   }, [props.messageError, props.messageSuccess])
@@ -68,7 +68,7 @@ const DatabasePage = (props: DatabasePageProps) => {
         <Divider sx={{ border: 1, my: 1.5 }} />
 
         <ShowCollections
-          collections={collections}
+          collections={collections[dbName]}
           dbName={dbName}
           show={{
             create: readOnly === false,
@@ -123,7 +123,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
 
   return {
     props: {
-      collections: global.mongo.collections[dbName],
       databaseStats,
       dbName,
       // TODO grids: global.mongo.gridFSBuckets[dbName],

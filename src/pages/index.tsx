@@ -1,18 +1,17 @@
-import { Alert, Box, Container, Divider, Typography } from '@mui/material'
+import { Box, Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 import { useEffect } from 'react'
-import { useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
 import { mapServerStatus } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset } from 'lib/GlobalRef.ts'
-import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 interface IndexProps {
-  databases: string[]
-  messageError: string | null
-  messageSuccess: string | null
+  messageError: string | undefined
+  messageSuccess: string | undefined
   options: {
     noDelete: boolean
     readOnly: boolean
@@ -23,22 +22,21 @@ interface IndexProps {
 
 const Index = (props: IndexProps) => {
   const {
-    databases,
-    messageError,
     options: { noDelete, readOnly },
     serverStatus,
     title
   } = props
 
-  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
-  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
+  const databases = useRecoilValue<Mongo['databases']>(databasesState)
+  const [error, setError] = useRecoilState<string | undefined>(messageErrorState)
+  const [success, setSuccess] = useRecoilState<string | undefined>(messageSuccessState)
 
   // Show alerts if messages exist
   useEffect(() => {
-    if ('messageError' in props) {
+    if (error !== props.messageError) {
       setError(props.messageError)
     }
-    if ('messageSuccess' in props) {
+    if (success !== props.messageSuccess) {
       setSuccess(props.messageSuccess)
     }
   }, [props.messageError, props.messageSuccess])
@@ -52,12 +50,6 @@ const Index = (props: IndexProps) => {
       </Head>
 
       <Container sx={{ p: 1 }}>
-        {messageError && (
-          <Alert severity="error" onClose={() => { }} sx={{ my: 2 }}>
-            {messageError}
-          </Alert>
-        )}
-
         <Typography component="h4" gutterBottom variant="h4">Mongo Express</Typography>
 
         <Divider sx={{ border: 1, my: 1.5 }} />
@@ -90,7 +82,6 @@ export async function getServerSideProps() {
   const messageSuccess = getGlobalValueAndReset('messageSuccess')
 
   const props = {
-    databases: global.mongo.databases,
     ...messageError !== undefined && { messageError },
     ...messageSuccess !== undefined && { messageSuccess },
     options: process.env.config.options,

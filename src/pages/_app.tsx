@@ -9,7 +9,7 @@ import createEmotionCache from 'common/createEmotionCache.mts'
 import theme from 'common/Theme.mts'
 import AlertMessages from 'components/Custom/AlertMessages.tsx'
 import NavBar from 'components/Nav/NavBar.tsx'
-import { selectedCollectionState, selectedDatabaseState } from 'store/globalAtoms.mts'
+import { collectionsState, databasesState, selectedCollectionState, selectedDatabaseState } from 'store/globalAtoms.mts'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -50,6 +50,8 @@ function MyApp(props: MyAppProps) {
     <RecoilRoot
       key="init"
       initializeState={({ set }) => {
+        set(databasesState, databases)
+        set(collectionsState, collections)
         if ('dbName' in props) {
           set(selectedDatabaseState, props.dbName)
         }
@@ -67,8 +69,6 @@ function MyApp(props: MyAppProps) {
           <CssBaseline />
 
           <NavBar
-            collections={collections}
-            databases={databases}
             show={{
               databases: 'dbName' in props,
               collections: 'collectionName' in props
@@ -95,7 +95,7 @@ MyApp.getInitialProps = async ({ router /* or ctx.req */ }) => {
 
   return {
     databases: global.mongo.databases,
-    collections: global.mongo.collections,
+    collections: Object.assign({}, global.mongo.collections),
     ...'dbName' in router.query && { dbName: router.query.dbName },
     ...'collectionName' in router.query && { collectionName: router.query.collectionName }
   }

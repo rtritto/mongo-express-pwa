@@ -4,19 +4,19 @@ import { useRecoilState } from 'recoil'
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 const AlertMessages = () => {
-  const [success, setSuccess] = useRecoilState<string | undefined | null>(messageSuccessState)
-  const [error, setError] = useRecoilState<string | undefined | null>(messageErrorState)
+  const [success, setSuccess] = useRecoilState<string | undefined>(messageSuccessState)
+  const [error, setError] = useRecoilState<string | undefined>(messageErrorState)
 
   return (
     <>
       {success && (
-        <Alert severity="success" onClose={() => { setSuccess(null) }} sx={{ my: 2 }}>
+        <Alert severity="success" onClose={() => { setSuccess(undefined) }} sx={{ my: 2 }}>
           {success}
         </Alert>
       )}
 
       {error && (
-        <Alert severity="error" onClose={() => { setError(null) }} sx={{ my: 2 }}>
+        <Alert severity="error" onClose={() => { setError(undefined) }} sx={{ my: 2 }}>
           {error}
         </Alert>
       )}

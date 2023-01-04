@@ -1,12 +1,13 @@
 import { Box, Button, Grid, Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
+import { useRouter } from 'next/router.js'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useSetRecoilState } from 'recoil'
 
-import { EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
+import { EP_DATABASE_COLLECTION, EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import { Edit } from 'common/SvgIcons.mts'
 import { isValidCollectionName } from 'lib/validations.ts'
-import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { collectionsState, selectedCollectionState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 interface RenameCollectionProps {
   collectionName: string
@@ -15,9 +16,12 @@ interface RenameCollectionProps {
 
 const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => {
   const [collection, setCollection] = useState<string>('')
-  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
+  const setCollections = useSetRecoilState<Mongo['collections']>(collectionsState)
+  const setSelectedCollection = useSetRecoilState<string>(selectedCollectionState)
+  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
+  const setError = useSetRecoilState<string | undefined>(messageErrorState)
   const methods = useForm({ mode: 'onChange' })
+  const router = useRouter()
 
   const handleRenameCollection = async () => {
     await fetch(EP_API_DATABASE_COLLECTION(dbName, collectionName), {
@@ -26,7 +30,23 @@ const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => 
       headers: { 'Content-Type': 'application/json' }
     }).then(async (res) => {
       if (res.ok === true) {
-        setSuccess('Collection renamed!')
+        setSuccess(`Collection '${collectionName}' renamed to '${collection}'!`)
+        // Rename collection from global collections to update viewing collections
+        setCollections((collections) => {
+          const indexToRemove = collections[dbName].findIndex((coll) => coll === collectionName)
+          return {
+            ...collections,
+            [dbName]: [
+              ...collections[dbName].slice(0, indexToRemove),
+              ...collections[dbName].slice(indexToRemove + 1),
+              collection
+            ].sort()
+          }
+        })
+        setSelectedCollection(collection)
+        setCollection('')  // Reset value
+        // Update URI (without page reload)
+        router.push(EP_DATABASE_COLLECTION(dbName, collection), undefined, { shallow: true })
       } else {
         const { error } = await res.json()
         setError(error)
@@ -64,10 +84,10 @@ const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => 
                       name="controllerRenameCollection"
                       render={({ field: { onChange } }) => (
                         <TextField
-                          id="newCollectionName"
+                          id="collection"
                           error={collection !== '' && 'controllerRenameCollection' in methods.formState.errors}
                           helperText={collection !== '' && (methods.formState.errors.controllerRenameCollection?.message || '')}
-                          name="collectionName"
+                          name="collection"
                           onChange={({ target: { value } }) => {
                             setCollection(value)
                             onChange(value)
@@ -76,6 +96,7 @@ const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => 
                           required
                           size="small"
                           type="string"
+                          value={collection}
                           variant="outlined"
                         // sx={{ paddingBottom: 0 }}
                         />
@@ -89,7 +110,7 @@ const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => 
                       disabled={!collection || 'controllerRenameCollection' in methods.formState.errors}
                       size="small"
                       startIcon={(
-                        <SvgIcon sx={{ marginRight: '8px', marginLeft: '-4px' }}>
+                        <SvgIcon sx={{ marginRight: '8px', marginLeft: '-4px' /* restore default margin style */ }}>
                           <path d={Edit} />
                         </SvgIcon>
                       )}

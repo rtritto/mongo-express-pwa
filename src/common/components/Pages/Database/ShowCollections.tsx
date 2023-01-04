@@ -6,7 +6,7 @@ import { FileUpload, Save, Visibility } from 'common/SvgIcons.mts'
 import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import CreateCollection from 'components/Pages/Database/CreateCollection.tsx'
-import { messageErrorState, messageSuccessState, selectedCollectionState } from 'store/globalAtoms.mts'
+import { collectionsState, messageErrorState, messageSuccessState, selectedCollectionState } from 'store/globalAtoms.mts'
 
 const tooltipTitle = 'Are you sure you want to delete this collection? All documents will be deleted.'
 
@@ -44,14 +44,26 @@ const handleImport = async (event) => {
 
 const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps) => {
   const setSelectedCollectionState = useSetRecoilState(selectedCollectionState)
-  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
+  const setCollections = useSetRecoilState<Mongo['collections']>(collectionsState)
+  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
+  const setError = useSetRecoilState<string | undefined>(messageErrorState)
 
   const handleDelete = async (database: string, collection: string) => {
     await fetch(EP_API_DATABASE_COLLECTION(database, collection), {
       method: 'DELETE'
     }).then(async (res) => {
       if (res.ok === true) {
+        // Remove collection from global collections to update viewing collections
+        setCollections((collections) => {
+          const indexToRemove = collections[database].findIndex((coll) => coll === collection)
+          return {
+            ...collections,
+            [database]: [
+              ...collections[database].slice(0, indexToRemove),
+              ...collections[database].slice(indexToRemove + 1)
+            ]
+          }
+        })
         setSuccess(`Collection '${collection}' deleted!`)
       } else {
         const { error } = await res.json()

@@ -30,12 +30,12 @@ declare interface DeleteModalBoxProps {
 
 const DeleteModalBox = ({ value, entity, tooltipTitle, handleDelete }: DeleteModalBoxProps) => {
   const [open, setOpen] = useState(false)
-  const [input, setinput] = useState('')
+  const [input, setInput] = useState('')
 
   const handleOpen = () => { setOpen(true) }
   const handleClose = () => { setOpen(false) }
 
-  const handleOnChange = (event) => { setinput(event.currentTarget.value) }
+  const handleOnChange = (event) => { setInput(event.currentTarget.value) }
 
   return (
     <Box>
@@ -84,11 +84,13 @@ const DeleteModalBox = ({ value, entity, tooltipTitle, handleDelete }: DeleteMod
               </Typography>
 
               <TextField
+                autoFocus
                 fullWidth
                 onChange={handleOnChange}
                 placeholder={value}
                 size="small"
                 type="string"
+                value={input}
                 variant="outlined"
                 sx={{ pl: 0.5 }} />
             </Box>
@@ -99,7 +101,12 @@ const DeleteModalBox = ({ value, entity, tooltipTitle, handleDelete }: DeleteMod
           <Grid container justifyContent="flex-end" sx={{ p: 1 }}>
             <Button
               id="delete"
-              onClick={() => input === value && handleDelete(input) && handleClose()}
+              onClick={() => {
+                handleDelete(input)
+                handleClose()
+                setInput('')  // Reset value
+              }}
+              disabled={input !== value}
               size="small"
               // type="submit"
               value={value}

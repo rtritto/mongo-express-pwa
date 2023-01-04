@@ -6,7 +6,7 @@ import { useSetRecoilState } from 'recoil'
 import { EP_API_DATABASE } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
 import { isValidCollectionName } from 'lib/validations.ts'
-import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { collectionsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 interface CreateCollectionProps {
   dbName: string
@@ -14,8 +14,9 @@ interface CreateCollectionProps {
 
 const CreateCollection = ({ dbName }: CreateCollectionProps) => {
   const [collection, setCollection] = useState<string>('')
-  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
+  const setCollections = useSetRecoilState<Mongo['collections']>(collectionsState)
+  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
+  const setError = useSetRecoilState<string | undefined>(messageErrorState)
   const methods = useForm({ mode: 'onChange' })
 
   const handleCreateCollection = async () => {
@@ -26,6 +27,12 @@ const CreateCollection = ({ dbName }: CreateCollectionProps) => {
     }).then(async (res) => {
       if (res.ok === true) {
         setSuccess(`Collection '${collection}' created!`)
+        // Add collection to global collections to update viewing collections
+        setCollections((collections) => ({
+          ...collections,
+          [dbName]: [...collections[dbName], collection].sort()
+        }))
+        setCollection('')  // Reset value
       } else {
         const { error } = await res.json()
         setError(error)
@@ -54,6 +61,7 @@ const CreateCollection = ({ dbName }: CreateCollectionProps) => {
             required
             size="small"
             type="string"
+            value={collection}
             variant="outlined"
           // sx={{ paddingBottom: 0 }}
           />

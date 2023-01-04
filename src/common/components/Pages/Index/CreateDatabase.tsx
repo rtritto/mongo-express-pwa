@@ -6,12 +6,13 @@ import { useSetRecoilState } from 'recoil'
 import { EP_API_DB } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
 import { isValidDatabaseName } from 'lib/validations.ts'
-import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
 
 const CreateDatabase = () => {
   const [database, setDatabase] = useState<string>('')
-  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
+  const setDatabases = useSetRecoilState<Mongo['databases']>(databasesState)
+  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
+  const setError = useSetRecoilState<string | undefined>(messageErrorState)
   const methods = useForm({ mode: 'onChange' })
 
   const handleCreateDatabase = async () => {
@@ -22,6 +23,9 @@ const CreateDatabase = () => {
     }).then(async (res) => {
       if (res.ok === true) {
         setSuccess(`Database '${database}' created!`)
+        // Add database to global databases to update viewing databases
+        setDatabases((databases) => [...databases, database].sort())
+        setDatabase('')  // Reset value
       } else {
         const { error } = await res.json()
         setError(error)
@@ -51,6 +55,7 @@ const CreateDatabase = () => {
               required
               size="small"
               type="string"
+              value={database}
               variant="outlined"
             // sx={{ paddingBottom: 0 }}
             />

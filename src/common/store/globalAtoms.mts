@@ -1,5 +1,15 @@
 import { atom } from 'recoil'
 
+export const databasesState = atom({
+  key: 'databasesState',
+  default: []
+})
+
+export const collectionsState = atom({
+  key: 'collectionsState',
+  default: {}
+})
+
 export const selectedDatabaseState = atom({
   key: 'selectedDatabaseState',
   default: ''

@@ -2,7 +2,7 @@ import { Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 import { GetServerSideProps } from 'next'
 import { useEffect } from 'react'
-import { useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
@@ -14,10 +14,16 @@ import { mapCollectionStats } from 'lib/mapInfo.ts'
 // TODO move utils import and related logic that use it to lib/mapInfo.ts
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
 import { bytesToSize, roughSizeOfObject } from 'lib/utils.ts'
-import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { selectedCollectionState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+
+const getRedirect = (dbName: string): { redirect: Redirect } => ({
+  redirect: {
+    destination: EP_DATABASE(dbName),
+    permanent: false
+  }
+})
 
 declare interface DatabasePageProps {
-  collectionName: string
   collectionStats: ReturnType<typeof mapCollectionStats>
   count: number
   dbName: string
@@ -34,30 +40,25 @@ declare interface DatabasePageProps {
   title: string
 }
 
-const getRedirect = (dbName: string): { redirect: Redirect } => ({
-  redirect: {
-    destination: EP_DATABASE(dbName),
-    permanent: false
-  }
-})
-
 const CollectionPage = (props: DatabasePageProps) => {
   const {
-    collectionName, collectionStats, dbName,
+    dbName,
+    collectionStats,
     count, documents, indexes, pagination,
     options: { noDelete, noExport, readOnly },
     title
   } = props
 
-  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
-  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
+  const collectionName = useRecoilValue<string>(selectedCollectionState)
+  const [error, setError] = useRecoilState<string | undefined>(messageErrorState)
+  const [success, setSuccess] = useRecoilState<string | undefined>(messageSuccessState)
 
   // Show alerts if messages exist
   useEffect(() => {
-    if ('messageError' in props) {
+    if (error !== props.messageError) {
       setError(props.messageError)
     }
-    if ('messageSuccess' in props) {
+    if (success !== props.messageSuccess) {
       setSuccess(props.messageSuccess)
     }
   }, [props.messageError, props.messageSuccess])
@@ -264,7 +265,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
     return {
       props: {
         // ctx,
-        collectionName,
         collectionStats,
         count, // total number of docs returned by the query
         dbName,

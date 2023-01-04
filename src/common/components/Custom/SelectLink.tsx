@@ -13,14 +13,14 @@ interface SelectLinkProps {
 
 const SelectLink = ({ baseUrl, entities = [], label, selectedState }: SelectLinkProps) => {
   const [selected, setSelected] = useRecoilState<string>(selectedState)
-  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
+  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
+  const setError = useSetRecoilState<string | undefined>(messageErrorState)
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelected(event.target.value)
     // reset Alerts
-    setSuccess(null)
-    setError(null)
+    setSuccess(undefined)
+    setError(undefined)
   }
 
   return (
@@ -36,8 +36,8 @@ const SelectLink = ({ baseUrl, entities = [], label, selectedState }: SelectLink
           // Button
           onClick={() => {
             // reset Alerts
-            setSuccess(null)
-            setError(null)
+            setSuccess(undefined)
+            setError(undefined)
           }}
           sx={{
             color: 'rgb(153, 143, 143)',

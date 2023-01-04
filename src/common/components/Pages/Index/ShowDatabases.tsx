@@ -6,7 +6,7 @@ import { Visibility } from 'common/SvgIcons.mts'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import CreateDatabase from 'components/Pages/Index/CreateDatabase.tsx'
-import { messageErrorState, messageSuccessState, selectedDatabaseState } from 'store/globalAtoms.mts'
+import { databasesState, messageErrorState, messageSuccessState, selectedDatabaseState } from 'store/globalAtoms.mts'
 
 const tooltipTitle = 'Warning! Are you sure you want to delete this database? All collections and documents will be deleted.'
 
@@ -24,9 +24,10 @@ declare interface ShowDatabasesProps {
 }
 
 const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
+  const setDatabases = useSetRecoilState<Mongo['databases']>(databasesState)
   const setSelectedDatabaseState = useSetRecoilState(selectedDatabaseState)
-  const setSuccess = useSetRecoilState<string | undefined | null>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined | null>(messageErrorState)
+  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
+  const setError = useSetRecoilState<string | undefined>(messageErrorState)
 
   const handleDelete = async (database: string) => {
     await fetch(EP_API_DATABASE(database), {
@@ -34,6 +35,14 @@ const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
     }).then(async (res) => {
       if (res.ok === true) {
         setSuccess('Database created!')
+        // Remove database from global database to update viewing databases
+        setDatabases((databases) => {
+          const indexToRemove = databases.findIndex((db) => db === database)
+          return [
+            ...databases.slice(0, indexToRemove),
+            ...databases.slice(indexToRemove + 1)
+          ]
+        })
       } else {
         const { error } = await res.json()
         setError(error)

@@ -188,9 +188,9 @@ const CustomNavBar = ({ databases, collections, show }: CustomNavBarProps) => {
             </Typography>
 
             <Breadcrumbs aria-label="breadcrumb" separator=">" >
-              {show.databases === true && <NavDatabases databases={databases} />}
+              {show.databases === true && <NavDatabases />}
 
-              {show.collections === true && <NavCollections collections={collections} />}
+              {show.collections === true && <NavCollections />}
             </Breadcrumbs>
 
             {/* {mapNavLinks} */}
