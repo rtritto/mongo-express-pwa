@@ -37,8 +37,8 @@ const CreateCollection = ({ dbName }: CreateCollectionProps) => {
         const { error } = await res.json()
         setError(error)
       }
-    }).catch((reason) => {
-      setError(reason.message)
+    }).catch((error) => {
+      setError(error.message)
     })
   }
 

@@ -69,8 +69,8 @@ const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps)
         const { error } = await res.json()
         setError(error)
       }
-    }).catch((reason) => {
-      setError(reason.message)
+    }).catch((error) => {
+      setError(error.message)
     })
   }
 
