@@ -11,7 +11,7 @@ export const toSafeBSON = (string: string) => {
     return toBSON(string)
   } catch (error) {
     console.error(error)
-    return null
+    return
   }
 }
 

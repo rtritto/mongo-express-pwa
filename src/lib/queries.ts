@@ -87,7 +87,7 @@ export const getQuery = (query: QueryParameter) => {
   if (jsonQuery) {
     // if it is a complex query, take it as is
     const result = bson.toSafeBSON(jsonQuery)
-    if (result === null) {
+    if (result === undefined) {
       throw new Error('Query entered is not valid')
     }
     return result
