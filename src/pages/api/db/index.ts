@@ -25,10 +25,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await global.mongo.updateDatabases()
     await ndb.dropCollection('delete_me')/* .then(() => {
       res.redirect(res.locals.baseHref + 'db/' + name)
-    }) */.catch((/* error */) => {
+    }) */.catch((error) => {
+      console.debug(error)
       // Comment to prevent permission error:
       // MongoServerError: user is not allowed to do action [dropDatabase] on [<database>.]
-      // console.debug(error)
       // throw new Error(`Could not delete collection. ${error.message}`)
     })
     res.end()

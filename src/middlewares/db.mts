@@ -42,14 +42,14 @@ global.mongo = {
     const fullName = this.clients.length > 1
       ? `${info.connectionName}_${dbName}`
       : dbName
-    const newConnection = {
+    const connection = {
       info,
       dbName,
       fullName,
       db
     }
-    this.connections[fullName] = newConnection
-    return newConnection
+    this.connections[fullName] = connection
+    return connection
   },
   async updateDatabases() {
     this.connections = {}

@@ -8,7 +8,7 @@ const ModalStyle = {
   top: '10%',
   // alignItems: 'center', // vertical align
   justifyContent: 'center'  // horizontal align
-}
+} as const
 
 const BoxStyle = {
   position: 'absolute' as 'absolute',
