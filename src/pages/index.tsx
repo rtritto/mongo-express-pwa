@@ -7,7 +7,7 @@ import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
 import { mapServerStatus } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset } from 'lib/GlobalRef.ts'
-import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 interface IndexProps {
   messageError: string | undefined

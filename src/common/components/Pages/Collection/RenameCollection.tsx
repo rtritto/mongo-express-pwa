@@ -7,7 +7,7 @@ import { useSetRecoilState } from 'recoil'
 import { EP_DATABASE_COLLECTION, EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import { Edit } from 'common/SvgIcons.mts'
 import { isValidCollectionName } from 'lib/validations.ts'
-import { collectionsState, selectedCollectionState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { collectionsState, selectedCollectionState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 interface RenameCollectionProps {
   collectionName: string

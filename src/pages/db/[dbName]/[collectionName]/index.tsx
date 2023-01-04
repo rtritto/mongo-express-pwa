@@ -14,7 +14,7 @@ import { mapCollectionStats } from 'lib/mapInfo.ts'
 // TODO move utils import and related logic that use it to lib/mapInfo.ts
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
 import { bytesToSize, roughSizeOfObject } from 'lib/utils.ts'
-import { selectedCollectionState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { selectedCollectionState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 const getRedirect = (dbName: string): { redirect: Redirect } => ({
   redirect: {

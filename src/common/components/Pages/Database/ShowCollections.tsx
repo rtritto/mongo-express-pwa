@@ -6,7 +6,7 @@ import { FileUpload, Save, Visibility } from 'common/SvgIcons.mts'
 import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import CreateCollection from 'components/Pages/Database/CreateCollection.tsx'
-import { collectionsState, messageErrorState, messageSuccessState, selectedCollectionState } from 'store/globalAtoms.mts'
+import { collectionsState, messageErrorState, messageSuccessState, selectedCollectionState } from 'store/globalAtoms.ts'
 
 const tooltipTitle = 'Are you sure you want to delete this collection? All documents will be deleted.'
 

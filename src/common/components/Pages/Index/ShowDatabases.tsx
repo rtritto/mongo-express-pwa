@@ -6,7 +6,7 @@ import { Visibility } from 'common/SvgIcons.mts'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import CreateDatabase from 'components/Pages/Index/CreateDatabase.tsx'
-import { databasesState, messageErrorState, messageSuccessState, selectedDatabaseState } from 'store/globalAtoms.mts'
+import { databasesState, messageErrorState, messageSuccessState, selectedDatabaseState } from 'store/globalAtoms.ts'
 
 const tooltipTitle = 'Warning! Are you sure you want to delete this database? All collections and documents will be deleted.'
 

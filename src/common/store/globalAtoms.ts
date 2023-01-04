@@ -2,30 +2,30 @@ import { atom } from 'recoil'
 
 export const databasesState = atom({
   key: 'databasesState',
-  default: []
+  default: [] as Mongo['databases']
 })
 
 export const collectionsState = atom({
   key: 'collectionsState',
-  default: {}
+  default: {} as Mongo['collections']
 })
 
 export const selectedDatabaseState = atom({
   key: 'selectedDatabaseState',
-  default: ''
+  default: '' as string
 })
 
 export const selectedCollectionState = atom({
   key: 'selectedCollectionState',
-  default: ''
+  default: '' as string
 })
 
 export const messageSuccessState = atom({
   key: 'messageSuccessState',
-  default: undefined
+  default: undefined as string | undefined
 })
 
 export const messageErrorState = atom({
   key: 'messageErrorState',
-  default: undefined
+  default: undefined as string | undefined
 })

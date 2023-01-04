@@ -9,7 +9,7 @@ import createEmotionCache from 'common/createEmotionCache.mts'
 import theme from 'common/Theme.mts'
 import AlertMessages from 'components/Custom/AlertMessages.tsx'
 import NavBar from 'components/Nav/NavBar.tsx'
-import { collectionsState, databasesState, selectedCollectionState, selectedDatabaseState } from 'store/globalAtoms.mts'
+import { collectionsState, databasesState, selectedCollectionState, selectedDatabaseState } from 'store/globalAtoms.ts'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()

@@ -2,7 +2,7 @@ import { useRecoilValue } from 'recoil'
 
 import { EP_DB } from 'configs/endpoints.ts'
 import SelectLink from 'components/Custom/SelectLink.tsx'
-import { databasesState, selectedDatabaseState } from 'store/globalAtoms.mts'
+import { databasesState, selectedDatabaseState } from 'store/globalAtoms.ts'
 
 const NavDatabases = () => {
   const databases = useRecoilValue<Mongo['collections']>(databasesState)

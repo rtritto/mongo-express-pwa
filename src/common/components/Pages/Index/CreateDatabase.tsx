@@ -6,7 +6,7 @@ import { useSetRecoilState } from 'recoil'
 import { EP_API_DB } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
 import { isValidDatabaseName } from 'lib/validations.ts'
-import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 const CreateDatabase = () => {
   const [database, setDatabase] = useState<string>('')

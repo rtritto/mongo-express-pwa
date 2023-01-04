@@ -2,7 +2,7 @@ import { FormControl, Select, SelectChangeEvent } from '@mui/material'
 import { RecoilState, useRecoilState, useSetRecoilState } from 'recoil'
 
 import CustomLink from 'components/Custom/CustomLink.tsx'
-import { messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 interface SelectLinkProps {
   baseUrl: string

@@ -6,7 +6,7 @@ import { useSetRecoilState } from 'recoil'
 import { EP_API_DATABASE } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
 import { isValidCollectionName } from 'lib/validations.ts'
-import { collectionsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { collectionsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 interface CreateCollectionProps {
   dbName: string

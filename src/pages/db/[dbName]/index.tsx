@@ -8,7 +8,7 @@ import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
 import { mapDatabaseStats } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
-import { collectionsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.mts'
+import { collectionsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 declare interface DatabasePageProps {
   dbName: string
