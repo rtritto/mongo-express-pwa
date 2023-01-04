@@ -33,7 +33,7 @@ const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => 
         setSuccess(`Collection '${collectionName}' renamed to '${collection}'!`)
         // Rename collection from global collections to update viewing collections
         setCollections((collections) => {
-          const indexToRemove = collections[dbName].findIndex((coll) => coll === collectionName)
+          const indexToRemove = collections[dbName].indexOf(collectionName)
           return {
             ...collections,
             [dbName]: [

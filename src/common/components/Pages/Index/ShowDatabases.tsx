@@ -37,7 +37,7 @@ const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
         setSuccess('Database created!')
         // Remove database from global database to update viewing databases
         setDatabases((databases) => {
-          const indexToRemove = databases.findIndex((db) => db === database)
+          const indexToRemove = databases.indexOf(database)
           return [
             ...databases.slice(0, indexToRemove),
             ...databases.slice(indexToRemove + 1)

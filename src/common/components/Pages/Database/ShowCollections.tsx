@@ -55,7 +55,7 @@ const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps)
       if (res.ok === true) {
         // Remove collection from global collections to update viewing collections
         setCollections((collections) => {
-          const indexToRemove = collections[database].findIndex((coll) => coll === collection)
+          const indexToRemove = collections[database].indexOf(collection)
           return {
             ...collections,
             [database]: [
