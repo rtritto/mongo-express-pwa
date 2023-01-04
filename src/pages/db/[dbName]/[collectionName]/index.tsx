@@ -6,6 +6,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
+import DeleteDocuments from 'components/Pages/Collection/DeleteDocuments.tsx'
 import RenameCollection from 'components/Pages/Collection/RenameCollection.tsx'
 import { EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
@@ -37,6 +38,7 @@ declare interface DatabasePageProps {
     readOnly: boolean
   }
   pagination: boolean
+  query: string
   title: string
 }
 
@@ -45,7 +47,10 @@ const CollectionPage = (props: DatabasePageProps) => {
     dbName,
     collectionStats,
     count, documents, indexes, pagination,
+    messageError,
+    messageSuccess,
     options: { noDelete, noExport, readOnly },
+    query,
     title
   } = props
 
@@ -55,13 +60,13 @@ const CollectionPage = (props: DatabasePageProps) => {
 
   // Show alerts if messages exist
   useEffect(() => {
-    if (error !== props.messageError) {
-      setError(props.messageError)
+    if (error !== messageError) {
+      setError(messageError)
     }
-    if (success !== props.messageSuccess) {
-      setSuccess(props.messageSuccess)
+    if (success !== messageSuccess) {
+      setSuccess(messageSuccess)
     }
-  }, [props.messageError, props.messageSuccess])
+  }, [messageError, messageSuccess])
 
   return (
     <div>
@@ -81,6 +86,7 @@ const CollectionPage = (props: DatabasePageProps) => {
             <button type="button" data-toggle="modal" data-target="#addDocument">
               New Document
             </button>
+
             <button type="button" data-toggle="modal" data-target="#addIndex">
               New Index
             </button>
@@ -92,15 +98,9 @@ const CollectionPage = (props: DatabasePageProps) => {
           <li><a href="#advanced" data-toggle="tab">Advanced</a></li>
         </ul>
 
-        {readOnly === false && noDelete === false && count > 0 && (
-          <p>
-            {/* <form id="deleteListForm" method="POST"> */}
-            <button type="button" data-toggle="modal" data-target="#deleteListModal">
-              Delete all {count} documents
-            </button>
-            {/* </form> */}
-          </p>
-        )}
+        {readOnly === false && noDelete === false && count > 0 && <DeleteDocuments
+          count={count} collectionName={collectionName} dbName={dbName} query={query}
+        />}
 
         {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}
 
@@ -131,7 +131,7 @@ const CollectionPage = (props: DatabasePageProps) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params, query: reqQuery }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, query }) => {
   const { collectionName, dbName } = params as Params
 
   // Make sure database exists
@@ -155,29 +155,29 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
   // req.collection = coll
 
   try {
-    const queryOptions = queries.getQueryOptions(reqQuery)
-    const query = queries.getQuery(reqQuery)
+    const filterOptions = queries.getQueryOptions(query)
+    const filter = queries.getQuery(query)
 
     let items
     let count
-    if (reqQuery.runAggregate === 'on') {
-      if (query.constructor.name === 'Object') {
-        const queryAggregate = queries.getSimpleAggregatePipeline(query, queryOptions)
+    if (query.runAggregate === 'on') {
+      if (filter.constructor.name === 'Object') {
+        const filterAggregate = queries.getSimpleAggregatePipeline(filter, filterOptions)
         [items, count] = await Promise.all([
-          collection.aggregate(queryAggregate).toArray(),
-          collection.countDocuments(query)
+          collection.aggregate(filterAggregate).toArray(),
+          collection.countDocuments(filter)
         ])
       } else {
         // Array case
-        const queryAggregate = queries.getComplexAggregatePipeline(query, queryOptions)
-        const [resultArray] = await collection.aggregate(queryAggregate).toArray()
+        const filterAggregate = queries.getComplexAggregatePipeline(filter, filterOptions)
+        const [resultArray] = await collection.aggregate(filterAggregate).toArray()
         items = resultArray.data
         count = resultArray.metadata.total
       }
     } else {
       [items, count] = await Promise.all([
-        collection.find(query, queryOptions).toArray(),
-        collection.countDocuments(query)
+        collection.find(filter, filterOptions).toArray(),
+        collection.countDocuments(filter)
       ])
     }
 
@@ -238,7 +238,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
     columns = columns.filter((value, index, array) => array.indexOf(value) === index)
 
     // Pagination
-    const { limit, skip, sort } = queryOptions
+    const { limit, skip, sort } = filterOptions
     const pagination = count > limit
 
     const ctx = {
@@ -248,12 +248,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
       // limit,
       // skip,
       // sort,
-      // key: reqQuery.key,
-      // value: reqQuery.value,  // value: type === 'O' ? ['ObjectId("', value, '")'].join('') : value,
-      // type: reqQuery.type,
-      // query: reqQuery.query,
-      // projection: reqQuery.projection,
-      runAggregate: reqQuery.runAggregate === 'on'
+      // key: query.key,
+      // value: query.value,  // value: type === 'O' ? ['ObjectId("', value, '")'].join('') : value,
+      // type: query.type,
+      // projection: query.projection,
+      runAggregate: query.runAggregate === 'on'
     }
 
     const collectionStats = mapCollectionStats(stats)
@@ -273,6 +272,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query: re
         ...messageSuccess !== undefined && { messageSuccess },
         ...messageError !== undefined && { messageError },
         options: process.env.config.options,
+        ...'query' in query && { query: query.query },
         pagination,
         title: `Viewing Collection: ${collectionName}`
       }
