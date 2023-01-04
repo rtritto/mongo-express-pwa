@@ -52,7 +52,7 @@ const converters = {
     return new RegExp(value, 'i')
   },
   U(value: string) {
-    return new mongodb.Binary(Buffer.from(value.replace(/-/g, ''), 'hex'), mongodb.Binary.SUBTYPE_UUID)
+    return new mongodb.Binary(Buffer.from(value.replaceAll('-', ''), 'hex'), mongodb.Binary.SUBTYPE_UUID)
   },
   // if type == S, no conversion done
   S(value: string) {
