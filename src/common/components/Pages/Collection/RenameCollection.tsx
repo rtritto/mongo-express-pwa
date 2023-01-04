@@ -107,7 +107,7 @@ const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => 
 
                   <Grid item>
                     <Button
-                      disabled={!collection || 'controllerRenameCollection' in methods.formState.errors}
+                      disabled={!collection || collection === collectionName || 'controllerRenameCollection' in methods.formState.errors}
                       size="small"
                       startIcon={(
                         <SvgIcon sx={{ marginRight: '8px', marginLeft: '-4px' /* restore default margin style */ }}>
