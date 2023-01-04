@@ -85,6 +85,10 @@ global.mongo = {
   },
   async connect(config: Config = process.env.config) {
     if (mongoClient !== undefined) {
+      await this.updateDatabases()
+      await Promise.all(
+        Object.values(this.connections).map((connection) => this.updateCollections(connection))
+      )
       return mongoClient
     }
 

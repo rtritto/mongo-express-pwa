@@ -92,6 +92,7 @@ MyApp.getInitialProps = async ({ router /* or ctx.req */ }) => {
 
   //   return { info }
   // }
+  await global.mongo.connect()
 
   return {
     databases: global.mongo.databases,
