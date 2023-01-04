@@ -1,2 +1,2 @@
-export { default as MandatoryReqBody } from './MandatoryReqBody.ts'
-export { default as MandatoryReqBodyParam } from './MandatoryReqBodyParam.ts'
+export { default as MandatoryReqBodyError } from './MandatoryReqBodyError.ts'
+export { default as MandatoryReqBodyParamError } from './MandatoryReqBodyParamError.ts'

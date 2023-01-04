@@ -1,4 +1,4 @@
-import { MandatoryReqBody, MandatoryReqBodyParam } from 'errors/index.mts'
+import { MandatoryReqBodyError, MandatoryReqBodyParamError } from 'errors/index.mts'
 import { checkDatabase, validateCollection } from 'lib/validations.ts'
 import { withExceptionHandler } from 'middlewares/api.ts'
 
@@ -7,13 +7,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { dbName } = req.query as Params
     checkDatabase(dbName)
     if (req.body === '') {
-      throw new MandatoryReqBody()
+      throw new MandatoryReqBodyError()
     }
     let collection: string
     try {
       collection = req.body.collection
     } catch (error) {
-      throw new MandatoryReqBodyParam('collection')
+      throw new MandatoryReqBodyParamError('collection')
     }
     validateCollection(collection)
     const client = await global.mongo.connect()
