@@ -7,7 +7,7 @@ type Admin = import('mongodb').Admin
  */
 type CollStats = import('mongodb').CollStats
 type Db = import('mongodb').Db
-type Document = import('mongodb').Document
+type MongoDocument = import('mongodb').Document
 type MongoClient = import('mongodb').MongoClient
 
 type NextApiRequest = import('next').NextApiRequest
@@ -27,7 +27,7 @@ type CustomApiError = (any | Error) & {
  * Type definition is missing in mongodb
  * @see https://www.mongodb.com/docs/manual/reference/command/serverStatus
  */
-type ServerStatus = Document & {
+type ServerStatus = MongoDocument & {
   host: string
   version: string
   uptime: number
@@ -67,7 +67,7 @@ type ServerStatus = Document & {
  * Type definition is missing in mongodb
  * @see https://www.mongodb.com/docs/manual/reference/command/dbStats
  */
-type DbStats = Document & {
+type DbStats = MongoDocument & {
   db: string
   collections: number
   view: number

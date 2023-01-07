@@ -1,7 +1,8 @@
 import mongodb from 'mongodb'
-import * as bson from './bson.ts'
 
-declare interface QueryParameter {
+import { parseObjectId, toSafeBSON } from './bson.ts'
+
+interface QueryParameter {
   // mongodb
   skip?: string
   sort?: { [key: string]: string }
@@ -12,9 +13,29 @@ declare interface QueryParameter {
   type?: string
   query?: string
 }
-declare type Query = ReturnType<typeof getQuery>
-declare type QueryOptions = ReturnType<typeof getQueryOptions>
-declare type Pipeline = Array<object>
+interface QueryOptions {
+  limit: number
+  projection?: {
+    [field: string]: number
+  }
+  skip?: number
+  sort?: {
+    [field: string]: number
+  }
+}
+interface StageMatch { $match: MongoDocument }
+interface StageSort { $sort: { [field: string]: number } }
+interface StageLimit { $limit: number }
+interface StageSkip { $skip: number }
+interface StageFacet { $facet: { data: Pipeline } }
+interface StageProject {
+  $project: {
+    'metadata.total': { $size: string }
+    data: { $slice: [string, number] }
+  }
+}
+type Stage = StageMatch | StageSort | StageLimit | StageSkip | StageFacet | StageProject
+type Pipeline = (MongoDocument | Stage)[]
 
 export const getSort = (sort: { [key: string]: string }) => {
   const outSort: { [key: string]: number } = {}
@@ -24,13 +45,29 @@ export const getSort = (sort: { [key: string]: string }) => {
   return outSort
 }
 
-export const getQueryOptions = (query: QueryParameter) => {
-  return {
-    ...query.sort && { sort: getSort(query.sort) },
+export const getQueryOptions = (query: QueryParameter): QueryOptions => {
+  const queryOptions: QueryOptions = {
     limit: process.env.config.options.documentsPerPage,
-    ...query.skip && { skip: Number.parseInt(query.skip, 10) || 0 },
-    ...query.projection && { projection: bson.toSafeBSON(query.projection) as object || {} }
   }
+  if (query.sort) {
+    const sort = getSort(query.sort)
+    if (Object.keys(sort).length > 0) {
+      queryOptions.sort = sort
+    }
+  }
+  if (query.skip) {
+    const skip = Number.parseInt(query.skip, 10)
+    if (skip) {
+      queryOptions.skip = skip
+    }
+  }
+  if (query.projection) {
+    const projection = toSafeBSON(query.projection)
+    if (projection) {
+      queryOptions.projection = projection
+    }
+  }
+  return queryOptions
 }
 
 const converters = {
@@ -45,7 +82,7 @@ const converters = {
   },
   // If type == O, convert value to ObjectId
   O(value: string) {
-    return bson.parseObjectId(value)
+    return parseObjectId(value)
   },
   // If type == R, convert to RegExp
   R(value: string) {
@@ -65,7 +102,7 @@ const converters = {
  * Simple/Advanced parameters input.
  * Returns {} if no query parameters were passed in request.
  */
-export const getQuery = (query: QueryParameter) => {
+export const getQuery = (query: QueryParameter): MongoDocument => {
   const { key, value } = query
   if (key && value) {
     // if it is a simple query
@@ -86,7 +123,7 @@ export const getQuery = (query: QueryParameter) => {
   const { query: jsonQuery } = query
   if (jsonQuery) {
     // if it is a complex query, take it as is
-    const result = bson.toSafeBSON(jsonQuery)
+    const result = toSafeBSON(jsonQuery)
     if (result === undefined) {
       throw new Error('Query entered is not valid')
     }
@@ -95,25 +132,31 @@ export const getQuery = (query: QueryParameter) => {
   return {}
 }
 
-const getBaseAggregatePipeline = (pipeline: Pipeline, queryOptions: QueryOptions) => {
+const getBaseAggregatePipeline = (pipeline: Pipeline, queryOptions: QueryOptions): Pipeline => {
   return [
     ...pipeline,
-    ...queryOptions.sort ? [{ $sort: 'sort' in queryOptions }] : [],
-    ...queryOptions.projection ? [{ $project: 'projection' in queryOptions }] : []
+    ...'sort' in queryOptions ? [{ $sort: queryOptions.sort }] : [],
+    ...'projection' in queryOptions ? [{ $project: queryOptions.projection }] : []
   ]
 }
 
-export const getSimpleAggregatePipeline = (query: Query, queryOptions: QueryOptions) => {
+export const getSimpleAggregatePipeline = (query: MongoDocument, queryOptions: QueryOptions): Pipeline => {
   const pipeline = Object.keys(query).length > 0 ? [{ $match: query }] : []
-  return [
-    ...getBaseAggregatePipeline(pipeline, queryOptions),
-    // https://stackoverflow.com/a/24161461/10413113
-    { $limit: queryOptions.limit + 'skip' in queryOptions || 0 },
-    ...'skip' in queryOptions ? [{ $skip: queryOptions.skip }] : []
-  ]
+  const simpleAggregatePipeline = getBaseAggregatePipeline(pipeline, queryOptions)
+  // https://stackoverflow.com/a/24161461/10413113
+  const skip = 'skip' in queryOptions ? queryOptions.skip : 0
+  if (skip === 0) {
+    simpleAggregatePipeline.push({ $limit: queryOptions.limit })
+  } else {
+    simpleAggregatePipeline.push(
+      { $limit: queryOptions.limit + skip },
+      { $skip: skip }
+    )
+  }
+  return simpleAggregatePipeline
 }
 
-export const getComplexAggregatePipeline = (pipeline: Pipeline, queryOptions: QueryOptions) => {
+export const getComplexAggregatePipeline = (pipeline: Pipeline, queryOptions: QueryOptions): Pipeline => {
   return [
     { $facet: { data: getBaseAggregatePipeline(pipeline, queryOptions) } },
     {
