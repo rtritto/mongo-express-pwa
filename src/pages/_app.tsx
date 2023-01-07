@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { CacheProvider } from '@emotion/react'
 import { RecoilRoot } from 'recoil'
+import type { EmotionCache } from '@emotion/cache'
 import type { AppProps } from 'next/app.js'
 
 import createEmotionCache from 'common/createEmotionCache.mts'
@@ -15,14 +16,19 @@ import { collectionsState, databasesState, selectedCollectionState, selectedData
 const clientSideEmotionCache = createEmotionCache()
 
 declare interface MyAppProps extends AppProps {
-  collections: Mongo['collections']
   databases: Mongo['databases']
+  dbName: string | null
+  collections: Mongo['collections']
+  collectionName: string | null
+  emotionCache: EmotionCache
 }
 
 function MyApp(props: MyAppProps) {
   const {
-    collections,
     databases,
+    dbName,
+    collections,
+    collectionName,
     Component,
     emotionCache = clientSideEmotionCache,
     pageProps
@@ -52,11 +58,11 @@ function MyApp(props: MyAppProps) {
       initializeState={({ set }) => {
         set(databasesState, databases)
         set(collectionsState, collections)
-        if ('dbName' in props) {
-          set(selectedDatabaseState, props.dbName)
+        if (dbName !== null) {
+          set(selectedDatabaseState, dbName)
         }
-        if ('collectionName' in props) {
-          set(selectedCollectionState, props.collectionName)
+        if (collectionName !== null) {
+          set(selectedCollectionState, collectionName)
         }
       }}
     >
@@ -96,9 +102,9 @@ MyApp.getInitialProps = async ({ router /* or ctx.req */ }) => {
 
   return {
     databases: global.mongo.databases,
+    dbName: 'dbName' in router.query ? router.query.dbName : null,
     collections: Object.assign({}, global.mongo.collections),
-    ...'dbName' in router.query && { dbName: router.query.dbName },
-    ...'collectionName' in router.query && { collectionName: router.query.collectionName }
+    collectionName: 'collectionName' in router.query ? router.query.collectionName : null
   }
 }
 

@@ -35,6 +35,8 @@ const DatabasePage = (props: DatabasePageProps) => {
     dbName,
     options: { noDelete, noExport, readOnly },
     databaseStats,
+    messageError,
+    messageSuccess,
     title
   } = props
 
@@ -44,13 +46,13 @@ const DatabasePage = (props: DatabasePageProps) => {
 
   // Show alerts if messages exist
   useEffect(() => {
-    if (error !== props.messageError) {
-      setError(props.messageError)
+    if (error !== messageError) {
+      setError(messageError)
     }
-    if (success !== props.messageSuccess) {
-      setSuccess(props.messageSuccess)
+    if (success !== messageSuccess) {
+      setSuccess(messageSuccess)
     }
-  }, [props.messageError, props.messageSuccess])
+  }, [messageError, messageSuccess])
 
   return (
     <div>
@@ -126,8 +128,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
       databaseStats,
       dbName,
       // TODO grids: global.mongo.gridFSBuckets[dbName],
-      ...messageSuccess !== undefined && { messageSuccess },
-      ...messageError !== undefined && { messageError },
+      messageError,
+      messageSuccess,
       options: process.env.config.options,
       title: `${dbName} - Mongo Express`
     }

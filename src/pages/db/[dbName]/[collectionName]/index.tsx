@@ -269,8 +269,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query }) 
         dbName,
         documents: items, // Docs converted to strings
         indexes,
-        ...messageSuccess !== undefined && { messageSuccess },
-        ...messageError !== undefined && { messageError },
+        messageError,
+        messageSuccess,
         options: process.env.config.options,
         ...'query' in query && { query: query.query },
         pagination,

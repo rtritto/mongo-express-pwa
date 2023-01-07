@@ -16,12 +16,14 @@ interface IndexProps {
     noDelete: boolean
     readOnly: boolean
   }
-  serverStatus?: ReturnType<typeof mapServerStatus>
+  serverStatus: ReturnType<typeof mapServerStatus> | null
   title: string
 }
 
 const Index = (props: IndexProps) => {
   const {
+    messageError,
+    messageSuccess,
     options: { noDelete, readOnly },
     serverStatus,
     title
@@ -33,13 +35,13 @@ const Index = (props: IndexProps) => {
 
   // Show alerts if messages exist
   useEffect(() => {
-    if (error !== props.messageError) {
-      setError(props.messageError)
+    if (error !== messageError) {
+      setError(messageError)
     }
-    if (success !== props.messageSuccess) {
-      setSuccess(props.messageSuccess)
+    if (success !== messageSuccess) {
+      setSuccess(messageSuccess)
     }
-  }, [props.messageError, props.messageSuccess])
+  }, [messageError, messageSuccess])
 
   return (
     <div>
@@ -63,7 +65,7 @@ const Index = (props: IndexProps) => {
         />
 
         <Box sx={{ mb: 2 }}>
-          {serverStatus ? <StatsTable label="Server Status" fields={serverStatus} /> : (
+          {serverStatus !== null ? <StatsTable label="Server Status" fields={serverStatus} /> : (
             <>
               <Typography component="h4" gutterBottom variant="h4">Server Status</Typography>
 
@@ -82,16 +84,13 @@ export async function getServerSideProps() {
   const messageSuccess = getGlobalValueAndReset('messageSuccess')
 
   const props = {
-    ...messageError !== undefined && { messageError },
-    ...messageSuccess !== undefined && { messageSuccess },
+    messageError,
+    messageSuccess,
     options: process.env.config.options,
+    serverStatus: global.mongo.adminDb !== null
+      ? mapServerStatus(await global.mongo.adminDb.serverStatus())
+      : null,
     title: 'Home - Mongo Express'
-  }
-
-  if (global.mongo.adminDb !== null) {
-    const serverStatus = await global.mongo.adminDb.serverStatus()
-    props.serverStatus = mapServerStatus(serverStatus)
-    // global.stats = stats
   }
 
   return {
