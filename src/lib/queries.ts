@@ -2,10 +2,10 @@ import mongodb from 'mongodb'
 
 import { parseObjectId, toSafeBSON } from './bson.ts'
 
-interface QueryParameter {
+interface QueryParameter extends ParsedUrlQuery {
   // mongodb
   skip?: string
-  sort?: { [key: string]: string }
+  sort?: string
   projection?: string
   // custom
   key?: string
@@ -37,10 +37,13 @@ interface StageProject {
 type Stage = StageMatch | StageSort | StageLimit | StageSkip | StageFacet | StageProject
 type Pipeline = (MongoDocument | Stage)[]
 
-export const getSort = (sort: { [key: string]: string }) => {
+/** @param sort example: sort=field1:1,field2:0 */
+export const getSort = (sort: string) => {
   const outSort: { [key: string]: number } = {}
-  for (const i in sort) {
-    outSort[i] = Number.parseInt(sort[i], 10)
+  const sorts = sort.split(',')
+  for (const qp in sorts) {
+    const [sortField, sortType] = qp.split(':')
+    outSort[sortField] = Number.parseInt(sortType, 10)
   }
   return outSort
 }
@@ -133,23 +136,27 @@ export const getQuery = (query: QueryParameter): MongoDocument => {
 }
 
 const getBaseAggregatePipeline = (pipeline: Pipeline, queryOptions: QueryOptions): Pipeline => {
-  return [
-    ...pipeline,
-    ...'sort' in queryOptions ? [{ $sort: queryOptions.sort }] : [],
-    ...'projection' in queryOptions ? [{ $project: queryOptions.projection }] : []
-  ]
+  const baseAggregatePipeline = [...pipeline]
+  const { sort, projection } = queryOptions
+  if (sort !== undefined) {
+    baseAggregatePipeline.push({ $sort: sort })
+  }
+  if (projection !== undefined) {
+    baseAggregatePipeline.push({ $project: projection })
+  }
+  return baseAggregatePipeline
 }
 
 export const getSimpleAggregatePipeline = (query: MongoDocument, queryOptions: QueryOptions): Pipeline => {
   const pipeline = Object.keys(query).length > 0 ? [{ $match: query }] : []
   const simpleAggregatePipeline = getBaseAggregatePipeline(pipeline, queryOptions)
   // https://stackoverflow.com/a/24161461/10413113
-  const skip = 'skip' in queryOptions ? queryOptions.skip : 0
+  const { limit, skip = 0 } = queryOptions
   if (skip === 0) {
-    simpleAggregatePipeline.push({ $limit: queryOptions.limit })
+    simpleAggregatePipeline.push({ $limit: limit })
   } else {
     simpleAggregatePipeline.push(
-      { $limit: queryOptions.limit + skip },
+      { $limit: limit + skip },
       { $skip: skip }
     )
   }
@@ -165,7 +172,7 @@ export const getComplexAggregatePipeline = (pipeline: Pipeline, queryOptions: Qu
         data: {
           $slice: [
             '$data',
-            'skip' in queryOptions ? queryOptions.skip : 0,
+            queryOptions.skip || 0,
             queryOptions.limit
           ]
         }
