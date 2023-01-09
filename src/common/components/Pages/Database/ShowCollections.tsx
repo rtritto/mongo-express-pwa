@@ -22,7 +22,7 @@ const ButtonExportImportStyle = {
   textTransform: 'none'
 }
 
-declare interface ShowDatabasesProps {
+interface ShowDatabasesProps {
   collections: string[]
   dbName: string
   show: {

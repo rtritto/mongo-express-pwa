@@ -54,7 +54,7 @@ const mapNavLinks = navLinks.map(({ icon, title, path }) => (
   </Link>
 ))
 
-declare interface CustomNavBarProps {
+interface CustomNavBarProps {
   collections: Mongo['collections']
   databases: Mongo['databases']
   show: {

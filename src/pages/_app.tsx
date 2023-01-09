@@ -4,7 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { CacheProvider } from '@emotion/react'
 import { RecoilRoot } from 'recoil'
 import type { EmotionCache } from '@emotion/cache'
-import type { AppProps } from 'next/app.js'
+import type { AppProps, AppContext } from 'next/app.js'
 
 import createEmotionCache from 'common/createEmotionCache.mts'
 import theme from 'common/Theme.mts'
@@ -15,24 +15,24 @@ import { collectionsState, databasesState, selectedCollectionState, selectedData
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
-declare interface MyAppProps extends AppProps {
+type App = typeof import('next/app.js').default
+interface MyAppProps extends AppProps {
   databases: Mongo['databases']
-  dbName: string | null
+  dbName?: string
   collections: Mongo['collections']
-  collectionName: string | null
+  collectionName?: string
   emotionCache: EmotionCache
 }
 
-function MyApp(props: MyAppProps) {
-  const {
-    databases,
-    dbName,
-    collections,
-    collectionName,
-    Component,
-    emotionCache = clientSideEmotionCache,
-    pageProps
-  } = props
+const MyApp: App = ({
+  databases,
+  dbName,
+  collections,
+  collectionName,
+  Component,
+  emotionCache = clientSideEmotionCache,
+  pageProps
+}: MyAppProps) => {
   // const router = useRouter()
 
   // useEffect(() => {
@@ -56,13 +56,13 @@ function MyApp(props: MyAppProps) {
     <RecoilRoot
       key="init"
       initializeState={({ set }) => {
-        set(databasesState, databases)
         set(collectionsState, collections)
-        if (dbName !== null) {
-          set(selectedDatabaseState, dbName)
-        }
-        if (collectionName !== null) {
+        if (collectionName !== undefined) {
           set(selectedCollectionState, collectionName)
+        }
+        set(databasesState, databases)
+        if (dbName !== undefined) {
+          set(selectedDatabaseState, dbName)
         }
       }}
     >
@@ -76,8 +76,8 @@ function MyApp(props: MyAppProps) {
 
           <NavBar
             show={{
-              databases: 'dbName' in props,
-              collections: 'collectionName' in props
+              databases: dbName !== undefined,
+              collections: collectionName !== undefined
             }}
           />
 
@@ -90,7 +90,7 @@ function MyApp(props: MyAppProps) {
   )
 }
 
-MyApp.getInitialProps = async ({ router /* or ctx.req */ }) => {
+MyApp.getInitialProps = async ({ router /* or ctx.req */ }: AppContext): Promise<MyAppProps> => {
   // if (global.mongo.adminDb) {
   //   const rawInfo = await global.mongo.adminDb.serverStatus()
   //   const info = mapMongoDBInfo(rawInfo)
@@ -102,10 +102,10 @@ MyApp.getInitialProps = async ({ router /* or ctx.req */ }) => {
 
   return {
     databases: global.mongo.databases,
-    dbName: 'dbName' in router.query ? router.query.dbName : null,
+    ...'dbName' in router.query && { dbName: router.query.dbName },
     collections: Object.assign({}, global.mongo.collections),
-    collectionName: 'collectionName' in router.query ? router.query.collectionName : null
-  }
+    ...'collectionName' in router.query && { collectionName: router.query.collectionName }
+  } as MyAppProps
 }
 
 export default MyApp

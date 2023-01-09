@@ -1,8 +1,8 @@
 import { Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
-import { GetServerSideProps } from 'next'
 import { useEffect } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import type { GetServerSideProps } from 'next'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
@@ -24,36 +24,34 @@ const getRedirect = (dbName: string): { redirect: Redirect } => ({
   }
 })
 
-declare interface DatabasePageProps {
+interface CollectionPageProps {
   collectionStats: ReturnType<typeof mapCollectionStats>
   count: number
   dbName: string
-  documents: Array<Document>
+  documents: Document[]
   indexes: Indexes
-  messageError: string | undefined
-  messageSuccess: string | undefined
+  messageError?: string
+  messageSuccess?: string
   options: {
     noDelete: boolean
     noExport: boolean
     readOnly: boolean
   }
   pagination: boolean
-  query: string
+  query?: string | string[]
   title: string
 }
 
-const CollectionPage = (props: DatabasePageProps) => {
-  const {
-    dbName,
-    collectionStats,
-    count, documents, indexes, pagination,
-    messageError,
-    messageSuccess,
-    options: { noDelete, noExport, readOnly },
-    query,
-    title
-  } = props
-
+const CollectionPage = ({
+  dbName,
+  collectionStats,
+  count, documents, indexes, pagination,
+  messageError,
+  messageSuccess,
+  options: { noDelete, noExport, readOnly },
+  query,
+  title
+}: CollectionPageProps) => {
   const collectionName = useRecoilValue<string>(selectedCollectionState)
   const [error, setError] = useRecoilState<string | undefined>(messageErrorState)
   const [success, setSuccess] = useRecoilState<string | undefined>(messageSuccessState)
@@ -131,7 +129,7 @@ const CollectionPage = (props: DatabasePageProps) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params, query }) => {
+export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params> = async ({ params, query }) => {
   const { collectionName, dbName } = params as Params
 
   // Make sure database exists
@@ -183,7 +181,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query }) 
 
     const [stats, indexes] = await Promise.all([
       collection.stats(),
-      collection.indexes()
+      collection.indexes() as Promise<Indexes>
     ])
 
     // Add index size
@@ -269,8 +267,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query }) 
         dbName,
         documents: items, // Docs converted to strings
         indexes,
-        messageError,
-        messageSuccess,
+        ...messageError !== undefined && { messageError },
+        ...messageSuccess !== undefined && { messageSuccess },
         options: process.env.config.options,
         ...'query' in query && { query: query.query },
         pagination,

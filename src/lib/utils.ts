@@ -57,7 +57,7 @@ export const convertBytes = (input: number | undefined) => {
   return `${input} Bytes`
 }
 
-const deepmergeArray = (target: Array<object>, src: Array<object>) => {
+const deepmergeArray = (target: object[], src: object[]) => {
   const dst = [...(target || [])]
   for (const [i, e] of src.entries()) {
     if (dst[i] === undefined) {
@@ -94,9 +94,9 @@ const deepmergeObject = (target: IObject, src: IObject) => {
   return dst
 }
 
-export const deepmerge = (target: Array<object> | object, src: Array<object> | object) => {
+export const deepmerge = (target: object[] | object, src: object[] | object) => {
   if (Array.isArray(src)) {
-    return deepmergeArray(target as Array<object>, src as Array<object>)
+    return deepmergeArray(target as object[], src as object[])
   }
 
   return deepmergeObject(target as object, src as object)

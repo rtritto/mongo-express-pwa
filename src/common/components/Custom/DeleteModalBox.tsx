@@ -21,7 +21,7 @@ const BoxStyle = {
   boxShadow: 24,
 } as const
 
-declare interface DeleteModalBoxProps {
+interface DeleteModalBoxProps {
   value: string
   entity: string
   tooltipTitle: string

@@ -5,7 +5,7 @@ import { convertBytes } from 'lib/utils.ts'
 const HEADER_FIELDS = new Set(['Name', 'Columns', 'Size', 'Attributes', 'Actions'])
 const NOT_ATTRIBUTE_FIELDS = new Set(['key', 'v', 'name', 'ns', 'size'])
 
-declare interface StatsTableProps {
+interface StatsTableProps {
   indexes: Indexes
   show: {
     delete: boolean

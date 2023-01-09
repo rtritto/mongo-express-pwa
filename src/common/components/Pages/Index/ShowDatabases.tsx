@@ -15,7 +15,7 @@ const TableCellStyle = {
   p: 0.5
 }
 
-declare interface ShowDatabasesProps {
+interface ShowDatabasesProps {
   databases: string[]
   show: {
     create: boolean

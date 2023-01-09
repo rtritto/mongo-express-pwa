@@ -1,8 +1,8 @@
 import { Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
-import { GetServerSideProps } from 'next'
 import { useEffect } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import type { GetServerSideProps } from 'next'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
@@ -10,16 +10,16 @@ import { mapDatabaseStats } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
 import { collectionsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
-declare interface DatabasePageProps {
+interface DatabasePageProps {
+  databaseStats?: ReturnType<typeof mapDatabaseStats>
   dbName: string
-  messageError: string | undefined
-  messageSuccess: string | undefined
+  messageError?: string
+  messageSuccess?: string
   options: {
     noDelete: boolean
     noExport: boolean
     readOnly: boolean
   }
-  databaseStats: ReturnType<typeof mapDatabaseStats>
   title: string
 }
 
@@ -30,15 +30,14 @@ const getRedirect = (): { redirect: Redirect } => ({
   }
 })
 
-const DatabasePage = (props: DatabasePageProps) => {
-  const {
-    dbName,
-    options: { noDelete, noExport, readOnly },
-    databaseStats,
-    messageError,
-    messageSuccess,
-    title
-  } = props
+const DatabasePage = ({
+  dbName,
+  databaseStats,
+  messageError,
+  messageSuccess,
+  options: { noDelete, noExport, readOnly },
+  title
+}: DatabasePageProps) => {
 
   const collections = useRecoilValue<Mongo['collections']>(collectionsState)
   const [error, setError] = useRecoilState<string | undefined>(messageErrorState)
@@ -89,7 +88,7 @@ const DatabasePage = (props: DatabasePageProps) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params, res }) => {
+export const getServerSideProps: GetServerSideProps<DatabasePageProps, Params> = async ({ params }) => {
   const { dbName } = params as Params
 
   // Make sure database exists
@@ -128,8 +127,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
       databaseStats,
       dbName,
       // TODO grids: global.mongo.gridFSBuckets[dbName],
-      messageError,
-      messageSuccess,
+      ...messageError !== undefined && { messageError },
+      ...messageSuccess !== undefined && { messageSuccess },
       options: process.env.config.options,
       title: `${dbName} - Mongo Express`
     }

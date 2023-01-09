@@ -97,7 +97,7 @@ type DbStats = MongoDocument & {
   numExtents: number
 }
 
-type Index = {
+interface Index extends MongoDocument {
   v: number
   key: {
     [name: string]: number
@@ -106,7 +106,7 @@ type Index = {
   size: number
 }
 
-type Indexes = Array<Index>
+type Indexes = Index[]
 
 type Fields = {
   [field: string]: {
@@ -124,7 +124,7 @@ type ClientInfo = {
 }
 
 type Collections = {
-  [dbName: string]: Array<string>
+  [dbName: string]: string[]
 }
 
 type Connection = {
@@ -140,15 +140,15 @@ type Connections = {
 
 // type Mongo = import('middlewares/db.mts').Mongo
 type Mongo = {
-  clients: Array<ClientInfo>
+  clients: ClientInfo[]
   collections: Collections
   connections: Connections
-  databases: Array<string>
+  databases: string[]
   // gridFSBuckets?  TODO
   mainClient: ClientInfo | null
   adminDb: ClientInfo['adminDb'] | null
   addConnection: (info: ClientInfo, db: Db, dbName: string) => Connection
-  getDatabases: () => Array<string>
+  getDatabases: () => string[]
   updateCollections: (dbConnection: Connection) => Promise<void>
   updateDatabases: () => Promise<void>
   connect: (config?: Config) => Promise<MongoClient>

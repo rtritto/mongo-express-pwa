@@ -2,6 +2,7 @@ import { Box, Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 import { useEffect } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import type { GetServerSideProps } from 'next'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
@@ -10,25 +11,23 @@ import { getGlobalValueAndReset } from 'lib/GlobalRef.ts'
 import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 interface IndexProps {
-  messageError: string | undefined
-  messageSuccess: string | undefined
+  messageError?: string
+  messageSuccess?: string
   options: {
     noDelete: boolean
     readOnly: boolean
   }
-  serverStatus: ReturnType<typeof mapServerStatus> | null
+  serverStatus?: ReturnType<typeof mapServerStatus>
   title: string
 }
 
-const Index = (props: IndexProps) => {
-  const {
-    messageError,
-    messageSuccess,
-    options: { noDelete, readOnly },
-    serverStatus,
-    title
-  } = props
-
+const Index = ({
+  messageError,
+  messageSuccess,
+  options: { noDelete, readOnly },
+  serverStatus,
+  title
+}: IndexProps) => {
   const databases = useRecoilValue<Mongo['databases']>(databasesState)
   const [error, setError] = useRecoilState<string | undefined>(messageErrorState)
   const [success, setSuccess] = useRecoilState<string | undefined>(messageSuccessState)
@@ -65,7 +64,7 @@ const Index = (props: IndexProps) => {
         />
 
         <Box sx={{ mb: 2 }}>
-          {serverStatus !== null ? <StatsTable label="Server Status" fields={serverStatus} /> : (
+          {serverStatus ? <StatsTable label="Server Status" fields={serverStatus} /> : (
             <>
               <Typography component="h4" gutterBottom variant="h4">Server Status</Typography>
 
@@ -78,18 +77,18 @@ const Index = (props: IndexProps) => {
   )
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
   // Get messages from redirect
   const messageError = getGlobalValueAndReset('messageError')
   const messageSuccess = getGlobalValueAndReset('messageSuccess')
 
-  const props = {
-    messageError,
-    messageSuccess,
+  const props: IndexProps = {
+    ...messageError !== undefined && { messageError },
+    ...messageSuccess !== undefined && { messageSuccess },
     options: process.env.config.options,
-    serverStatus: global.mongo.adminDb !== null
-      ? mapServerStatus(await global.mongo.adminDb.serverStatus())
-      : null,
+    ...global.mongo.adminDb !== null && {
+      serverStatus: mapServerStatus(await global.mongo.adminDb.serverStatus())
+    },
     title: 'Home - Mongo Express'
   }
 

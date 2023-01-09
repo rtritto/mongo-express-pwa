@@ -29,7 +29,7 @@ const getRowsComponent = (fields: Fields) => {
   return out
 }
 
-declare interface StatsTableProps {
+interface StatsTableProps {
   label: string
   fields: Fields
 }

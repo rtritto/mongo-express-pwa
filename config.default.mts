@@ -174,8 +174,8 @@ const configDefault = {
 
 export type MongoDb = typeof mongodb & {
   connectionName: string | undefined
-  whitelist: Array<string>
-  blacklist: Array<string>
+  whitelist: string[]
+  blacklist: string[]
 }
 export type Config = typeof configDefault & {
   mongodb: MongoDb
