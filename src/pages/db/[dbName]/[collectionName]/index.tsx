@@ -191,7 +191,8 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
     }
 
     const docs: object[] = []
-    let columns = []
+    // Generate an array of columns used by all documents visible on this page
+    const columns = new Set()
 
     for (const i in items) {
       // Prep items with stubs so as not to send large info down the wire
@@ -227,13 +228,11 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
       }
 
       docs[i] = items[i]
-      columns.push(Object.keys(items[i]))
-      items[i] = bson.toString(items[i])
+      for (const field in items[i]) {
+        columns.add(field)
+      }
+      items[i] = bson.toString()
     }
-
-    // Generate an array of columns used by all documents visible on this page
-    columns = columns.flat()
-    columns = columns.filter((value, index, array) => array.indexOf(value) === index)
 
     // Pagination
     const { limit, skip, sort } = filterOptions
@@ -241,7 +240,6 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
 
     const ctx = {
       // docs,       // Original docs
-      columns, // All used columns
       editorTheme: process.env.config.options.editorTheme,
       // limit,
       // skip,
@@ -263,7 +261,8 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
       props: {
         // ctx,
         collectionStats,
-        count, // total number of docs returned by the query
+        columns: Array.from(columns),  // All used columns
+        count,  // total number of docs returned by the query
         dbName,
         documents: items, // Docs converted to strings
         indexes,
