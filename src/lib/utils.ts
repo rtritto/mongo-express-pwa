@@ -102,7 +102,11 @@ export const deepmerge = (target: object[] | object, src: object[] | object) => 
   return deepmergeObject(target as object, src as object)
 }
 
-const recurse = (value: any, objectList: object[]) => {
+type ObjectInputSize = {
+  [key: string]: PrimitiveTypes
+}
+
+const recurse = (value: PrimitiveTypes | ObjectInputSize, objectList: object[]): number => {
   let bytes = 0
 
   if (typeof value === 'boolean') {
@@ -123,7 +127,7 @@ const recurse = (value: any, objectList: object[]) => {
   return bytes
 }
 
-export const roughSizeOfObject = (value: any) => {
+export const roughSizeOfObject = (value: PrimitiveTypes | ObjectInputSize) => {
   const objectList: object[] = []
 
   return recurse(value, objectList)

@@ -7,6 +7,7 @@ import type { GetServerSideProps } from 'next'
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
 import DeleteDocuments from 'components/Pages/Collection/DeleteDocuments.tsx'
+import DocumentsTable from 'components/Pages/Collection/DocumentsTable.tsx'
 import RenameCollection from 'components/Pages/Collection/RenameCollection.tsx'
 import { EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
@@ -15,6 +16,7 @@ import { mapCollectionStats } from 'lib/mapInfo.ts'
 // TODO move utils import and related logic that use it to lib/mapInfo.ts
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
 import { bytesToSize, roughSizeOfObject } from 'lib/utils.ts'
+import { stringDocIDs } from 'lib/filters.ts'
 import { selectedCollectionState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 const getRedirect = (dbName: string): { redirect: Redirect } => ({
@@ -26,9 +28,11 @@ const getRedirect = (dbName: string): { redirect: Redirect } => ({
 
 interface CollectionPageProps {
   collectionStats: ReturnType<typeof mapCollectionStats>
+  columns: string[]
   count: number
   dbName: string
-  documents: Document[]
+  documentsJS: MongoDocument[]
+  // documentsString: string[]
   indexes: Indexes
   messageError?: string
   messageSuccess?: string
@@ -45,7 +49,12 @@ interface CollectionPageProps {
 const CollectionPage = ({
   dbName,
   collectionStats,
-  count, documents, indexes, pagination,
+  columns,
+  count,
+  documentsJS,
+  // documentsString,
+  indexes,
+  pagination,
   messageError,
   messageSuccess,
   options: { noDelete, noExport, readOnly },
@@ -102,7 +111,7 @@ const CollectionPage = ({
 
         {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}
 
-        {documents.length === 0 ? (
+        {documentsJS.length === 0 ? (
           <p>No documents found.</p>
         ) : (
           <>
@@ -110,7 +119,7 @@ const CollectionPage = ({
             {pagination === true && <div>Pagination Top</div>}
 
             {/* TODO */}
-            Show Docs
+            <DocumentsTable columns={columns} documents={documentsJS} />
 
             {/* TODO */}
             {pagination === true && <div>Pagination Bottom</div>}
@@ -190,48 +199,53 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
       indexes[index].size = indexSizes[indexes[index].name]
     }
 
-    const docs: object[] = []
+    const documentsJS: MongoDocument[] = []
+    const documentsString: string[] = []
     // Generate an array of columns used by all documents visible on this page
-    const columns = new Set()
+    const columns = new Set<string>()
 
-    for (const i in items) {
+    for (const item of items) {
       // Prep items with stubs so as not to send large info down the wire
-      for (const prop in items[i]) {
-        if (roughSizeOfObject(items[i][prop]) > process.env.config.options.maxPropSize) {
-          items[i][prop] = {
+      /*for (const prop in item) {
+        if (roughSizeOfObject(item[prop]) > process.env.config.options.maxPropSize) {
+          item[prop] = {
             attribu: prop,
             display: '*** LARGE PROPERTY ***',
-            humanSz: bytesToSize(roughSizeOfObject(items[i][prop])),
+            humanSz: bytesToSize(roughSizeOfObject(item[prop])),
             maxSize: bytesToSize(process.env.config.options.maxPropSize),
-            preview: JSON.stringify(items[i][prop]).slice(0, 25),
-            roughSz: roughSizeOfObject(items[i][prop]),
-            _id: items[i]._id
+            preview: JSON.stringify(item[prop]).slice(0, 25),
+            roughSz: roughSizeOfObject(item[prop]),
+            _id: item._id
           }
         }
       }
 
       // If after prepping the row is still too big
-      if (roughSizeOfObject(items[i]) > process.env.config.options.maxRowSize) {
-        for (const prop in items[i]) {
-          if (prop !== '_id' && roughSizeOfObject(items[i][prop]) > 200) {
-            items[i][prop] = {
+      if (roughSizeOfObject(item) > process.env.config.options.maxRowSize) {
+        for (const prop in item) {
+          if (prop !== '_id' && roughSizeOfObject(item[prop]) > 200) {
+            item[prop] = {
               attribu: prop,
               display: '*** LARGE ROW ***',
-              humanSz: bytesToSize(roughSizeOfObject(items[i][prop])),
+              humanSz: bytesToSize(roughSizeOfObject(item[prop])),
               maxSize: bytesToSize(process.env.config.options.maxRowSize),
-              preview: JSON.stringify(items[i][prop]).slice(0, 25),
-              roughSz: roughSizeOfObject(items[i][prop]),
-              _id: items[i]._id
+              preview: JSON.stringify(item[prop]).slice(0, 25),
+              roughSz: roughSizeOfObject(item[prop]),
+              _id: item._id
             }
           }
         }
-      }
+      }*/
 
-      docs[i] = items[i]
-      for (const field in items[i]) {
+      const valuesString = await Promise.all(Object.values(item).map(stringDocIDs))
+      const documentJS: MongoDocument = {}
+      for (const [index, field] of Object.keys(item).entries()) {
+        documentJS[field] = valuesString[index]
         columns.add(field)
       }
-      items[i] = bson.toString()
+
+      documentsJS.push(documentJS)
+      documentsString.push(bson.toString(item))
     }
 
     // Pagination
@@ -239,7 +253,6 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
     const pagination = count > limit
 
     const ctx = {
-      // docs,       // Original docs
       editorTheme: process.env.config.options.editorTheme,
       // limit,
       // skip,
@@ -264,7 +277,8 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
         columns: Array.from(columns),  // All used columns
         count,  // total number of docs returned by the query
         dbName,
-        documents: items, // Docs converted to strings
+        documentsJS,  // Original docs
+        // documentsString, // Docs converted to strings
         indexes,
         ...messageError !== undefined && { messageError },
         ...messageSuccess !== undefined && { messageSuccess },

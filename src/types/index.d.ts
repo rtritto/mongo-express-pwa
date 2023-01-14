@@ -18,6 +18,8 @@ type Redirect = import('next').Redirect
 type Config = import('config.default.mts').Config
 type MongoDb = import('config.default.mts').MongoDb
 
+type PrimitiveTypes = boolean | string | number
+
 type CustomApiError = (any | Error) & {
   message: string
   status: number

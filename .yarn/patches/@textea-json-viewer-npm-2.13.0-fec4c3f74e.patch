@@ -1,0 +1,14 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index f3895849f607a9f483d5795a36caeaa14f33ee7c..69e8e4ebaf34dd7b6795539226291a4367e278ca 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -1067,7 +1067,8 @@ var ObjectType = function(props) {
+             pl: props.inspect ? indentWidth - 0.6 : 0,
+             marginLeft: marginLeft,
+             color: keyColor,
+-            borderLeft: props.inspect ? "1px solid ".concat(borderColor) : "none"
++            borderLeft: props.inspect ? "1px solid ".concat(borderColor) : "none",
++            width: 'max-content'
+         },
+         children: props.inspect ? elements : !isTrap ? /*#__PURE__*/ jsx(Box, {
+             component: "span",
