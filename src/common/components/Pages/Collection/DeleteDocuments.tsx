@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Grid, Modal, SvgIcon, Tooltip, Typography } from '@mui/material'
 import { useState } from 'react'
-import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 
 import { EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import { Delete } from 'common/SvgIcons.mts'
@@ -35,8 +35,8 @@ const DeleteDocuments = ({ count, collectionName, dbName, query }: DeleteDocumen
   const [open, setOpen] = useState(false)
   const handleOpen = () => { setOpen(true) }
   const handleClose = () => { setOpen(false) }
-  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined>(messageErrorState)
+  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
+  const setError = useSetAtom<string | undefined>(messageErrorState)
 
   const handleDeleteCollection = async () => {
     await fetch(EP_API_DATABASE_COLLECTION(dbName, collectionName), {

@@ -1,5 +1,6 @@
 import { FormControl, Select, SelectChangeEvent } from '@mui/material'
-import { RecoilState, useRecoilState, useSetRecoilState } from 'recoil'
+import { useAtom, useSetAtom } from 'jotai'
+import type { Atom } from 'jotai'
 
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
@@ -8,13 +9,13 @@ interface SelectLinkProps {
   baseUrl: string
   entities: string[]
   label: string
-  selectedState: RecoilState<string>
+  selectedState: Atom<string>
 }
 
 const SelectLink = ({ baseUrl, entities = [], label, selectedState }: SelectLinkProps) => {
-  const [selected, setSelected] = useRecoilState<string>(selectedState)
-  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined>(messageErrorState)
+  const [selected, setSelected] = useAtom<string>(selectedState)
+  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
+  const setError = useSetAtom<string | undefined>(messageErrorState)
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelected(event.target.value)

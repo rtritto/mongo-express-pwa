@@ -2,7 +2,7 @@ import { Box, Button, Grid, Paper, SvgIcon, Table, TableBody, TableCell, TableCo
 import { useRouter } from 'next/router.js'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 
 import { EP_DATABASE_COLLECTION, EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import { Edit } from 'common/SvgIcons.mts'
@@ -16,10 +16,10 @@ interface RenameCollectionProps {
 
 const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => {
   const [collection, setCollection] = useState<string>('')
-  const setCollections = useSetRecoilState<Mongo['collections']>(collectionsState)
-  const setSelectedCollection = useSetRecoilState<string>(selectedCollectionState)
-  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined>(messageErrorState)
+  const setCollections = useSetAtom<Mongo['collections']>(collectionsState)
+  const setSelectedCollection = useSetAtom<string>(selectedCollectionState)
+  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
+  const setError = useSetAtom<string | undefined>(messageErrorState)
   const methods = useForm({ mode: 'onChange' })
   const router = useRouter()
 

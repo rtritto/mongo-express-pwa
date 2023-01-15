@@ -5695,13 +5695,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hamt_plus@npm:1.0.2":
-  version: 1.0.2
-  resolution: "hamt_plus@npm:1.0.2"
-  checksum: 61f3b3405cdbb76c0ada226379ae69ee4cd57fd3ad439236764b8d92edd4627cc0520e1dbf3e5658680485449f7bf14b9d4bcc36874ac0f2c42c015e465ba7b4
-  languageName: node
-  linkType: hard
-
 "has-bigints@npm:^1.0.1, has-bigints@npm:^1.0.2":
   version: 1.0.2
   resolution: "has-bigints@npm:1.0.2"
@@ -6250,6 +6243,49 @@ __metadata:
     merge-stream: "npm:^2.0.0"
     supports-color: "npm:^8.0.0"
   checksum: dc5167cc25813211fd1920be69c32c71afcb7b8bff117b87669cc445fdfdb086d84b61e4cdd69bf310705ec453354753930b4f64cf40b9d4f6f1e1c28c86543e
+  languageName: node
+  linkType: hard
+
+"jotai@npm:^1.13.0":
+  version: 1.13.0
+  resolution: "jotai@npm:1.13.0"
+  peerDependencies:
+    "@babel/core": "*"
+    "@babel/template": "*"
+    jotai-devtools: "*"
+    jotai-immer: "*"
+    jotai-optics: "*"
+    jotai-redux: "*"
+    jotai-tanstack-query: "*"
+    jotai-urql: "*"
+    jotai-valtio: "*"
+    jotai-xstate: "*"
+    jotai-zustand: "*"
+    react: ">=16.8"
+  peerDependenciesMeta:
+    "@babel/core":
+      optional: true
+    "@babel/template":
+      optional: true
+    jotai-devtools:
+      optional: true
+    jotai-immer:
+      optional: true
+    jotai-optics:
+      optional: true
+    jotai-redux:
+      optional: true
+    jotai-tanstack-query:
+      optional: true
+    jotai-urql:
+      optional: true
+    jotai-valtio:
+      optional: true
+    jotai-xstate:
+      optional: true
+    jotai-zustand:
+      optional: true
+  checksum: 29dcd1a37ca339a2f55d1a2e463546b0a62a6c4473b716efc07de43a5e676bf328b57e23daa91273e945804709a84de76d982af97f0955f132e8a2b8f6cbf382
   languageName: node
   linkType: hard
 
@@ -6855,6 +6891,7 @@ __metadata:
     eslint-plugin-import: "npm:^2.26.0"
     eslint-plugin-unicorn: "npm:^45.0.2"
     fastest-validator: "npm:^1.16.0"
+    jotai: "npm:^1.13.0"
     lib: "link:./src/lib"
     middlewares: "link:./src/middlewares"
     mongodb: "npm:^4.13.0"
@@ -6865,8 +6902,6 @@ __metadata:
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
     react-hook-form: "npm:^7.41.5"
-    recoil: "npm:^0.7.6"
-    recoil-persist: "npm:^4.2.0"
     store: "link:./src/common/store"
     ts-import: "npm:^4.0.0-beta.10"
     typescript: "npm:^4.9.4"
@@ -7723,31 +7758,6 @@ __metadata:
     isarray: "npm:0.0.1"
     string_decoder: "npm:~0.10.x"
   checksum: 6c3abb4a779392e39805fca0f4a58b093673d52acc4f3bfecfa6fd82ef421dad3465f20379354be3e087f9c89d71e81cf5292c80939a32fca4cbee45e53a9994
-  languageName: node
-  linkType: hard
-
-"recoil-persist@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "recoil-persist@npm:4.2.0"
-  peerDependencies:
-    recoil: ^0.7.2
-  checksum: 94a4625bac6b173407d4c53b8e4db3a5702285d2157951aa576f43baf09147093a3c7fe801da760c7334e8fa385b124e839c36e59302a6934ff8205002d8d209
-  languageName: node
-  linkType: hard
-
-"recoil@npm:^0.7.6":
-  version: 0.7.6
-  resolution: "recoil@npm:0.7.6"
-  dependencies:
-    hamt_plus: "npm:1.0.2"
-  peerDependencies:
-    react: ">=16.13.1"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 42fd256e35e03dcce4dfa94089ef718cb2b6983c1e6802d6373a523ecc5d7f28deede6ede1aa2a441e1ee547a38acd96dd1a9890f658835b77dd7635d1ed21fe
   languageName: node
   linkType: hard
 

@@ -67,7 +67,7 @@ const CustomNavBar = ({ databases, collections, show }: CustomNavBarProps) => {
   // const [state, setState] = useState(false)
 
   //#region Theme
-  // const [darkMode, setDarkMode] = useRecoilState(darkModeState)
+  // const [darkMode, setDarkMode] = useAtom(darkModeState)
 
   // const handleDarkModeToggle = () => {
   //   setDarkMode(!darkMode)

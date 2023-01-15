@@ -1,11 +1,11 @@
 import { Alert } from '@mui/material'
-import { useRecoilState } from 'recoil'
+import { useAtom } from 'jotai'
 
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 const AlertMessages = () => {
-  const [success, setSuccess] = useRecoilState<string | undefined>(messageSuccessState)
-  const [error, setError] = useRecoilState<string | undefined>(messageErrorState)
+  const [success, setSuccess] = useAtom<string | undefined>(messageSuccessState)
+  const [error, setError] = useAtom<string | undefined>(messageErrorState)
 
   return (
     <>

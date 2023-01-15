@@ -1,12 +1,12 @@
-import { useRecoilValue } from 'recoil'
+import { useAtomValue } from 'jotai'
 
 import { EP_DATABASE } from 'configs/endpoints.ts'
 import SelectLink from 'components/Custom/SelectLink.tsx'
 import { collectionsState, selectedCollectionState, selectedDatabaseState } from 'store/globalAtoms.ts'
 
 const NavCollections = () => {
-  const collections = useRecoilValue<Mongo['collections']>(collectionsState)
-  const selectedDb = useRecoilValue<string>(selectedDatabaseState)
+  const collections = useAtomValue<Mongo['collections']>(collectionsState)
+  const selectedDb = useAtomValue<string>(selectedDatabaseState)
 
   return (
     <SelectLink

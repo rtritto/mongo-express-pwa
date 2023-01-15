@@ -1,7 +1,7 @@
 import { Box, Button, FormGroup, SvgIcon, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 
 import { EP_API_DB } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
@@ -10,9 +10,9 @@ import { databasesState, messageErrorState, messageSuccessState } from 'store/gl
 
 const CreateDatabase = () => {
   const [database, setDatabase] = useState<string>('')
-  const setDatabases = useSetRecoilState<Mongo['databases']>(databasesState)
-  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined>(messageErrorState)
+  const setDatabases = useSetAtom<Mongo['databases']>(databasesState)
+  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
+  const setError = useSetAtom<string | undefined>(messageErrorState)
   const methods = useForm({ mode: 'onChange' })
 
   const handleCreateDatabase = async () => {

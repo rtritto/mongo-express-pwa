@@ -2,7 +2,7 @@
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { CacheProvider } from '@emotion/react'
-import { RecoilRoot } from 'recoil'
+import { Provider } from 'jotai'
 import type { EmotionCache } from '@emotion/cache'
 import type { AppProps, AppContext } from 'next/app.js'
 
@@ -53,18 +53,14 @@ const MyApp: App = ({
   // }, [])
 
   return (
-    <RecoilRoot
+    <Provider
       key="init"
-      initializeState={({ set }) => {
-        set(collectionsState, collections)
-        if (collectionName !== undefined) {
-          set(selectedCollectionState, collectionName)
-        }
-        set(databasesState, databases)
-        if (dbName !== undefined) {
-          set(selectedDatabaseState, dbName)
-        }
-      }}
+      initialValues={[
+        [collectionsState, collections],
+        [selectedCollectionState, collectionName],
+        [databasesState, databases],
+        [selectedDatabaseState, dbName]
+      ]}
     >
       <CacheProvider value={emotionCache}>
         {/* <Head>
@@ -86,7 +82,7 @@ const MyApp: App = ({
           <Component {...pageProps} />
         </ThemeProvider>
       </CacheProvider>
-    </RecoilRoot>
+    </Provider>
   )
 }
 

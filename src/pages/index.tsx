@@ -1,7 +1,7 @@
 import { Box, Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 import { useEffect } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useAtom, useAtomValue } from 'jotai'
 import type { GetServerSideProps } from 'next'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
@@ -28,9 +28,9 @@ const Index = ({
   serverStatus,
   title
 }: IndexProps) => {
-  const databases = useRecoilValue<Mongo['databases']>(databasesState)
-  const [error, setError] = useRecoilState<string | undefined>(messageErrorState)
-  const [success, setSuccess] = useRecoilState<string | undefined>(messageSuccessState)
+  const databases = useAtomValue<Mongo['databases']>(databasesState)
+  const [error, setError] = useAtom<string | undefined>(messageErrorState)
+  const [success, setSuccess] = useAtom<string | undefined>(messageSuccessState)
 
   // Show alerts if messages exist
   useEffect(() => {

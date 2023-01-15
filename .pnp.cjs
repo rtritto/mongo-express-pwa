@@ -51,6 +51,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.26.0"],\
           ["eslint-plugin-unicorn", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:45.0.2"],\
           ["fastest-validator", "npm:1.16.0"],\
+          ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:1.13.0"],\
           ["lib", "link:./src/lib::locator=mongo-express-pwa%40workspace%3A."],\
           ["middlewares", "link:./src/middlewares::locator=mongo-express-pwa%40workspace%3A."],\
           ["mongodb", "npm:4.13.0"],\
@@ -61,8 +62,6 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.2.0"],\
           ["react-dom", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:18.2.0"],\
           ["react-hook-form", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:7.41.5"],\
-          ["recoil", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:0.7.6"],\
-          ["recoil-persist", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.2.0"],\
           ["store", "link:./src/common/store::locator=mongo-express-pwa%40workspace%3A."],\
           ["ts-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.0.0-beta.10"],\
           ["typescript", "patch:typescript@npm%3A4.9.4#optional!builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
@@ -7792,15 +7791,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["hamt_plus", [\
-      ["npm:1.0.2", {\
-        "packageLocation": "../../Users/Computer/AppData/Local/Yarn/Berry/cache/hamt_plus-npm-1.0.2-67a52ee1df-9.zip/node_modules/hamt_plus/",\
-        "packageDependencies": [\
-          ["hamt_plus", "npm:1.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["has", [\
       ["npm:1.0.3", {\
         "packageLocation": "../../Users/Computer/AppData/Local/Yarn/Berry/cache/has-npm-1.0.3-b7f00631c1-9.zip/node_modules/has/",\
@@ -8435,6 +8425,72 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:18.11.10"],\
           ["merge-stream", "npm:2.0.0"],\
           ["supports-color", "npm:8.1.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["jotai", [\
+      ["npm:1.13.0", {\
+        "packageLocation": "../../Users/Computer/AppData/Local/Yarn/Berry/cache/jotai-npm-1.13.0-40b25b2e95-9.zip/node_modules/jotai/",\
+        "packageDependencies": [\
+          ["jotai", "npm:1.13.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:1.13.0", {\
+        "packageLocation": "./.yarn/__virtual__/jotai-virtual-b31cd5cc79/3/Users/Computer/AppData/Local/Yarn/Berry/cache/jotai-npm-1.13.0-40b25b2e95-9.zip/node_modules/jotai/",\
+        "packageDependencies": [\
+          ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:1.13.0"],\
+          ["@babel/core", null],\
+          ["@babel/template", null],\
+          ["@types/babel__core", null],\
+          ["@types/babel__template", null],\
+          ["@types/jotai-devtools", null],\
+          ["@types/jotai-immer", null],\
+          ["@types/jotai-optics", null],\
+          ["@types/jotai-redux", null],\
+          ["@types/jotai-tanstack-query", null],\
+          ["@types/jotai-urql", null],\
+          ["@types/jotai-valtio", null],\
+          ["@types/jotai-xstate", null],\
+          ["@types/jotai-zustand", null],\
+          ["@types/react", "npm:18.0.26"],\
+          ["jotai-devtools", null],\
+          ["jotai-immer", null],\
+          ["jotai-optics", null],\
+          ["jotai-redux", null],\
+          ["jotai-tanstack-query", null],\
+          ["jotai-urql", null],\
+          ["jotai-valtio", null],\
+          ["jotai-xstate", null],\
+          ["jotai-zustand", null],\
+          ["react", "npm:18.2.0"]\
+        ],\
+        "packagePeers": [\
+          "@babel/core",\
+          "@babel/template",\
+          "@types/babel__core",\
+          "@types/babel__template",\
+          "@types/jotai-devtools",\
+          "@types/jotai-immer",\
+          "@types/jotai-optics",\
+          "@types/jotai-redux",\
+          "@types/jotai-tanstack-query",\
+          "@types/jotai-urql",\
+          "@types/jotai-valtio",\
+          "@types/jotai-xstate",\
+          "@types/jotai-zustand",\
+          "@types/react",\
+          "jotai-devtools",\
+          "jotai-immer",\
+          "jotai-optics",\
+          "jotai-redux",\
+          "jotai-tanstack-query",\
+          "jotai-urql",\
+          "jotai-valtio",\
+          "jotai-xstate",\
+          "jotai-zustand",\
+          "react"\
         ],\
         "linkType": "HARD"\
       }]\
@@ -9108,6 +9164,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.26.0"],\
           ["eslint-plugin-unicorn", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:45.0.2"],\
           ["fastest-validator", "npm:1.16.0"],\
+          ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:1.13.0"],\
           ["lib", "link:./src/lib::locator=mongo-express-pwa%40workspace%3A."],\
           ["middlewares", "link:./src/middlewares::locator=mongo-express-pwa%40workspace%3A."],\
           ["mongodb", "npm:4.13.0"],\
@@ -9118,8 +9175,6 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.2.0"],\
           ["react-dom", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:18.2.0"],\
           ["react-hook-form", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:7.41.5"],\
-          ["recoil", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:0.7.6"],\
-          ["recoil-persist", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.2.0"],\
           ["store", "link:./src/common/store::locator=mongo-express-pwa%40workspace%3A."],\
           ["ts-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.0.0-beta.10"],\
           ["typescript", "patch:typescript@npm%3A4.9.4#optional!builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
@@ -10125,59 +10180,6 @@ const RAW_RUNTIME_STATE =
           ["inherits", "npm:2.0.4"],\
           ["string_decoder", "npm:1.3.0"],\
           ["util-deprecate", "npm:1.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["recoil", [\
-      ["npm:0.7.6", {\
-        "packageLocation": "../../Users/Computer/AppData/Local/Yarn/Berry/cache/recoil-npm-0.7.6-6f8de04e3d-9.zip/node_modules/recoil/",\
-        "packageDependencies": [\
-          ["recoil", "npm:0.7.6"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:0.7.6", {\
-        "packageLocation": "./.yarn/__virtual__/recoil-virtual-0c4db79f1d/3/Users/Computer/AppData/Local/Yarn/Berry/cache/recoil-npm-0.7.6-6f8de04e3d-9.zip/node_modules/recoil/",\
-        "packageDependencies": [\
-          ["recoil", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:0.7.6"],\
-          ["@types/react", "npm:18.0.26"],\
-          ["@types/react-dom", "npm:18.0.10"],\
-          ["@types/react-native", null],\
-          ["hamt_plus", "npm:1.0.2"],\
-          ["react", "npm:18.2.0"],\
-          ["react-dom", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:18.2.0"],\
-          ["react-native", null]\
-        ],\
-        "packagePeers": [\
-          "@types/react-dom",\
-          "@types/react-native",\
-          "@types/react",\
-          "react-dom",\
-          "react-native",\
-          "react"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["recoil-persist", [\
-      ["npm:4.2.0", {\
-        "packageLocation": "../../Users/Computer/AppData/Local/Yarn/Berry/cache/recoil-persist-npm-4.2.0-8058958608-9.zip/node_modules/recoil-persist/",\
-        "packageDependencies": [\
-          ["recoil-persist", "npm:4.2.0"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.2.0", {\
-        "packageLocation": "./.yarn/__virtual__/recoil-persist-virtual-df7dfadbc4/3/Users/Computer/AppData/Local/Yarn/Berry/cache/recoil-persist-npm-4.2.0-8058958608-9.zip/node_modules/recoil-persist/",\
-        "packageDependencies": [\
-          ["recoil-persist", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.2.0"],\
-          ["@types/recoil", null],\
-          ["recoil", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:0.7.6"]\
-        ],\
-        "packagePeers": [\
-          "@types/recoil",\
-          "recoil"\
         ],\
         "linkType": "HARD"\
       }]\

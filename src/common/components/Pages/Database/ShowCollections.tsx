@@ -1,5 +1,5 @@
 import { Button, Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 
 import { EP_DB, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION, EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import { FileUpload, Save, Visibility } from 'common/SvgIcons.mts'
@@ -43,10 +43,10 @@ const handleImport = async (event) => {
 }
 
 const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps) => {
-  const setSelectedCollectionState = useSetRecoilState(selectedCollectionState)
-  const setCollections = useSetRecoilState<Mongo['collections']>(collectionsState)
-  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined>(messageErrorState)
+  const setSelectedCollectionState = useSetAtom(selectedCollectionState)
+  const setCollections = useSetAtom<Mongo['collections']>(collectionsState)
+  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
+  const setError = useSetAtom<string | undefined>(messageErrorState)
 
   const handleDelete = async (database: string, collection: string) => {
     await fetch(EP_API_DATABASE_COLLECTION(database, collection), {

@@ -1,5 +1,5 @@
 import { Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import { useSetRecoilState } from 'recoil'
+import { useSetAtom } from 'jotai'
 
 import { EP_DB, EP_API_DATABASE } from 'configs/endpoints.ts'
 import { Visibility } from 'common/SvgIcons.mts'
@@ -24,10 +24,10 @@ interface ShowDatabasesProps {
 }
 
 const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
-  const setDatabases = useSetRecoilState<Mongo['databases']>(databasesState)
-  const setSelectedDatabaseState = useSetRecoilState(selectedDatabaseState)
-  const setSuccess = useSetRecoilState<string | undefined>(messageSuccessState)
-  const setError = useSetRecoilState<string | undefined>(messageErrorState)
+  const setDatabases = useSetAtom<Mongo['databases']>(databasesState)
+  const setSelectedDatabaseState = useSetAtom(selectedDatabaseState)
+  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
+  const setError = useSetAtom<string | undefined>(messageErrorState)
 
   const handleDelete = async (database: string) => {
     await fetch(EP_API_DATABASE(database), {

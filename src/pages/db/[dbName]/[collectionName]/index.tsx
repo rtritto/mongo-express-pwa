@@ -1,7 +1,7 @@
 import { Container, Divider, Typography } from '@mui/material'
 import Head from 'next/head.js'
 import { useEffect } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useAtom, useAtomValue } from 'jotai'
 import type { GetServerSideProps } from 'next'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
@@ -61,9 +61,9 @@ const CollectionPage = ({
   query,
   title
 }: CollectionPageProps) => {
-  const collectionName = useRecoilValue<string>(selectedCollectionState)
-  const [error, setError] = useRecoilState<string | undefined>(messageErrorState)
-  const [success, setSuccess] = useRecoilState<string | undefined>(messageSuccessState)
+  const collectionName = useAtomValue<string>(selectedCollectionState)
+  const [error, setError] = useAtom<string | undefined>(messageErrorState)
+  const [success, setSuccess] = useAtom<string | undefined>(messageSuccessState)
 
   // Show alerts if messages exist
   useEffect(() => {
