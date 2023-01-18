@@ -3,15 +3,17 @@
   "editor.minimap.enabled": false,
   "editor.renderWhitespace": "all",
   "editor.tabSize": 2,
+  "eslint.nodePath": ".yarn/sdks",
   "files.eol": "\n",
   "git.mergeEditor": false,
-  "terminal.integrated.defaultProfile.windows": "Command Prompt",
   "search.exclude": {
+    "**/.next": true,
     "**/.yarn": true,
     "**/.pnp.*": true
   },
-  "eslint.nodePath": ".yarn/sdks",
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "window.commandCenter": false
+  "window.commandCenter": false,
+  "workbench.startupEditor": "none"
 }
