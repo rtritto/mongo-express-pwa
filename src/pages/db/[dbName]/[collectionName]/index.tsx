@@ -4,12 +4,12 @@ import { useEffect } from 'react'
 import { useAtom, useAtomValue } from 'jotai'
 import type { GetServerSideProps } from 'next'
 
+import DeleteModalBoxSimple from 'components/Custom/DeleteModalBoxSimple.tsx'
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
-import DeleteDocuments from 'components/Pages/Collection/DeleteDocuments.tsx'
 import DocumentsTable from 'components/Pages/Collection/DocumentsTable.tsx'
 import RenameCollection from 'components/Pages/Collection/RenameCollection.tsx'
-import { EP_DATABASE } from 'configs/endpoints.ts'
+import { EP_API_DATABASE_COLLECTION, EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
 import * as queries from 'lib/queries.ts'
 import { mapCollectionStats } from 'lib/mapInfo.ts'
@@ -105,8 +105,15 @@ const CollectionPage = ({
           <li><a href="#advanced" data-toggle="tab">Advanced</a></li>
         </ul>
 
-        {readOnly === false && noDelete === false && count > 0 && <DeleteDocuments
-          count={count} collectionName={collectionName} dbName={dbName} query={query}
+        {readOnly === false && noDelete === false && count > 0 && <DeleteModalBoxSimple
+          deleteUrl={EP_API_DATABASE_COLLECTION(dbName, collectionName)}
+          query={query}
+          messages={{
+            button: `Delete all ${count} document(s)`,
+            modal: <>You want to delete all <strong>{count}</strong> document(s)?</>,
+            success: `${count} documents deleted!`
+          }}
+          width="100%"
         />}
 
         {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}
@@ -119,7 +126,16 @@ const CollectionPage = ({
             {pagination === true && <div>Pagination Top</div>}
 
             {/* TODO */}
-            <DocumentsTable columns={columns} documents={documentsJS} />
+            <DocumentsTable
+              columns={columns}
+              deleteUrl={EP_API_DATABASE_COLLECTION(dbName, collectionName)}
+              documents={documentsJS}
+              show={{
+                delete: readOnly === false && noDelete === false
+                  && collectionName !== 'system.indexes'
+                  && columns.includes('_id')
+              }}
+            />
 
             {/* TODO */}
             {pagination === true && <div>Pagination Bottom</div>}

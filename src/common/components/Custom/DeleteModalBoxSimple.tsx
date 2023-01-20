@@ -2,7 +2,6 @@ import { Box, Button, Divider, Grid, Modal, SvgIcon, Tooltip, Typography } from 
 import { useState } from 'react'
 import { useSetAtom } from 'jotai'
 
-import { EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import { Delete } from 'common/SvgIcons.mts'
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
@@ -24,14 +23,18 @@ const BoxStyle = {
   boxShadow: 24,
 } as const
 
-interface DeleteDocumentsProps {
-  count: number
-  dbName: string
-  collectionName: string
+interface DeleteModalBoxSimpleProps {
+  deleteUrl: string
+  messages: {
+    button: string
+    modal: string
+    success: string
+  }
   query?: string
+  width?: string
 }
 
-const DeleteDocuments = ({ count, collectionName, dbName, query }: DeleteDocumentsProps) => {
+const DeleteModalBoxSimple = ({ deleteUrl, messages, query, width }: DeleteModalBoxSimpleProps) => {
   const [open, setOpen] = useState(false)
   const handleOpen = () => { setOpen(true) }
   const handleClose = () => { setOpen(false) }
@@ -39,23 +42,21 @@ const DeleteDocuments = ({ count, collectionName, dbName, query }: DeleteDocumen
   const setError = useSetAtom<string | undefined>(messageErrorState)
 
   const handleDeleteCollection = async () => {
-    await fetch(EP_API_DATABASE_COLLECTION(dbName, collectionName), {
+    await fetch(deleteUrl, {
       method: 'DELETE',
       ...query && { query: { query } }
     }).then(async (res) => {
       if (res.ok === true) {
-        setSuccess(`${count} documents deleted!`)
+        setSuccess(messages.success)
       } else {
         const { error } = await res.json()
         setError(error)
       }
-    }).catch((error) => {
-      setError(error.message)
-    })
+    }).catch((error) => { setError(error.message) })
   }
 
   return (
-    <Box display="flex">
+    <Box>
       <Button
         onClick={handleOpen}
         startIcon={<SvgIcon sx={{
@@ -67,11 +68,11 @@ const DeleteDocuments = ({ count, collectionName, dbName, query }: DeleteDocumen
         variant="contained"
         sx={{
           backgroundColor: 'rgb(108, 49, 47)',
-          width: '100%',
+          width,
           textTransform: 'none'
         }}
       >
-        Delete all {count} document(s)
+        {messages.button}
       </Button>
 
       <Modal
@@ -84,7 +85,7 @@ const DeleteDocuments = ({ count, collectionName, dbName, query }: DeleteDocumen
         <Box sx={BoxStyle}>
           <Box sx={{ p: 2 }} >
             <Typography component='div' fontSize={14} gutterBottom>
-              You want to delete all <strong>{count}</strong> document(s)?
+              {messages.modal}
             </Typography>
           </Box>
 
@@ -120,4 +121,4 @@ const DeleteDocuments = ({ count, collectionName, dbName, query }: DeleteDocumen
   )
 }
 
-export default DeleteDocuments
+export default DeleteModalBoxSimple
