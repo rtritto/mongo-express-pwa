@@ -121,11 +121,6 @@ const configDefault = {
     // See http://codemirror.net/demo/theme.html for all examples
     editorTheme: process.env.ME_CONFIG_OPTIONS_EDITORTHEME || 'rubyblue',
 
-    // Maximum size of a single property & single row
-    // Reduces the risk of sending a huge amount of data when viewing collections
-    maxPropSize: (100 * 1000), // default 100KB
-    maxRowSize: (1000 * 1000), // default 1MB
-
     // The options below aren't being used yet
 
     // cmdType: the type of command line you want mongo express to run
@@ -169,7 +164,7 @@ const configDefault = {
 
     // noDelete: if noDelete is set to true, we won't show delete buttons
     noDelete: getBoolean(process.env.ME_CONFIG_OPTIONS_NO_DELETE, false)
-  },
+  }
 }
 
 export type MongoDb = typeof mongodb & {

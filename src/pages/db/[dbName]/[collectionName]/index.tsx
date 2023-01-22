@@ -15,7 +15,6 @@ import * as queries from 'lib/queries.ts'
 import { mapCollectionStats } from 'lib/mapInfo.ts'
 // TODO move utils import and related logic that use it to lib/mapInfo.ts
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
-import { bytesToSize, roughSizeOfObject } from 'lib/utils.ts'
 import { stringDocIDs } from 'lib/filters.ts'
 import { selectedCollectionState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
@@ -221,38 +220,6 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
     const columns = new Set<string>()
 
     for (const item of items) {
-      // Prep items with stubs so as not to send large info down the wire
-      /*for (const prop in item) {
-        if (roughSizeOfObject(item[prop]) > process.env.config.options.maxPropSize) {
-          item[prop] = {
-            attribu: prop,
-            display: '*** LARGE PROPERTY ***',
-            humanSz: bytesToSize(roughSizeOfObject(item[prop])),
-            maxSize: bytesToSize(process.env.config.options.maxPropSize),
-            preview: JSON.stringify(item[prop]).slice(0, 25),
-            roughSz: roughSizeOfObject(item[prop]),
-            _id: item._id
-          }
-        }
-      }
-
-      // If after prepping the row is still too big
-      if (roughSizeOfObject(item) > process.env.config.options.maxRowSize) {
-        for (const prop in item) {
-          if (prop !== '_id' && roughSizeOfObject(item[prop]) > 200) {
-            item[prop] = {
-              attribu: prop,
-              display: '*** LARGE ROW ***',
-              humanSz: bytesToSize(roughSizeOfObject(item[prop])),
-              maxSize: bytesToSize(process.env.config.options.maxRowSize),
-              preview: JSON.stringify(item[prop]).slice(0, 25),
-              roughSz: roughSizeOfObject(item[prop]),
-              _id: item._id
-            }
-          }
-        }
-      }*/
-
       const valuesString = await Promise.all(Object.values(item).map(stringDocIDs))
       const documentJS: MongoDocument = {}
       for (const [index, field] of Object.keys(item).entries()) {
