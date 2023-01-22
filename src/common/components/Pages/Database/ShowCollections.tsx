@@ -79,13 +79,13 @@ const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps)
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ borderRight: 'none', p: 1.5, verticalAlign: 'top' }}>
+            <TableCell sx={{ borderRight: 'none', p: 1.5 }}>
               <Typography component='h6' variant='h6' sx={{ fontWeight: 'bold' }}>
                 Collections
               </Typography>
             </TableCell>
 
-            <TableCell sx={{ px: 1.5, py: 1, borderLeft: 'none' }} align="right" colSpan={5}>
+            <TableCell sx={{ px: 1.5, borderLeft: 'none' }} align="right" colSpan={5}>
               {show.create === true && <CreateCollection dbName={dbName} />}
             </TableCell>
           </TableRow>

@@ -113,7 +113,7 @@ const CollectionPage = ({
             modal: <>You want to delete all <strong>{count}</strong> document(s)?</>,
             success: `${count} documents deleted!`
           }}
-          width="100%"
+          ButtonProps={{ sx: { width: "100%" } }}
         />}
 
         {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}

@@ -74,7 +74,9 @@ Theme = createTheme(Theme, {
     MuiTableCell: {
       styleOverrides: {
         root: {
-          border: `1px solid rgba(81, 81, 81, 1)`
+          border: `1px solid rgba(81, 81, 81, 1)`,
+          paddingBottom: 0,
+          paddingTop: 0
           // add divider border in middle
           // '&:not(:first-child):not(:last-child)': {
           //   borderLeft: '1px solid rgba(81, 81, 81, 1)',

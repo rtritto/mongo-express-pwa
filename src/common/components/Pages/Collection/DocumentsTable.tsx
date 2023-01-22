@@ -16,7 +16,7 @@ const getTableCells = (columns: string[], document: MongoDocument, index: number
   return columns.map((column) => {
     const field = document[column] as string | object | undefined | null
     return (typeof field === 'object' ?? Array.isArray(field)) ? (
-      <TableCell key={`${column}${index}`} sx={{ verticalAlign: 'top', backgroundColor: '#181818' }}>
+      <TableCell key={`${column}${index}`} sx={{ backgroundColor: '#181818', py: 1 }}>
         <JsonViewer
           collapseStringsAfterLength={50}
           defaultInspectDepth={1}
@@ -32,7 +32,7 @@ const getTableCells = (columns: string[], document: MongoDocument, index: number
         />
       </TableCell>
     ) : (
-      <TableCell key={`${column}${index}`} sx={{ verticalAlign: 'top', py: 0.75 }}>
+      <TableCell key={`${column}${index}`} sx={{ py: 1 }}>
         <>{field}</>
       </TableCell>
     )
@@ -55,7 +55,7 @@ const getColumns = (columns: string[], showDelete: boolean) => {
 const DocumentsTable = ({ columns, documents, show, deleteUrl }: DocumentsTableProps) => {
   return (
     <TableContainer component={Paper}>
-      <Table size="small">
+      <Table size="small" /*padding="checkbox"*/ >
         <TableHead>
           <TableRow>
             {getColumns(columns, show.delete)}
@@ -66,7 +66,7 @@ const DocumentsTable = ({ columns, documents, show, deleteUrl }: DocumentsTableP
           {documents.map((document, index) => (
             <TableRow key={`doc${index}`}>
               {show.delete === true && (
-                <TableCell key={`delDoc${index}`}>
+                <TableCell key={`delDoc${index}`} width="1%" sx={{ px: 1, py: 0.5 }}>
                   <DeleteModalBoxSimple
                     // TODO add (json | safe | url_encode filter) to _id
                     deleteUrl={`${deleteUrl}/${document._id}`}
@@ -76,7 +76,7 @@ const DocumentsTable = ({ columns, documents, show, deleteUrl }: DocumentsTableP
                     }}
                     // TODO handle query
                     // query={}
-                    width="100%"
+                    ButtonProps={{ sx: { minWidth: 0 } }}
                   />
                 </TableCell>
               )}

@@ -34,7 +34,7 @@ interface DeleteModalBoxSimpleProps {
   width?: string
 }
 
-const DeleteModalBoxSimple = ({ deleteUrl, messages, query, width }: DeleteModalBoxSimpleProps) => {
+const DeleteModalBoxSimple = ({ deleteUrl, messages, query, ButtonProps = {} }: DeleteModalBoxSimpleProps) => {
   const [open, setOpen] = useState(false)
   const handleOpen = () => { setOpen(true) }
   const handleClose = () => { setOpen(false) }
@@ -64,8 +64,8 @@ const DeleteModalBoxSimple = ({ deleteUrl, messages, query, width }: DeleteModal
         variant="contained"
         sx={{
           backgroundColor: 'rgb(108, 49, 47)',
-          width,
-          textTransform: 'none'
+          textTransform: 'none',
+          ...ButtonProps.sx
         }}
       >
         {messages.button}
