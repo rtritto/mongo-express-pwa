@@ -71,8 +71,8 @@ const DocumentsTable = ({ columns, documents, show, deleteUrl }: DocumentsTableP
                     // TODO add (json | safe | url_encode filter) to _id
                     deleteUrl={`${deleteUrl}/${document._id}`}
                     messages={{
-                      modal: 'Are you sure?',
-                      success: `Document _id '${document._id}' deleted!`
+                      modal: `Are you sure you want delete _id "${document._id}"?`,
+                      success: `Document _id "${document._id}" deleted!`
                     }}
                     // TODO handle query
                     // query={}

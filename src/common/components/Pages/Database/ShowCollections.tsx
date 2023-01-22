@@ -64,7 +64,7 @@ const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps)
             ]
           }
         })
-        setSuccess(`Collection '${collection}' deleted!`)
+        setSuccess(`Collection "${collection}" deleted!`)
       } else {
         const { error } = await res.json()
         setError(error)

@@ -92,7 +92,7 @@ export const getServerSideProps: GetServerSideProps<DatabasePageProps, Params> =
 
   // Make sure database exists
   if (!(dbName in global.mongo.connections)) {
-    setGlobalValue('messageError', `Database '${dbName}' not found!`)
+    setGlobalValue('messageError', `Database "${dbName}" not found!`)
     return getRedirect()
   }
   // TODO ???

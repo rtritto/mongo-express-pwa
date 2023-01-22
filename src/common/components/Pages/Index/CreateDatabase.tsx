@@ -22,7 +22,7 @@ const CreateDatabase = () => {
       headers: { 'Content-Type': 'application/json' }
     }).then(async (res) => {
       if (res.ok === true) {
-        setSuccess(`Database '${database}' created!`)
+        setSuccess(`Database "${database}" created!`)
         // Add database to global databases to update viewing databases
         setDatabases((databases) => [...databases, database].sort())
         setDatabase('')  // Reset value

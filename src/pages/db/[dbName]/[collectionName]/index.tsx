@@ -159,17 +159,17 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
 
   // Make sure database exists
   if (!(dbName in global.mongo.connections)) {
-    setGlobalValue('messageError', `Database '${dbName}' not found!`)
+    setGlobalValue('messageError', `Database "${dbName}" not found!`)
     return getRedirect(dbName)
   }
   // Make sure collection exists
   if (!global.mongo.collections[dbName].includes(collectionName)) {
-    setGlobalValue('messageError', `Collection '${collectionName}' not found!`)
+    setGlobalValue('messageError', `Collection "${collectionName}" not found!`)
     return getRedirect(dbName)
   }
   const collection = global.mongo.connections[dbName].db.collection(collectionName)
   if (collection === null) {
-    setGlobalValue('messageError', `Collection '${collectionName}' not found!`)
+    setGlobalValue('messageError', `Collection "${collectionName}" not found!`)
     return getRedirect(dbName)
   }
   // TODO ???

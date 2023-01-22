@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const client = await global.mongo.connect()
     await client.db(dbName).collection(collectionName).rename(collection).catch((error) => {
       console.debug(error)
-      throw new Error(`Could not rename collection '${collectionName}' in '${collection}'. ${error.message}`)
+      throw new Error(`Could not rename collection "${collectionName}" in "${collection}". ${error.message}`)
     })
     await global.mongo.updateCollections(global.mongo.connections[dbName])
     // res.redirect(utils.buildCollectionURL(res.locals.baseHref, req.query.dbName, collection))

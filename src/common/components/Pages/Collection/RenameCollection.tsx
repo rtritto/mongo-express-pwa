@@ -30,7 +30,7 @@ const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => 
       headers: { 'Content-Type': 'application/json' }
     }).then(async (res) => {
       if (res.ok === true) {
-        setSuccess(`Collection '${collectionName}' renamed to '${collection}'!`)
+        setSuccess(`Collection "${collectionName}" renamed to "${collection}"!`)
         // Rename collection from global collections to update viewing collections
         setCollections((collections) => {
           const indexToRemove = collections[dbName].indexOf(collectionName)
