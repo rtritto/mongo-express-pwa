@@ -59,11 +59,7 @@ const DeleteModalBoxSimple = ({ deleteUrl, messages, query, width }: DeleteModal
     <Box>
       <Button
         onClick={handleOpen}
-        startIcon={<SvgIcon sx={{
-          marginRight: '8px', marginLeft: '-4px'  // restore default margin style
-        }}>
-          <path d={Delete} />
-        </SvgIcon>}
+        startIcon={<SvgIcon><path d={Delete} /></SvgIcon>}
         size="small"
         variant="contained"
         sx={{

@@ -1,5 +1,7 @@
 import { EJSON } from 'bson'
 
+import { checkDatabase, checkCollection } from 'lib/validations.ts'
+
 const ALLOWED_MIME_TYPES = new Set([
   'text/csv',
   'application/json'
@@ -7,6 +9,10 @@ const ALLOWED_MIME_TYPES = new Set([
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {  // importCollection
+    const { collectionName, dbName } = req.query as Params
+    checkDatabase(dbName)
+    checkCollection(dbName, collectionName)
+
     if (!req.files) {
       return res.status(400).send('Missing file')
     }
@@ -35,13 +41,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       }
     }
-    await req.collection.insertMany(docs).then((stats) => {
-      res.status(200).send(`${stats.insertedCount} document(s) inserted`)
-    }).catch((error) => {
-      console.error(error)
-      res.status(500).send('Server error')
-    })
+
+    const client = await global.mongo.connect()
+    const stats = await client.db(dbName).collection(collectionName).insertMany(docs)
+
+    res.end(`${stats.insertedCount} document(s) inserted`)
+    return
   }
+  res.status(405).end(`Method ${req.method} Not Allowed!`)
 }
 
 export default handler

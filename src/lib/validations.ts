@@ -1,3 +1,5 @@
+import { toBSON } from 'lib/bson.ts'
+
 export const isValidCollectionName = (name: string) => {
   // if (name === undefined || name.length === 0) {
   //   return { error: true, message: 'You forgot to enter a collection name!' }
@@ -46,6 +48,14 @@ export const checkDatabase = (dbName: string) => {
 export const checkCollection = (dbName: string, collectionName: string) => {
   if (!global.mongo.collections[dbName].includes(collectionName)) {
     throw new Error(`Collection '${collectionName}' not found!`)
+  }
+}
+
+export const checkDocument = (document: string) => {
+  try {
+    return toBSON(document)
+  } catch (error) {
+    throw new Error('That document in request body is not valid!')
   }
 }
 

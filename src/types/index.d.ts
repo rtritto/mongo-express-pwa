@@ -159,4 +159,18 @@ type Mongo = {
 interface Params extends ParsedUrlQuery {
   collectionName: string
   dbName: string
+  documentId: string
+}
+
+interface QueryParameter extends ParsedUrlQuery {
+  // mongodb
+  skip?: string
+  sort?: string
+  projection?: string
+  // custom
+  key?: string
+  value?: string
+  type?: string
+  query?: string
+  subtype?: string
 }

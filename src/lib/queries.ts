@@ -2,17 +2,6 @@ import mongodb from 'mongodb'
 
 import { parseObjectId, toSafeBSON } from './bson.ts'
 
-interface QueryParameter extends ParsedUrlQuery {
-  // mongodb
-  skip?: string
-  sort?: string
-  projection?: string
-  // custom
-  key?: string
-  value?: string
-  type?: string
-  query?: string
-}
 interface QueryOptions {
   limit: number
   projection?: {

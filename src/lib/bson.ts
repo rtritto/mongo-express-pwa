@@ -1,5 +1,5 @@
-import parser, { toJSString } from 'mongodb-query-parser'
 import { Document, EJSON, ObjectId } from 'bson'
+import parser, { toJSString } from 'mongodb-query-parser'
 
 export const toBSON = parser
 

@@ -72,7 +72,7 @@ const DocumentsTable = ({ columns, documents, show, deleteUrl }: DocumentsTableP
                     deleteUrl={`${deleteUrl}/${document._id}`}
                     messages={{
                       modal: 'Are you sure?',
-                      success: `Document ${document._id} deleted!`
+                      success: `Document _id '${document._id}' deleted!`
                     }}
                     // TODO handle query
                     // query={}

@@ -8,3 +8,5 @@
   - understand declare statement use
 - collection.indexes isn't in doc, it should be replaced with collection.listIndexes?
 - test instance of connection
+- check when use console debug|error|log
+- check when use res.end and res.send

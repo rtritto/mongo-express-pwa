@@ -1,5 +1,5 @@
 import { getQuery } from 'lib/queries.ts'
-import { checkDatabase, checkCollection, checkOption } from 'lib/validations.ts'
+import { checkCollection, checkDatabase, checkDocument, checkOption } from 'lib/validations.ts'
 import { validateCollectionReqBody } from 'lib/validationsReq.ts'
 import { withExceptionHandler } from 'middlewares/api.ts'
 
@@ -10,6 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { collectionName, dbName } = req.query as Params
     checkDatabase(dbName)
     checkCollection(dbName, collectionName)
+
     const client = await global.mongo.connect()
     await client.db(dbName).collection(collectionName).rename(collection).catch((error) => {
       console.debug(error)
@@ -17,6 +18,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     })
     await global.mongo.updateCollections(global.mongo.connections[dbName])
     // res.redirect(utils.buildCollectionURL(res.locals.baseHref, req.query.dbName, collection))
+    res.end()
+    return
+  }
+  if (req.method === 'POST') {  // addDocument
+    const { collectionName, dbName } = req.query as Params
+    checkDatabase(dbName)
+    checkCollection(dbName, collectionName)
+    const docBSON = checkDocument(req.body)
+
+    const client = await global.mongo.connect()
+    await client.db(dbName).collection(collectionName).insertOne(docBSON)
+
+    // TODO move request in page
+    // req.session.success = 'Document added!'
+    // res.redirect(buildCollectionURL(res.locals.baseHref, req.dbName, req.collectionName))
+
     res.end()
     return
   }

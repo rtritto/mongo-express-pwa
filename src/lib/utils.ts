@@ -1,3 +1,10 @@
+import { Binary, ObjectId } from 'bson'
+
+const ALLOWED_SUBTYPES = new Set([
+  Binary.SUBTYPE_UUID_OLD,
+  Binary.SUBTYPE_UUID,
+])
+
 const K = 1000
 const LOG = Math.log(K)
 const BYTES_MAP = {
@@ -135,4 +142,24 @@ export const roughSizeOfObject = (value: PrimitiveTypes | ObjectInputSize) => {
 
 export const addHyphensToUUID = (hex: string) => {
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`
+}
+
+export const buildId = (id: string, { subtype }: QueryParameter) => {
+  // Case 1 : ObjectId
+  if (ObjectId.isValid(id)) {
+    return ObjectId.createFromHexString(id)
+  }
+  // Case 2 : BinaryID (only subtype 3 and 4)
+  if (subtype) {
+    const _subtype = Number.parseInt(subtype, 10)
+    if (ALLOWED_SUBTYPES.has(_subtype)) {
+      if (_subtype === Binary.SUBTYPE_UUID) {
+        return new Binary(Buffer.from(id.replace(/-/g, ''), 'hex'), _subtype)
+      }
+      // mongodb.Binary.SUBTYPE_UUID_OLD
+      return new Binary(Buffer.from(id, 'base64'), _subtype)
+    }
+  }
+  // Case 3 : Try as raw ID
+  return id
 }
