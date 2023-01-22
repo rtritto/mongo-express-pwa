@@ -211,8 +211,8 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
 
     // Add index size
     const { indexSizes } = stats
-    for (let index = 0, length_ = indexes.length; index < length_; index++) {
-      indexes[index].size = indexSizes[indexes[index].name]
+    for (const index of indexes) {
+      index.size = indexSizes[index.name]
     }
 
     const documentsJS: MongoDocument[] = []
