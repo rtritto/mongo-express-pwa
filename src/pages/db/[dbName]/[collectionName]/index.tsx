@@ -16,7 +16,7 @@ import { mapCollectionStats } from 'lib/mapInfo.ts'
 // TODO move utils import and related logic that use it to lib/mapInfo.ts
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
 import { stringDocIDs } from 'lib/filters.ts'
-import { selectedCollectionState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
+import { columnsState, documentsState, selectedCollectionState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 const getRedirect = (dbName: string): { redirect: Redirect } => ({
   redirect: {
@@ -48,9 +48,9 @@ interface CollectionPageProps {
 const CollectionPage = ({
   dbName,
   collectionStats,
-  columns,
+  columns: columnsInit,
   count,
-  documentsJS,
+  documentsJS: documentsInit,
   // documentsString,
   indexes,
   pagination,
@@ -61,6 +61,8 @@ const CollectionPage = ({
   title
 }: CollectionPageProps) => {
   const collectionName = useAtomValue<string>(selectedCollectionState)
+  const columns = useAtomValue<string[]>(columnsState(columnsInit))
+  const documents = useAtomValue<string[]>(documentsState(documentsInit))
   const [error, setError] = useAtom<string | undefined>(messageErrorState)
   const [success, setSuccess] = useAtom<string | undefined>(messageSuccessState)
 
@@ -117,7 +119,7 @@ const CollectionPage = ({
 
         {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}
 
-        {documentsJS.length === 0 ? (
+        {documents.length === 0 ? (
           <p>No documents found.</p>
         ) : (
           <>
@@ -128,7 +130,7 @@ const CollectionPage = ({
             <DocumentsTable
               columns={columns}
               deleteUrl={EP_API_DATABASE_COLLECTION(dbName, collectionName)}
-              documents={documentsJS}
+              documents={documents}
               show={{
                 delete: readOnly === false && noDelete === false
                   && collectionName !== 'system.indexes'

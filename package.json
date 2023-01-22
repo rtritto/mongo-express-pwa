@@ -18,6 +18,7 @@
     "config.default.mts": "link:./config.default.mts",
     "configs": "link:./src/configs",
     "errors": "link:./src/lib/errors",
+    "fast-deep-equal": "^3.1.3",
     "fastest-validator": "^1.16.0",
     "jotai": "^1.13.1",
     "lib": "link:./src/lib",

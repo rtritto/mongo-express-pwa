@@ -2,6 +2,8 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import { JsonViewer } from '@textea/json-viewer'
 
 import DeleteModalBoxSimple from 'components/Custom/DeleteModalBoxSimple.tsx'
+import { useAtom } from 'jotai'
+import { columnsState, documentsState } from 'src/common/store/globalAtoms.ts'
 
 interface DocumentsTableProps {
   columns: string[]
@@ -52,7 +54,32 @@ const getColumns = (columns: string[], showDelete: boolean) => {
   return columnsOut
 }
 
-const DocumentsTable = ({ columns, documents, show, deleteUrl }: DocumentsTableProps) => {
+const DocumentsTable = ({
+  columns: columnsInit,
+  documents: documentsInit,
+  show,
+  deleteUrl
+}: DocumentsTableProps) => {
+  const [columns, setColumns] = useAtom<string[]>(columnsState(columnsInit))
+  const [documents, setDocuments] = useAtom<MongoDocument[]>(documentsState(documentsInit))
+
+  const updateDocuments = (id: string) => {
+    const indexToRemove = documents.findIndex((document) => document._id === id)
+    const documentsNew = [
+      ...documents.slice(0, indexToRemove),
+      ...documents.slice(indexToRemove + 1)
+    ]
+    setDocuments(() => documentsNew)
+
+    const columnsNew = new Set<string>()
+    for (const document of documentsNew) {
+      for (const field in document) {
+        columnsNew.add(field)
+      }
+    }
+    setColumns(() => Array.from(columnsNew))
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table size="small" /*padding="checkbox"*/ >
@@ -76,6 +103,7 @@ const DocumentsTable = ({ columns, documents, show, deleteUrl }: DocumentsTableP
                     }}
                     // TODO handle query
                     // query={}
+                    additionaOnDelete={() => updateDocuments(document._id)}
                     ButtonProps={{ sx: { minWidth: 0 } }}
                   />
                 </TableCell>
