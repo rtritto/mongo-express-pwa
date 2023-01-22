@@ -31,6 +31,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.42.1",
+    "src": "link:./src",
     "store": "link:./src/common/store",
     "ts-import": "^4.0.0-beta.10"
   },
@@ -40,6 +41,7 @@
     "@types/react-dom": "^18.0.10",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
+    "@welldone-software/why-did-you-render": "^7.0.1",
     "@yarnpkg/sdks": "^3.0.0-rc.36",
     "eslint": "^8.32.0",
     "eslint-config-next": "^13.1.2",

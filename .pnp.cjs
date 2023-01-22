@@ -38,6 +38,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react-dom", "npm:18.0.10"],\
           ["@typescript-eslint/eslint-plugin", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:5.48.2"],\
           ["@typescript-eslint/parser", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:5.48.2"],\
+          ["@welldone-software/why-did-you-render", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:7.0.1"],\
           ["@yarnpkg/sdks", "npm:3.0.0-rc.36"],\
           ["bson", "npm:4.7.2"],\
           ["common", "link:./src/common::locator=mongo-express-pwa%40workspace%3A."],\
@@ -63,6 +64,7 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.2.0"],\
           ["react-dom", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:18.2.0"],\
           ["react-hook-form", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:7.42.1"],\
+          ["src", "link:./src::locator=mongo-express-pwa%40workspace%3A."],\
           ["store", "link:./src/common/store::locator=mongo-express-pwa%40workspace%3A."],\
           ["ts-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.0.0-beta.10"],\
           ["typescript", "patch:typescript@npm%3A4.9.4#optional!builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
@@ -4927,6 +4929,29 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@welldone-software/why-did-you-render", [\
+      ["npm:7.0.1", {\
+        "packageLocation": "../../Users/Computer/AppData/Local/Yarn/Berry/cache/@welldone-software-why-did-you-render-npm-7.0.1-33d725f830-9.zip/node_modules/@welldone-software/why-did-you-render/",\
+        "packageDependencies": [\
+          ["@welldone-software/why-did-you-render", "npm:7.0.1"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:7.0.1", {\
+        "packageLocation": "./.yarn/__virtual__/@welldone-software-why-did-you-render-virtual-9f10ebfef9/3/Users/Computer/AppData/Local/Yarn/Berry/cache/@welldone-software-why-did-you-render-npm-7.0.1-33d725f830-9.zip/node_modules/@welldone-software/why-did-you-render/",\
+        "packageDependencies": [\
+          ["@welldone-software/why-did-you-render", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:7.0.1"],\
+          ["@types/react", "npm:18.0.27"],\
+          ["lodash", "npm:4.17.21"],\
+          ["react", "npm:18.2.0"]\
+        ],\
+        "packagePeers": [\
+          "@types/react",\
+          "react"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@xtuc/ieee754", [\
       ["npm:1.2.0", {\
         "packageLocation": "../../Users/Computer/AppData/Local/Yarn/Berry/cache/@xtuc-ieee754-npm-1.2.0-ec0ce4e025-9.zip/node_modules/@xtuc/ieee754/",\
@@ -9145,6 +9170,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react-dom", "npm:18.0.10"],\
           ["@typescript-eslint/eslint-plugin", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:5.48.2"],\
           ["@typescript-eslint/parser", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:5.48.2"],\
+          ["@welldone-software/why-did-you-render", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:7.0.1"],\
           ["@yarnpkg/sdks", "npm:3.0.0-rc.36"],\
           ["bson", "npm:4.7.2"],\
           ["common", "link:./src/common::locator=mongo-express-pwa%40workspace%3A."],\
@@ -9170,6 +9196,7 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.2.0"],\
           ["react-dom", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:18.2.0"],\
           ["react-hook-form", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:7.42.1"],\
+          ["src", "link:./src::locator=mongo-express-pwa%40workspace%3A."],\
           ["store", "link:./src/common/store::locator=mongo-express-pwa%40workspace%3A."],\
           ["ts-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:4.0.0-beta.10"],\
           ["typescript", "patch:typescript@npm%3A4.9.4#optional!builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
@@ -10792,6 +10819,16 @@ const RAW_RUNTIME_STATE =
           ["sprintf-js", "npm:1.0.3"]\
         ],\
         "linkType": "HARD"\
+      }]\
+    ]],\
+    ["src", [\
+      ["link:./src::locator=mongo-express-pwa%40workspace%3A.", {\
+        "packageLocation": "./src/",\
+        "packageDependencies": [\
+          ["src", "link:./src::locator=mongo-express-pwa%40workspace%3A."]\
+        ],\
+        "linkType": "SOFT",\
+        "discardFromLookup": true\
       }]\
     ]],\
     ["ssri", [\

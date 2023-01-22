@@ -25,6 +25,23 @@ const nextConfig = {
     // your project has type errors.
     // !! WARN !!
     ignoreBuildErrors: true
+  },
+  // https://stackoverflow.com/a/72400455/10413113
+  webpack(config, { dev, isServer }) {
+    // why did you render
+    if (dev && process.env.NEXT_PUBLIC_WDYR === 'true' && !isServer) {
+      const originalEntry = config.entry
+      config.entry = async () => {
+        const path = await import('node:path')
+        const wdrPath = path.resolve('src/scripts/wdyr.mts')
+        const entries = await originalEntry()
+        if (entries['main.js'] && !entries['main.js'].includes(wdrPath)) {
+          entries['main.js'].unshift(wdrPath)
+        }
+        return entries
+      }
+    }
+    return config
   }
 }
 

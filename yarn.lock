@@ -3453,6 +3453,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@welldone-software/why-did-you-render@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "@welldone-software/why-did-you-render@npm:7.0.1"
+  dependencies:
+    lodash: "npm:^4"
+  peerDependencies:
+    react: ^16 || ^17 || ^18
+  checksum: 2e0169cbbeee674578b21e6d4a5402d3dbbf70408a002037cdd1349cc69ac869702048b5d201e605fe83555221c2f658f61ad378070d7fe20c7a5d8d30620d1a
+  languageName: node
+  linkType: hard
+
 "@xtuc/ieee754@npm:^1.2.0":
   version: 1.2.0
   resolution: "@xtuc/ieee754@npm:1.2.0"
@@ -6658,7 +6669,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21":
+"lodash@npm:^4, lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 3ac18e92108d68f88429fcddee609e42cf2b653583d9bac22308815a4cd6b185b89a0ad0d9b0c670c371d9d6b61571a98fee6b36e1db14e52766ca253ed9cba0
@@ -6967,6 +6978,7 @@ __metadata:
     "@types/react-dom": "npm:^18.0.10"
     "@typescript-eslint/eslint-plugin": "npm:^5.48.2"
     "@typescript-eslint/parser": "npm:^5.48.2"
+    "@welldone-software/why-did-you-render": "npm:^7.0.1"
     "@yarnpkg/sdks": "npm:^3.0.0-rc.36"
     bson: "npm:^4.7.2"
     common: "link:./src/common"
@@ -6992,6 +7004,7 @@ __metadata:
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
     react-hook-form: "npm:^7.42.1"
+    src: "link:./src"
     store: "link:./src/common/store"
     ts-import: "npm:^4.0.0-beta.10"
     typescript: "npm:^4.9.4"
@@ -8430,6 +8443,12 @@ __metadata:
   checksum: 3e0738f581ab5582868689318a4987ea532cdf220266c1af6fdc5a5091f5c4e758fe3fed9125ac82ed91119ec2cbe0762c0e069b59b929bf70e8bbbf879e56e5
   languageName: node
   linkType: hard
+
+"src@link:./src::locator=mongo-express-pwa%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "src@link:./src::locator=mongo-express-pwa%40workspace%3A."
+  languageName: node
+  linkType: soft
 
 "ssri@npm:^9.0.0":
   version: 9.0.1
