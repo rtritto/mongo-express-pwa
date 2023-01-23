@@ -164,10 +164,10 @@ interface Params extends ParsedUrlQuery {
 
 interface QueryParameter extends ParsedUrlQuery {
   // mongodb
-  skip?: string
   sort?: string
   projection?: string
   // custom
+  page?: string
   key?: string
   value?: string
   type?: string

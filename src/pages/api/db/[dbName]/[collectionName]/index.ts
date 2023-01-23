@@ -4,6 +4,24 @@ import { validateCollectionReqBody } from 'lib/validationsReq.ts'
 import { withExceptionHandler } from 'middlewares/api.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'GET') {  // getDocuments (NEW)
+    const { collectionName, dbName, limit, skip } = req.query as Params
+    checkDatabase(dbName)
+    checkCollection(dbName, collectionName)
+
+    // TODO handle aggregation
+    const filter = {}
+    const options = {
+      ...limit && { limit: Number.parseInt(limit, 10) },
+      ...skip && { skip: Number.parseInt(skip, 10) }
+    }
+
+    const client = await global.mongo.connect()
+    const documents = await client.db(dbName).collection(collectionName).find(filter, options).toArray()
+
+    res.json(documents)
+    return
+  }
   if (req.method === 'PUT') {  // renameCollection
     await validateCollectionReqBody(req.body)
     const { collection } = req.body

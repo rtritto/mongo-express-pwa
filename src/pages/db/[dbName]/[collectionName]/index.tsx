@@ -1,17 +1,25 @@
 import { Container, Divider, Typography } from '@mui/material'
-import Head from 'next/head.js'
-import { useEffect } from 'react'
 import { useAtom, useAtomValue } from 'jotai'
+import { useEffect, useState } from 'react'
 import type { GetServerSideProps } from 'next'
+import Head from 'next/head.js'
+import { useRouter } from 'next/router.js'
 
 import DeleteModalBoxSimple from 'components/Custom/DeleteModalBoxSimple.tsx'
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
 import DocumentsTable from 'components/Pages/Collection/DocumentsTable.tsx'
+import PaginationBox from 'components/Pages/Collection/PaginationBox.tsx'
 import RenameCollection from 'components/Pages/Collection/RenameCollection.tsx'
 import { EP_API_DATABASE_COLLECTION, EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
-import * as queries from 'lib/queries.ts'
+import {
+  getComplexAggregatePipeline,
+  getLastPage,
+  getQuery,
+  getQueryOptions,
+  getSimpleAggregatePipeline
+} from 'lib/queries.ts'
 import { mapCollectionStats } from 'lib/mapInfo.ts'
 // TODO move utils import and related logic that use it to lib/mapInfo.ts
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
@@ -29,10 +37,13 @@ interface CollectionPageProps {
   collectionStats: ReturnType<typeof mapCollectionStats>
   columns: string[]
   count: number
+  currentPage: number
   dbName: string
   documentsJS: MongoDocument[]
   // documentsString: string[]
   indexes: Indexes
+  lastPage: number
+  limit: number
   messageError?: string
   messageSuccess?: string
   options: {
@@ -40,7 +51,6 @@ interface CollectionPageProps {
     noExport: boolean
     readOnly: boolean
   }
-  pagination: boolean
   query?: string | string[]
   title: string
 }
@@ -50,21 +60,28 @@ const CollectionPage = ({
   collectionStats,
   columns: columnsInit,
   count,
+  currentPage: currentPageInit,
   documentsJS: documentsInit,
   // documentsString,
   indexes,
-  pagination,
+  lastPage: lastPageInit,
+  limit,
   messageError,
   messageSuccess,
   options: { noDelete, noExport, readOnly },
   query,
   title
 }: CollectionPageProps) => {
+  const router = useRouter()
+
   const collectionName = useAtomValue<string>(selectedCollectionState)
-  const columns = useAtomValue<string[]>(columnsState(columnsInit))
-  const documents = useAtomValue<string[]>(documentsState(documentsInit))
+  const [columns, setColumns] = useAtom<string[]>(columnsState(columnsInit))
+  const [documents, setDocuments] = useAtom<string[]>(documentsState(documentsInit))
   const [error, setError] = useAtom<string | undefined>(messageErrorState)
   const [success, setSuccess] = useAtom<string | undefined>(messageSuccessState)
+
+  const [currentPage, setCurrentPage] = useState(currentPageInit)
+  const [lastPage, setLastPage] = useState(lastPageInit)
 
   // Show alerts if messages exist
   useEffect(() => {
@@ -75,6 +92,52 @@ const CollectionPage = ({
       setSuccess(messageSuccess)
     }
   }, [messageError, messageSuccess])
+
+  const handleClickPage = async (pageClicked: number, limit: number) => {
+    const queryParams = `?${new URLSearchParams({
+      limit: limit.toString(),
+      skip: ((pageClicked - 1) * limit).toString()
+    })}`
+    await fetch(`${EP_API_DATABASE_COLLECTION(dbName, collectionName)}${queryParams}`, {
+      method: 'GET'
+    }).then(async (res) => {
+      if (res.ok === true) {
+        const documentsNew = await res.json()
+        setDocuments(documentsNew)
+
+        const columnsNew = new Set<string>()
+        for (const document of documentsNew) {
+          for (const field in document) {
+            columnsNew.add(field)
+          }
+        }
+        setColumns(Array.from(columnsNew))
+        await router.push({
+          pathname: router.pathname,
+          query: {
+            ...router.query,
+            page: pageClicked.toString()
+          }
+        }, undefined, { shallow: true })
+      } else {
+        const { error } = await res.json()
+        setError(error)
+      }
+    }).catch((error) => { setError(error.message) })
+  }
+
+  const PaginationBoxComponent = (lastPage !== 1) && (
+    <PaginationBox  // load Component when totalPage > 1
+      currentPage={currentPage}
+      lastPage={lastPage}
+      onChange={(event, pageClicked: number) => {
+        if (currentPage !== pageClicked) {
+          handleClickPage(pageClicked, limit)
+          setCurrentPage(pageClicked)
+        }
+      }}
+    />
+  )
 
   return (
     <div>
@@ -123,10 +186,8 @@ const CollectionPage = ({
           <p>No documents found.</p>
         ) : (
           <>
-            {/* TODO */}
-            {pagination === true && <div>Pagination Top</div>}
+            {PaginationBoxComponent}
 
-            {/* TODO */}
             <DocumentsTable
               columns={columns}
               deleteUrl={EP_API_DATABASE_COLLECTION(dbName, collectionName)}
@@ -138,8 +199,7 @@ const CollectionPage = ({
               }}
             />
 
-            {/* TODO */}
-            {pagination === true && <div>Pagination Bottom</div>}
+            {PaginationBoxComponent}
           </>
         )}
 
@@ -179,21 +239,21 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
   // req.collection = coll
 
   try {
-    const filterOptions = queries.getQueryOptions(query)
-    const filter = queries.getQuery(query)
+    const filterOptions = getQueryOptions(query)
+    const filter = getQuery(query)
 
     let items
     let count
     if (query.runAggregate === 'on') {
       if (filter.constructor.name === 'Object') {
-        const filterAggregate = queries.getSimpleAggregatePipeline(filter, filterOptions)
+        const filterAggregate = getSimpleAggregatePipeline(filter, filterOptions)
         [items, count] = await Promise.all([
           collection.aggregate(filterAggregate).toArray(),
           collection.countDocuments(filter)
         ])
       } else {
         // Array case
-        const filterAggregate = queries.getComplexAggregatePipeline(filter, filterOptions)
+        const filterAggregate = getComplexAggregatePipeline(filter, filterOptions)
         const [resultArray] = await collection.aggregate(filterAggregate).toArray()
         items = resultArray.data
         count = resultArray.metadata.total
@@ -234,13 +294,10 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
     }
 
     // Pagination
-    const { limit, skip, sort } = filterOptions
-    const pagination = count > limit
+    const { limit /* TODO skip, sort */ } = filterOptions
 
     const ctx = {
       editorTheme: process.env.config.options.editorTheme,
-      // limit,
-      // skip,
       // sort,
       // key: query.key,
       // value: query.value,  // value: type === 'O' ? ['ObjectId("', value, '")'].join('') : value,
@@ -265,11 +322,18 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
         documentsJS,  // Original docs
         // documentsString, // Docs converted to strings
         indexes,
+        ...count > limit ? {  // true for pagination
+          currentPage: query.page ? Number.parseInt(query.page, 10) : 1,
+          lastPage: getLastPage(limit, count)
+        } : {
+          currentPage: 1,
+          lastPage: 1
+        },
+        limit,
         ...messageError !== undefined && { messageError },
         ...messageSuccess !== undefined && { messageSuccess },
         options: process.env.config.options,
         ...'query' in query && { query: query.query },
-        pagination,
         title: `Viewing Collection: ${collectionName}`
       }
     }

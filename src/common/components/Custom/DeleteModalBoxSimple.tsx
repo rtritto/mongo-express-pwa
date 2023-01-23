@@ -46,9 +46,9 @@ const DeleteModalBoxSimple = ({ deleteUrl, messages, query, additionaOnDelete, B
   const setError = useSetAtom<string | undefined>(messageErrorState)
 
   const handleDeleteCollection = async () => {
-    await fetch(deleteUrl, {
-      method: 'DELETE',
-      ...query && { query: { query } }
+    const queryParams = query ? `?${new URLSearchParams({ query })}` : ''
+    await fetch(`${deleteUrl}${queryParams}`, {
+      method: 'DELETE'
     }).then(async (res) => {
       if (res.ok === true) {
         setSuccess(messages.success)

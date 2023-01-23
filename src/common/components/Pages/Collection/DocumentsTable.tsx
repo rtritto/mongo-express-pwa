@@ -81,7 +81,7 @@ const DocumentsTable = ({
   }
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{ margin: 0 }}>
       <Table size="small" /*padding="checkbox"*/ >
         <TableHead>
           <TableRow>

@@ -47,10 +47,11 @@ export const getQueryOptions = (query: QueryParameter): QueryOptions => {
       queryOptions.sort = sort
     }
   }
-  if (query.skip) {
-    const skip = Number.parseInt(query.skip, 10)
-    if (skip) {
-      queryOptions.skip = skip
+  if (query.page) {
+    // TODO add validation?
+    const page = Number.parseInt(query.page, 10)
+    if (page) {
+      queryOptions.skip = (page - 1) * queryOptions.limit
     }
   }
   if (query.projection) {
@@ -168,4 +169,17 @@ export const getComplexAggregatePipeline = (pipeline: Pipeline, queryOptions: Qu
       }
     }
   ]
+}
+
+export const getLastPage = (pageSize: number, totalCount: number): number => {
+  // Float to Integer
+  // result is 5 for:
+  // - x=5
+  // - 5<x<5.5
+  // - 5.5<=x<6
+  const result = Math.floor(totalCount / pageSize)
+
+  return totalCount % pageSize
+    ? result + 1
+    : result
 }
