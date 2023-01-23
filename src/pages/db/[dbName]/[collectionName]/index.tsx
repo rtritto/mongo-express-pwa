@@ -198,6 +198,7 @@ const CollectionPage = ({
                   && collectionName !== 'system.indexes'
                   && columns.includes('_id')
               }}
+              TableContainerProps={{ sx: lastPage !== 1 && { margin: 0 } }} // remove margin botton
             />
 
             {PaginationBoxComponent}

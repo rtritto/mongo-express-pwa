@@ -12,6 +12,9 @@ interface DocumentsTableProps {
   show: {
     delete: boolean
   }
+  TableContainerProps: {
+    sx?: object
+  }
 }
 
 const getTableCells = (columns: string[], document: MongoDocument, index: number) => {
@@ -58,7 +61,8 @@ const DocumentsTable = ({
   columns: columnsInit,
   documents: documentsInit,
   show,
-  deleteUrl
+  deleteUrl,
+  TableContainerProps = {}
 }: DocumentsTableProps) => {
   const [columns, setColumns] = useAtom<string[]>(columnsState(columnsInit))
   const [documents, setDocuments] = useAtom<MongoDocument[]>(documentsState(documentsInit))
@@ -81,7 +85,7 @@ const DocumentsTable = ({
   }
 
   return (
-    <TableContainer component={Paper} sx={{ margin: 0 }}>
+    <TableContainer component={Paper} sx={{ ...TableContainerProps.sx }}>
       <Table size="small" /*padding="checkbox"*/ >
         <TableHead>
           <TableRow>
