@@ -1,5 +1,7 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { useRouter } from 'next/router.js'
 
+import { EP_DATABASE } from 'configs/endpoints.ts'
 import DeleteModalBoxCollection from 'components/Custom/DeleteModalBoxCollection.tsx'
 
 interface ToolsProps {
@@ -13,6 +15,13 @@ interface ToolsProps {
 }
 
 const Tools = ({ collection, database, show }: ToolsProps) => {
+  const router = useRouter()
+
+  const additionaOnDelete = () => {
+    // Update URI (without page reload)
+    router.push(EP_DATABASE(database), undefined, { shallow: true })
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -47,7 +56,11 @@ const Tools = ({ collection, database, show }: ToolsProps) => {
 
                   {show.delete === true && (
                     <TableCell>
-                      <DeleteModalBoxCollection collection={collection} database={database} />
+                      <DeleteModalBoxCollection
+                        collection={collection}
+                        database={database}
+                        additionaOnDelete={additionaOnDelete}
+                      />
                     </TableCell>
                   )}
                 </>

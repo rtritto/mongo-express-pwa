@@ -8,9 +8,10 @@ const tooltipTitle = 'Are you sure you want to delete this database? All collect
 
 interface DeleteModalBoxDatabaseProps {
   database: string
+  additionaOnDelete: Function
 }
 
-const DeleteModalBoxDatabase = ({ database }: DeleteModalBoxDatabaseProps) => {
+const DeleteModalBoxDatabase = ({ database, additionaOnDelete }: DeleteModalBoxDatabaseProps) => {
   const setDatabases = useSetAtom<Mongo['databases']>(databasesState)
   const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
   const setError = useSetAtom<string | undefined>(messageErrorState)
@@ -29,6 +30,9 @@ const DeleteModalBoxDatabase = ({ database }: DeleteModalBoxDatabaseProps) => {
             ...databases.slice(indexToRemove + 1)
           ]
         })
+        if (typeof additionaOnDelete === 'function') {
+          additionaOnDelete()
+        }
       } else {
         const { error } = await res.json()
         setError(error)
