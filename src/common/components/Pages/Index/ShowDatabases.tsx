@@ -1,14 +1,12 @@
 import { Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useSetAtom } from 'jotai'
 
-import { EP_DB, EP_API_DATABASE } from 'configs/endpoints.ts'
+import { EP_DB } from 'configs/endpoints.ts'
 import { Visibility } from 'common/SvgIcons.mts'
 import CustomLink from 'components/Custom/CustomLink.tsx'
-import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
+import DeleteModalBoxDatabase from 'components/Custom/DeleteModalBoxDatabase.tsx'
 import CreateDatabase from 'components/Pages/Index/CreateDatabase.tsx'
-import { databasesState, messageErrorState, messageSuccessState, selectedDatabaseState } from 'store/globalAtoms.ts'
-
-const tooltipTitle = 'Warning! Are you sure you want to delete this database? All collections and documents will be deleted.'
+import { selectedDatabaseState } from 'store/globalAtoms.ts'
 
 const TableCellStyle = {
   // border: 1,
@@ -24,33 +22,7 @@ interface ShowDatabasesProps {
 }
 
 const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
-  const setDatabases = useSetAtom<Mongo['databases']>(databasesState)
   const setSelectedDatabaseState = useSetAtom(selectedDatabaseState)
-  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
-  const setError = useSetAtom<string | undefined>(messageErrorState)
-
-  const handleDelete = async (database: string) => {
-    await fetch(EP_API_DATABASE(database), {
-      method: 'DELETE'
-    }).then(async (res) => {
-      if (res.ok === true) {
-        setSuccess('Database created!')
-        // Remove database from global database to update viewing databases
-        setDatabases((databases) => {
-          const indexToRemove = databases.indexOf(database)
-          return [
-            ...databases.slice(0, indexToRemove),
-            ...databases.slice(indexToRemove + 1)
-          ]
-        })
-      } else {
-        const { error } = await res.json()
-        setError(error)
-      }
-    }).catch((error) => {
-      setError(error.message)
-    })
-  }
 
   return (
     <TableContainer component={Paper}>
@@ -122,12 +94,7 @@ const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
 
                 {show.delete === true && (
                   <TableCell key={`delete${database}`} align="right" sx={TableCellStyle}>
-                    <DeleteModalBox
-                      value={database}
-                      entity="database"
-                      tooltipTitle={tooltipTitle}
-                      handleDelete={() => handleDelete(database)}
-                    />
+                    <DeleteModalBoxDatabase database={database} />
                   </TableCell>
                 )}
               </TableRow>

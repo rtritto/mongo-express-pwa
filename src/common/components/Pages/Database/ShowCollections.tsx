@@ -1,14 +1,12 @@
 import { Button, Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useSetAtom } from 'jotai'
 
-import { EP_DB, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION, EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
+import { EP_DB, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION } from 'configs/endpoints.ts'
 import { FileUpload, Save, Visibility } from 'common/SvgIcons.mts'
-import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
+import DeleteModalBoxCollection from 'components/Custom/DeleteModalBoxCollection.tsx'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import CreateCollection from 'components/Pages/Database/CreateCollection.tsx'
-import { collectionsState, messageErrorState, messageSuccessState, selectedCollectionState } from 'store/globalAtoms.ts'
-
-const tooltipTitle = 'Are you sure you want to delete this collection? All documents will be deleted.'
+import { selectedCollectionState } from 'store/globalAtoms.ts'
 
 const TableCellStyle = {
   // border: 1,
@@ -44,35 +42,6 @@ const handleImport = async (event) => {
 
 const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps) => {
   const setSelectedCollectionState = useSetAtom(selectedCollectionState)
-  const setCollections = useSetAtom<Mongo['collections']>(collectionsState)
-  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
-  const setError = useSetAtom<string | undefined>(messageErrorState)
-
-  const handleDelete = async (database: string, collection: string) => {
-    await fetch(EP_API_DATABASE_COLLECTION(database, collection), {
-      method: 'DELETE'
-    }).then(async (res) => {
-      if (res.ok === true) {
-        // Remove collection from global collections to update viewing collections
-        setCollections((collections) => {
-          const indexToRemove = collections[database].indexOf(collection)
-          return {
-            ...collections,
-            [database]: [
-              ...collections[database].slice(0, indexToRemove),
-              ...collections[database].slice(indexToRemove + 1)
-            ]
-          }
-        })
-        setSuccess(`Collection "${collection}" deleted!`)
-      } else {
-        const { error } = await res.json()
-        setError(error)
-      }
-    }).catch((error) => {
-      setError(error.message)
-    })
-  }
 
   return (
     <TableContainer component={Paper}>
@@ -198,11 +167,7 @@ const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps)
 
                 {show.delete === true && (
                   <TableCell key={`delete${collection}`} align="right" sx={TableCellStyle}>
-                    <DeleteModalBox
-                      value={collection}
-                      entity="collection"
-                      tooltipTitle={tooltipTitle}
-                      handleDelete={() => handleDelete(dbName, collection)}
+                    <DeleteModalBoxCollection database={dbName} collection={collection}
                     />
                   </TableCell>
                 )}

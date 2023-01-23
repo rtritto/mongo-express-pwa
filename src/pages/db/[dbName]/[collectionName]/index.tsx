@@ -11,6 +11,7 @@ import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
 import DocumentsTable from 'components/Pages/Collection/DocumentsTable.tsx'
 import PaginationBox from 'components/Pages/Collection/PaginationBox.tsx'
 import RenameCollection from 'components/Pages/Collection/RenameCollection.tsx'
+import Tools from 'components/Pages/Collection/Tools.tsx'
 import { EP_API_DATABASE_COLLECTION, EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
 import {
@@ -205,7 +206,13 @@ const CollectionPage = ({
 
         {readOnly === false && <RenameCollection collectionName={collectionName} dbName={dbName} />}
 
-        {/* TODO Tools */}
+        <Tools collection={collectionName} database={dbName}
+          show={{
+            delete: noDelete === false,
+            export: noExport === false,
+            readOnly
+          }}
+        />
 
         <StatsTable label="Collection Stats" fields={collectionStats} />
 
