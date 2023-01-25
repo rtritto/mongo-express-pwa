@@ -3,14 +3,14 @@ import { getQuery, getSort } from 'lib/queries.ts'
 import { checkDatabase, checkCollection } from 'lib/validations.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // TODO convert to POST
   if (req.method === 'GET') {  // exportColArray
     const { collectionName, dbName } = req.query as Params
     checkDatabase(dbName)
     checkCollection(dbName, collectionName)
 
-    const queryOptions = { sort: getSort(req) }
-    const query = getQuery(req)
+    // TODO ? change to getQueryOptions
+    const queryOptions = { ...req.query.sort && { sort: getSort(req.query.sort) } }
+    const query = getQuery(req.query)
 
     const client = await global.mongo.connect()
     const items = await client.db(dbName).collection(collectionName).find(query, queryOptions).toArray()

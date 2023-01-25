@@ -1,8 +1,15 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useRouter } from 'next/router.js'
 
-import { EP_DATABASE } from 'configs/endpoints.ts'
+import { EP_DATABASE, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION } from 'configs/endpoints.ts'
 import DeleteModalBoxCollection from 'components/Custom/DeleteModalBoxCollection.tsx'
+import ExportButton from 'components/Custom/ExportButton.tsx'
+import ImportButton from 'components/Custom/ImportButton.tsx'
+
+const TableCellStyle = {
+  // border: 1,
+  p: 0.5
+} as const
 
 interface ToolsProps {
   collection: string
@@ -22,6 +29,9 @@ const Tools = ({ collection, database, show }: ToolsProps) => {
     router.push(EP_DATABASE(database), undefined, { shallow: true })
   }
 
+  const encodedDatabase = encodeURIComponent(database)
+  const encodedCollection = encodeURIComponent(collection)
+
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -40,15 +50,32 @@ const Tools = ({ collection, database, show }: ToolsProps) => {
             <>
               {show.export === true && (
                 <>
-                  <TableCell>Export Standard</TableCell>
-                  <TableCell>Export --jsonArray</TableCell>
+                  <TableCell key={`export${collection}`} sx={TableCellStyle}>
+                    <ExportButton
+                      href={EP_EXPORT_COLLECTION(encodedDatabase, encodedCollection)}
+                      text="Export Standard"
+                    />
+                  </TableCell>
+
+                  <TableCell key={`exportArray${collection}`} sx={TableCellStyle}>
+                    <ExportButton
+                      href={EP_EXPORT_ARRAY_COLLECTION(encodedDatabase, encodedCollection)}
+                      text="Export --jsonArray"
+                    />
+                  </TableCell>
+
                   <TableCell>Export --csv</TableCell>
                 </>
               )}
 
               <TableCell>Reindex</TableCell>
 
-              <TableCell>Import --mongoexport json</TableCell>
+              <TableCell key={`import${collection}`} sx={TableCellStyle}>
+                <ImportButton
+                  href={EP_IMPORT_COLLECTION(encodedDatabase, encodedCollection)}
+                  text="Import --mongoexport json"
+                />
+              </TableCell>
 
               {show.readOnly === false && (
                 <>

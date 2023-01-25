@@ -1,24 +1,19 @@
-import { Button, Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useSetAtom } from 'jotai'
 
-import { EP_DB, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION } from 'configs/endpoints.ts'
-import { FileUpload, Save, Visibility } from 'common/SvgIcons.mts'
+import { EP_EXPORT_COLLECTION, EP_DB, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION } from 'configs/endpoints.ts'
+import { Visibility } from 'common/SvgIcons.mts'
 import DeleteModalBoxCollection from 'components/Custom/DeleteModalBoxCollection.tsx'
 import CustomLink from 'components/Custom/CustomLink.tsx'
+import ExportButton from 'components/Custom/ExportButton.tsx'
+import ImportButton from 'components/Custom/ImportButton.tsx'
 import CreateCollection from 'components/Pages/Database/CreateCollection.tsx'
 import { selectedCollectionState } from 'store/globalAtoms.ts'
 
 const TableCellStyle = {
   // border: 1,
   p: 0.5
-}
-
-const ButtonExportImportStyle = {
-  backgroundColor: 'rgb(139, 107, 62)',
-  flexDirection: 'column',
-  py: 0.5,
-  textTransform: 'none'
-}
+} as const
 
 interface ShowDatabasesProps {
   collections: string[]
@@ -28,16 +23,6 @@ interface ShowDatabasesProps {
     delete: boolean
     export: boolean
   }
-}
-
-const handleImport = async (event) => {
-  const { files } = event.target
-  // await fetch(EP_DB, {
-  //   method: 'DELETE',
-  //   body: JSON.stringify({
-  //     database
-  //   })
-  // })
 }
 
 const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps) => {
@@ -65,9 +50,6 @@ const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps)
             const encodedDatabase = encodeURIComponent(dbName)
             const encodedCollection = encodeURIComponent(collection)
             const hrefView = `${EP_DB}/${encodedDatabase}/${encodedCollection}`
-            const hrefExport = EP_EXPORT_COLLECTION(encodedDatabase, encodedCollection)
-            const hrefExportArray = EP_EXPORT_ARRAY_COLLECTION(encodedDatabase, encodedCollection)
-            const epImport = EP_IMPORT_COLLECTION(encodedDatabase, encodedCollection)
             return (
               <TableRow key={`row${collection}`}>
                 <TableCell key={`view${collection}`} sx={TableCellStyle}>
@@ -95,52 +77,19 @@ const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps)
 
                 {show.export === true && (
                   <TableCell key={`export${collection}`} sx={TableCellStyle}>
-                    <CustomLink
-                      // Link
-                      href={hrefExport}
-                      style={{
-                        margin: 1,
-                        textDecoration: 'none'  // remove text underline
-                      }}
-                      // Button
-                      startIcon={<SvgIcon><path d={Save} /></SvgIcon>}
-                      variant="contained"
-                      sx={ButtonExportImportStyle}
-                    >
-                      Export
-                    </CustomLink>
+                    <ExportButton href={EP_EXPORT_COLLECTION(encodedDatabase, encodedCollection)} />
                   </TableCell>
                 )}
 
                 <TableCell key={`exportArray${collection}`} sx={TableCellStyle}>
-                  <CustomLink
-                    // Link
-                    href={hrefExportArray}
-                    style={{
-                      margin: 1,
-                      textDecoration: 'none'  // remove text underline
-                    }}
-                    // Button
-                    startIcon={<SvgIcon><path d={Save} /></SvgIcon>}
-                    variant="contained"
-                    sx={ButtonExportImportStyle}
-                  >
-                    [JSON]
-                  </CustomLink>
+                  <ExportButton
+                    href={EP_EXPORT_ARRAY_COLLECTION(encodedDatabase, encodedCollection)}
+                    text="[JSON]"
+                  />
                 </TableCell>
 
                 <TableCell key={`import${collection}`} sx={TableCellStyle}>
-                  <Button
-                    component="label"
-                    startIcon={<SvgIcon><path d={FileUpload} /></SvgIcon>}
-                    onChange={handleImport}
-                    value={epImport}
-                    variant="contained"
-                    sx={ButtonExportImportStyle}
-                  >
-                    Import
-                    <input type="file" hidden />
-                  </Button>
+                  <ImportButton href={EP_IMPORT_COLLECTION(encodedDatabase, encodedCollection)} />
                 </TableCell>
 
                 <TableCell key={`detail${collection}`} sx={TableCellStyle} width="100%">
