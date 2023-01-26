@@ -1,9 +1,10 @@
-import { Button, SvgIcon } from '@mui/material'
+import { Button, DialogActions, DialogContent, DialogContentText, SvgIcon } from '@mui/material'
 import { useSetAtom } from 'jotai'
-import type { ChangeEvent } from 'react'
+import { ChangeEvent, useState } from 'react'
 
 import { FileUpload } from 'common/SvgIcons.mts'
-import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
+import DialogDisable from 'components/Custom/DialogDisable.tsx'
+import { messageErrorState } from 'store/globalAtoms.ts'
 
 const ButtonExportImportStyle = {
   backgroundColor: 'rgb(139, 107, 62)',
@@ -19,9 +20,17 @@ interface ImportButtonProps {
   text: string
 }
 
-
 const ImportButton = ({ additionalHandle, collection, href, text = 'Import' }: ImportButtonProps) => {
-  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
+  const [open, setOpen] = useState(false)
+  const [message, setMessage] = useState('')
+
+  const handleClose = () => {
+    setOpen(false)
+    if (typeof additionalHandle === 'function') {
+      additionalHandle()
+    }
+  }
+
   const setError = useSetAtom<string | undefined>(messageErrorState)
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -42,10 +51,8 @@ const ImportButton = ({ additionalHandle, collection, href, text = 'Import' }: I
     }).then(async (res) => {
       if (res.ok === true) {
         const message = await res.text()
-        setSuccess(`${message} to "${collection}" collection`)
-        if (typeof additionalHandle === 'function') {
-          additionalHandle()
-        }
+        setMessage(`${message} to collection "${collection}"`)
+        setOpen(true)
       } else {
         const { error } = await res.json()
         setError(error)
@@ -56,16 +63,35 @@ const ImportButton = ({ additionalHandle, collection, href, text = 'Import' }: I
   }
 
   return (
-    <Button
-      component="label"
-      startIcon={<SvgIcon><path d={FileUpload} /></SvgIcon>}
-      variant="contained"
-      sx={ButtonExportImportStyle}
-    >
-      {text}
+    <>
+      <Button
+        component="label"
+        startIcon={<SvgIcon><path d={FileUpload} /></SvgIcon>}
+        variant="contained"
+        sx={ButtonExportImportStyle}
+      >
+        {text}
 
-      <input type="file" hidden onChange={handleFileUpload} />
-    </Button>
+        <input type="file" hidden onChange={handleFileUpload} />
+      </Button>
+
+      <DialogDisable disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
+        <DialogContent>
+          <DialogContentText>{message}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            autoFocus
+            onClick={handleClose}
+            size="small"
+            variant="contained"
+            sx={{ m: 1 }}
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </DialogDisable>
+    </>
   )
 }
 

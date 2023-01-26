@@ -57,13 +57,7 @@ const DeleteModalBox = ({ value, entity, tooltipTitle, handleDelete }: DeleteMod
         </Button>
       </Tooltip>
 
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        style={ModalStyle}
-      >
+      <Modal open={open} onClose={handleClose} style={ModalStyle}>
         <Box sx={BoxStyle}>
           <Typography fontSize={14} sx={{ p: 2 }}>
             Delete {entity}

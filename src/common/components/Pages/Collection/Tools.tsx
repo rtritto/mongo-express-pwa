@@ -1,7 +1,10 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useRouter } from 'next/router.js'
 
-import { EP_DATABASE, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION } from 'configs/endpoints.ts'
+import {
+  EP_DATABASE, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION,
+  EP_IMPORT_COLLECTION
+} from 'configs/endpoints.ts'
 import DeleteModalBoxCollection from 'components/Custom/DeleteModalBoxCollection.tsx'
 import ExportButton from 'components/Custom/ExportButton.tsx'
 import ImportButton from 'components/Custom/ImportButton.tsx'
@@ -23,11 +26,6 @@ interface ToolsProps {
 
 const Tools = ({ collection, database, show }: ToolsProps) => {
   const router = useRouter()
-
-  const additionaOnDelete = () => {
-    // Update URI (without page reload)
-    router.push(EP_DATABASE(database), undefined, { shallow: true })
-  }
 
   const encodedDatabase = encodeURIComponent(database)
   const encodedCollection = encodeURIComponent(collection)
@@ -73,6 +71,7 @@ const Tools = ({ collection, database, show }: ToolsProps) => {
                   collection={encodedCollection}
                   href={EP_IMPORT_COLLECTION(encodedDatabase, encodedCollection)}
                   text="Import JSON"  // --mongoexport
+                  additionalHandle={() => { router.reload() }}
                 />
               </TableCell>
 
@@ -85,7 +84,10 @@ const Tools = ({ collection, database, show }: ToolsProps) => {
                       <DeleteModalBoxCollection
                         collection={collection}
                         database={database}
-                        additionaOnDelete={additionaOnDelete}
+                        additionalHandle={() => {
+                          // Update URI (without page reload)
+                          router.push(EP_DATABASE(database), undefined, { shallow: true })
+                        }}
                       />
                     </TableCell>
                   )}

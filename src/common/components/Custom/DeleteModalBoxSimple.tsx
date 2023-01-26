@@ -78,13 +78,7 @@ const DeleteModalBoxSimple = ({ deleteUrl, messages, query, additionalHandle, Bu
         {messages.button}
       </Button>
 
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        style={ModalStyle}
-      >
+      <Modal open={open} onClose={handleClose} style={ModalStyle}>
         <Box sx={BoxStyle}>
           <Box sx={{ p: 2 }} >
             <Typography component='div' fontSize={14} gutterBottom>
