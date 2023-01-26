@@ -1,12 +1,13 @@
 import { Container, Divider, Typography } from '@mui/material'
 import { useAtom, useAtomValue } from 'jotai'
+import { useHydrateAtoms } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import type { GetServerSideProps } from 'next'
 import Head from 'next/head.js'
 import { useRouter } from 'next/router.js'
 
-import DeleteModalBoxSimple from 'components/Custom/DeleteModalBoxSimple.tsx'
 import StatsTable from 'components/Custom/StatsTable.tsx'
+import DeleteDocuments from 'components/Pages/Collection/DeleteDocuments.tsx'
 import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
 import DocumentsTable from 'components/Pages/Collection/DocumentsTable.tsx'
 import PaginationBox from 'components/Pages/Collection/PaginationBox.tsx'
@@ -15,17 +16,17 @@ import Tools from 'components/Pages/Collection/Tools.tsx'
 import { EP_API_DATABASE_COLLECTION, EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
 import {
-  getComplexAggregatePipeline,
-  getLastPage,
-  getQuery,
-  getQueryOptions,
+  getComplexAggregatePipeline, getLastPage, getQuery, getQueryOptions,
   getSimpleAggregatePipeline
 } from 'lib/queries.ts'
 import { mapCollectionStats } from 'lib/mapInfo.ts'
 // TODO move utils import and related logic that use it to lib/mapInfo.ts
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
 import { stringDocIDs } from 'lib/filters.ts'
-import { columnsState, documentsState, selectedCollectionState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
+import {
+  columnsState, documentsState, documentCountState, selectedCollectionState,
+  messageErrorState, messageSuccessState
+} from 'store/globalAtoms.ts'
 
 const getRedirect = (dbName: string): { redirect: Redirect } => ({
   redirect: {
@@ -73,11 +74,16 @@ const CollectionPage = ({
   query,
   title
 }: CollectionPageProps) => {
+  useHydrateAtoms([
+    [columnsState, columnsInit],
+    [documentsState, documentsInit],
+    [documentCountState, count]
+  ])
   const router = useRouter()
 
   const collectionName = useAtomValue<string>(selectedCollectionState)
-  const [columns, setColumns] = useAtom<string[]>(columnsState(columnsInit))
-  const [documents, setDocuments] = useAtom<string[]>(documentsState(documentsInit))
+  const [columns, setColumns] = useAtom<string[]>(columnsState)
+  const [documents, setDocuments] = useAtom<string[]>(documentsState)
   const [error, setError] = useAtom<string | undefined>(messageErrorState)
   const [success, setSuccess] = useAtom<string | undefined>(messageSuccessState)
 
@@ -104,15 +110,17 @@ const CollectionPage = ({
     }).then(async (res) => {
       if (res.ok === true) {
         const documentsNew = await res.json()
-        setDocuments(documentsNew)
 
-        const columnsNew = new Set<string>()
-        for (const document of documentsNew) {
-          for (const field in document) {
-            columnsNew.add(field)
+        setDocuments(documentsNew)
+        setColumns(() => {
+          const columnsNew = new Set<string>()
+          for (const document of documentsNew) {
+            for (const field in document) {
+              columnsNew.add(field)
+            }
           }
-        }
-        setColumns(Array.from(columnsNew))
+          return Array.from(columnsNew)
+        })
         await router.push({
           pathname: router.pathname,
           query: {
@@ -170,16 +178,12 @@ const CollectionPage = ({
           <li><a href="#advanced" data-toggle="tab">Advanced</a></li>
         </ul>
 
-        {readOnly === false && noDelete === false && count > 0 && <DeleteModalBoxSimple
-          deleteUrl={EP_API_DATABASE_COLLECTION(dbName, collectionName)}
+        <DeleteDocuments
+          database={dbName}
+          collection={collectionName}
           query={query}
-          messages={{
-            button: `Delete all ${count} document(s)`,
-            modal: <>You want to delete all <strong>{count}</strong> document(s)?</>,
-            success: `${count} documents deleted!`
-          }}
-          ButtonProps={{ sx: { width: "100%" } }}
-        />}
+          show={readOnly === false && noDelete === false}
+        />
 
         {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}
 

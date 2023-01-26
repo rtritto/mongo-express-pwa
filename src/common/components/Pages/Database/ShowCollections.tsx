@@ -119,8 +119,7 @@ const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps)
 
                 {show.delete === true && (
                   <TableCell key={`delete${collection}`} align="right" sx={TableCellStyle}>
-                    <DeleteModalBoxCollection database={dbName} collection={collection}
-                    />
+                    <DeleteModalBoxCollection database={dbName} collection={collection} />
                   </TableCell>
                 )}
               </TableRow>

@@ -51,7 +51,6 @@ const RAW_RUNTIME_STATE =
           ["eslint-import-resolver-typescript", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:3.5.3"],\
           ["eslint-plugin-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.27.5"],\
           ["eslint-plugin-unicorn", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:45.0.2"],\
-          ["fast-deep-equal", "npm:3.1.3"],\
           ["fastest-validator", "npm:1.16.0"],\
           ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:1.13.1"],\
           ["lib", "link:./src/lib::locator=mongo-express-pwa%40workspace%3A."],\
@@ -9432,7 +9431,6 @@ const RAW_RUNTIME_STATE =
           ["eslint-import-resolver-typescript", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:3.5.3"],\
           ["eslint-plugin-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.27.5"],\
           ["eslint-plugin-unicorn", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:45.0.2"],\
-          ["fast-deep-equal", "npm:3.1.3"],\
           ["fastest-validator", "npm:1.16.0"],\
           ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:1.13.1"],\
           ["lib", "link:./src/lib::locator=mongo-express-pwa%40workspace%3A."],\
