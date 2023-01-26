@@ -1,10 +1,11 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { JsonViewer } from '@textea/json-viewer'
 import { useHydrateAtoms } from 'jotai/utils'
+import { useRouter } from 'next/router.js'
 
 import DeleteDialogSimple from 'components/Custom/DeleteDialogSimple.tsx'
-import { useAtom, useSetAtom } from 'jotai'
-import { columnsState, documentCountState, documentsState } from 'src/common/store/globalAtoms.ts'
+import { useAtomValue } from 'jotai'
+import { columnsState, documentsState } from 'src/common/store/globalAtoms.ts'
 
 interface DocumentsTableProps {
   columns: string[]
@@ -69,29 +70,9 @@ const DocumentsTable = ({
     [columnsState, columnsInit],
     [documentsState, documentsInit]
   ])
-  const [columns, setColumns] = useAtom<string[]>(columnsState)
-  const [documents, setDocuments] = useAtom<MongoDocument[]>(documentsState)
-  const setCount = useSetAtom<number>(documentCountState)
-
-  const updateDocuments = (id: string) => {
-    const indexToRemove = documents.findIndex((document) => document._id === id)
-    const documentsNew = [
-      ...documents.slice(0, indexToRemove),
-      ...documents.slice(indexToRemove + 1)
-    ]
-
-    setDocuments(() => documentsNew)
-    setColumns(() => {
-      const columnsNew = new Set<string>()
-      for (const document of documentsNew) {
-        for (const field in document) {
-          columnsNew.add(field)
-        }
-      }
-      return Array.from(columnsNew)
-    })
-    setCount((oldCount) => oldCount - 1)
-  }
+  const router = useRouter()
+  const columns = useAtomValue<string[]>(columnsState)
+  const documents = useAtomValue<MongoDocument[]>(documentsState)
 
   return (
     <TableContainer component={Paper} sx={{ ...TableContainerProps.sx }}>
@@ -117,7 +98,7 @@ const DocumentsTable = ({
                     // TODO handle query
                     // query={}
                     ButtonProps={{ sx: { minWidth: 0 } }}
-                    additionalHandle={() => updateDocuments(document._id)}
+                    additionalHandle={() => { router.reload() }}
                   />
                 </TableCell>
               )}

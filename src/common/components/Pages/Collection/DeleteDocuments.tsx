@@ -1,8 +1,9 @@
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtomValue } from 'jotai'
+import { useRouter } from 'next/router.js'
 
 import DeleteDialogSimple from 'components/Custom/DeleteDialogSimple.tsx'
 import { EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
-import { documentsState, documentCountState } from 'store/globalAtoms.ts'
+import { documentCountState } from 'store/globalAtoms.ts'
 
 interface DeleteDocumentsProps {
   collection: string
@@ -17,8 +18,9 @@ const DeleteDocuments = ({
   query,
   show
 }: DeleteDocumentsProps) => {
-  const setDocuments = useSetAtom<MongoDocument[]>(documentsState)
-  const [count, setCount] = useAtom<number>(documentCountState)
+  const router = useRouter()
+
+  const count = useAtomValue<number>(documentCountState)
 
   return (show === true && count > 0 && (
     <DeleteDialogSimple
@@ -30,10 +32,7 @@ const DeleteDocuments = ({
         success: `${count} documents deleted!`
       }}
       ButtonProps={{ sx: { width: "100%" } }}
-      additionalHandle={() => {
-        setDocuments([])
-        setCount(0)
-      }}
+      additionalHandle={() => { router.reload() }}
     />
   ))
 }
