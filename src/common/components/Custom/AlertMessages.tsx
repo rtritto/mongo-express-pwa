@@ -1,4 +1,4 @@
-import { Alert } from '@mui/material'
+import { Alert, Snackbar } from '@mui/material'
 import { useAtom } from 'jotai'
 
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
@@ -10,15 +10,19 @@ const AlertMessages = () => {
   return (
     <>
       {success && (
-        <Alert severity="success" onClose={() => { setSuccess(undefined) }} sx={{ my: 2 }}>
-          {success}
-        </Alert>
+        <Snackbar open>
+          <Alert severity="success" onClose={() => { setSuccess(undefined) }} sx={{ my: 2 }}>
+            {success}
+          </Alert>
+        </Snackbar>
       )}
 
       {error && (
-        <Alert severity="error" onClose={() => { setError(undefined) }} sx={{ my: 2 }}>
-          {error}
-        </Alert>
+        <Snackbar open>
+          <Alert severity="error" onClose={() => { setError(undefined) }} sx={{ my: 2 }}>
+            {error}
+          </Alert>
+        </Snackbar>
       )}
     </>
   )
