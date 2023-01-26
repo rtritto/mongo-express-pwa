@@ -4,7 +4,7 @@ import { EP_API_DATABASE } from 'configs/endpoints.ts'
 import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
 import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
-const tooltipTitle = 'Are you sure you want to delete this database? All collections and documents will be deleted.'
+const tooltipTitle = 'Do you want to delete this database? All collections and documents will be deleted.'
 
 interface DeleteModalBoxDatabaseProps {
   database: string

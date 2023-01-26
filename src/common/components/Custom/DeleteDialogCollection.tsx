@@ -4,7 +4,7 @@ import { EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import DeleteDialog from 'components/Custom/DeleteDialog.tsx'
 import { collectionsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
-const tooltipTitle = 'Are you sure you want to delete this collection? All documents will be deleted.'
+const tooltipTitle = 'Do you want to delete this collection? All documents will be deleted.'
 
 interface DeleteDialogCollectionProps {
   collection: string
