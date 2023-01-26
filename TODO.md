@@ -11,3 +11,5 @@
 - check when use console debug|error|log
 - check when use res.end and res.send
 - validate skip Query Param and other QPs
+- refresh after export and delete 1 documents
+- redirect to /db/<db-name> when delete all documents

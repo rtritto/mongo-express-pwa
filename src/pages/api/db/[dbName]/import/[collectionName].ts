@@ -1,6 +1,7 @@
 import { EJSON } from 'bson'
 
 import { checkDatabase, checkCollection } from 'lib/validations.ts'
+import multipartDataParser from 'lib/parsers/multipart-data-parser.ts'
 
 const ALLOWED_MIME_TYPES = new Set([
   'text/csv',
@@ -13,12 +14,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     checkDatabase(dbName)
     checkCollection(dbName, collectionName)
 
-    if (!req.files) {
+    const files = multipartDataParser(req)
+    if (files.length === 0) {
       return res.status(400).send('Missing file')
     }
-
-    const files = Object.values(req.files)
-
     const areInvalidFiles = files.some((file) => !ALLOWED_MIME_TYPES.has(file.mimetype)
       || !file.data
       || !file.data.toString)

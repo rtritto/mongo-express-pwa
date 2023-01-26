@@ -16,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const items = await client.db(dbName).collection(collectionName).find(query, queryOptions).toArray()
     res.setHeader(
       'Content-Disposition',
-      `attachment filename="${encodeURI(collectionName)}.json" filename*=UTF-8''${encodeURI(collectionName)}.json`
+      `attachment; filename="${encodeURI(collectionName)}.json"; filename*=UTF-8''${encodeURI(collectionName)}.json`
     )
     res.setHeader('Content-Type', 'application/json')
     res.write(toJsonString(items))
