@@ -117,7 +117,7 @@ const DocumentsTable = ({
                     // TODO handle query
                     // query={}
                     ButtonProps={{ sx: { minWidth: 0 } }}
-                    additionaOnDelete={() => updateDocuments(document._id)}
+                    additionalHandle={() => updateDocuments(document._id)}
                   />
                 </TableCell>
               )}

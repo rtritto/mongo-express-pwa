@@ -13,13 +13,14 @@ const ButtonExportImportStyle = {
 } as const
 
 interface ImportButtonProps {
+  additionalHandle: Function
   collection: string
   href: string
   text: string
 }
 
 
-const ImportButton = ({ collection, href, text = 'Import' }: ImportButtonProps) => {
+const ImportButton = ({ additionalHandle, collection, href, text = 'Import' }: ImportButtonProps) => {
   const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
   const setError = useSetAtom<string | undefined>(messageErrorState)
 
@@ -42,6 +43,9 @@ const ImportButton = ({ collection, href, text = 'Import' }: ImportButtonProps) 
       if (res.ok === true) {
         const message = await res.text()
         setSuccess(`${message} to "${collection}" collection`)
+        if (typeof additionalHandle === 'function') {
+          additionalHandle()
+        }
       } else {
         const { error } = await res.json()
         setError(error)

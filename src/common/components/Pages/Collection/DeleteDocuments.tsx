@@ -30,7 +30,7 @@ const DeleteDocuments = ({
         success: `${count} documents deleted!`
       }}
       ButtonProps={{ sx: { width: "100%" } }}
-      additionaOnDelete={() => {
+      additionalHandle={() => {
         setDocuments([])
         setCount(0)
       }}

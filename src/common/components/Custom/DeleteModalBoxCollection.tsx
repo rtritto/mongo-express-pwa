@@ -9,10 +9,10 @@ const tooltipTitle = 'Are you sure you want to delete this collection? All docum
 interface DeleteModalBoxCollectionProps {
   collection: string
   database: string
-  additionaOnDelete: Function
+  additionalHandle: Function
 }
 
-const DeleteModalBoxCollection = ({ collection, database, additionaOnDelete }: DeleteModalBoxCollectionProps) => {
+const DeleteModalBoxCollection = ({ collection, database, additionalHandle }: DeleteModalBoxCollectionProps) => {
   const setCollections = useSetAtom<Mongo['collections']>(collectionsState)
   const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
   const setError = useSetAtom<string | undefined>(messageErrorState)
@@ -34,8 +34,8 @@ const DeleteModalBoxCollection = ({ collection, database, additionaOnDelete }: D
           }
         })
         setSuccess(`Collection "${collection}" deleted!`)
-        if (typeof additionaOnDelete === 'function') {
-          additionaOnDelete()
+        if (typeof additionalHandle === 'function') {
+          additionalHandle()
         }
       } else {
         const { error } = await res.json()

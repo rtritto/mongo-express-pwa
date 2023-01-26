@@ -24,6 +24,7 @@ const BoxStyle = {
 } as const
 
 interface DeleteModalBoxSimpleProps {
+  additionalHandle?: Function
   deleteUrl: string
   messages: {
     button: string
@@ -32,13 +33,12 @@ interface DeleteModalBoxSimpleProps {
   }
   query?: string
   width?: string
-  additionaOnDelete?: Function
   ButtonProps: {
     sx?: object
   }
 }
 
-const DeleteModalBoxSimple = ({ deleteUrl, messages, query, additionaOnDelete, ButtonProps = {} }: DeleteModalBoxSimpleProps) => {
+const DeleteModalBoxSimple = ({ deleteUrl, messages, query, additionalHandle, ButtonProps = {} }: DeleteModalBoxSimpleProps) => {
   const [open, setOpen] = useState(false)
   const handleOpen = () => { setOpen(true) }
   const handleClose = () => { setOpen(false) }
@@ -52,8 +52,8 @@ const DeleteModalBoxSimple = ({ deleteUrl, messages, query, additionaOnDelete, B
     }).then(async (res) => {
       if (res.ok === true) {
         setSuccess(messages.success)
-        if (typeof additionaOnDelete === 'function') {
-          additionaOnDelete()
+        if (typeof additionalHandle === 'function') {
+          additionalHandle()
         }
       } else {
         const { error } = await res.json()
