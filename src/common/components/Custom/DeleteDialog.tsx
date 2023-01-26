@@ -49,31 +49,23 @@ const DeleteDialog = ({ value, entity, tooltipTitle, handleDelete }: DeleteDialo
 
           <Divider />
 
-
           <DialogContent>
             <DialogContentText>
-              Be careful! You are about to delete whole <Box fontWeight='fontWeightMedium' display='inline'>
-                <strong>{value}</strong>
-              </Box> {entity}.
+              You are about to delete whole <strong>{value}</strong> {entity}.
             </DialogContentText>
 
-            <DialogContentText alignItems="center" sx={{ py: 0.5, display: "flex" }}>
-              <Typography fontSize={12} sx={{ fontWeight: 'bold', width: '100%' }}>
-                Type the {entity} name to proceed.
-              </Typography>
-
-              <TextField
-                autoFocus
-                fullWidth
-                onChange={handleOnChange}
-                placeholder={value}
-                size="small"
-                type="string"
-                value={input}
-                variant="outlined"
-                sx={{ pl: 0.5 }}
-              />
-            </DialogContentText>
+            <TextField
+              autoFocus
+              fullWidth
+              margin="dense"
+              onChange={handleOnChange}
+              placeholder={value}
+              size="small"
+              type="string"
+              value={input}
+              variant="outlined"
+              sx={{ pl: 0.5 }}
+            />
           </DialogContent>
 
           <Divider />
