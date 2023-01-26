@@ -89,7 +89,10 @@ const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps)
                 </TableCell>
 
                 <TableCell key={`import${collection}`} sx={TableCellStyle}>
-                  <ImportButton href={EP_IMPORT_COLLECTION(encodedDatabase, encodedCollection)} />
+                  <ImportButton
+                    collection={encodedCollection}
+                    href={EP_IMPORT_COLLECTION(encodedDatabase, encodedCollection)}
+                  />
                 </TableCell>
 
                 <TableCell key={`detail${collection}`} sx={TableCellStyle} width="100%">

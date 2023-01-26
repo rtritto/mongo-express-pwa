@@ -1,7 +1,9 @@
 import { Button, SvgIcon } from '@mui/material'
+import { useSetAtom } from 'jotai'
 import type { ChangeEvent } from 'react'
 
 import { FileUpload } from 'common/SvgIcons.mts'
+import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 const ButtonExportImportStyle = {
   backgroundColor: 'rgb(139, 107, 62)',
@@ -11,12 +13,16 @@ const ButtonExportImportStyle = {
 } as const
 
 interface ImportButtonProps {
+  collection: string
   href: string
   text: string
 }
 
 
-const ImportButton = ({ href, text = 'Import' }: ImportButtonProps) => {
+const ImportButton = ({ collection, href, text = 'Import' }: ImportButtonProps) => {
+  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
+  const setError = useSetAtom<string | undefined>(messageErrorState)
+
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target
     if (!files) {
@@ -32,6 +38,16 @@ const ImportButton = ({ href, text = 'Import' }: ImportButtonProps) => {
     await fetch(href, {
       method: 'POST',
       body: formData
+    }).then(async (res) => {
+      if (res.ok === true) {
+        const message = await res.text()
+        setSuccess(`${message} to "${collection}" collection`)
+      } else {
+        const { error } = await res.json()
+        setError(error)
+      }
+    }).catch((error) => {
+      setError(error.message)
     })
   }
 

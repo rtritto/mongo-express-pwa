@@ -49,31 +49,30 @@ const Tools = ({ collection, database, show }: ToolsProps) => {
           <TableRow>
             <>
               {show.export === true && (
-                <>
-                  <TableCell key={`export${collection}`} sx={TableCellStyle}>
-                    <ExportButton
-                      href={EP_EXPORT_COLLECTION(encodedDatabase, encodedCollection)}
-                      text="Export Standard"
-                    />
-                  </TableCell>
-
-                  <TableCell key={`exportArray${collection}`} sx={TableCellStyle}>
-                    <ExportButton
-                      href={EP_EXPORT_ARRAY_COLLECTION(encodedDatabase, encodedCollection)}
-                      text="Export --jsonArray"
-                    />
-                  </TableCell>
-
-                  <TableCell>Export --csv</TableCell>
-                </>
+                <TableCell key={`export${collection}`} sx={TableCellStyle}>
+                  <ExportButton
+                    href={EP_EXPORT_COLLECTION(encodedDatabase, encodedCollection)}
+                    text="Export"  // Standard
+                  />
+                </TableCell>
               )}
+
+              <TableCell key={`exportArray${collection}`} sx={TableCellStyle}>
+                <ExportButton
+                  href={EP_EXPORT_ARRAY_COLLECTION(encodedDatabase, encodedCollection)}
+                  text="Export JSON"  // --jsonArray
+                />
+              </TableCell>
+
+              <TableCell>Export --csv</TableCell>
 
               <TableCell>Reindex</TableCell>
 
               <TableCell key={`import${collection}`} sx={TableCellStyle}>
                 <ImportButton
+                  collection={encodedCollection}
                   href={EP_IMPORT_COLLECTION(encodedDatabase, encodedCollection)}
-                  text="Import --mongoexport json"
+                  text="Import JSON"  // --mongoexport
                 />
               </TableCell>
 
