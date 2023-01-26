@@ -1,27 +1,10 @@
-import { Box, Button, Divider, Grid, Modal, SvgIcon, Tooltip, Typography } from '@mui/material'
+import { Box, Button, DialogActions, DialogContent, DialogContentText, Divider, SvgIcon } from '@mui/material'
 import { useState } from 'react'
 import { useSetAtom } from 'jotai'
 
 import { Delete } from 'common/SvgIcons.mts'
+import DialogDisable from 'components/Custom/DialogDisable.tsx'
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
-
-const ModalStyle = {
-  display: 'flex',
-  top: '10%',
-  // alignItems: 'center', // vertical align
-  justifyContent: 'center'  // horizontal align
-} as const
-
-const BoxStyle = {
-  position: 'absolute' as 'absolute',
-  // centre
-  // top: '50%',
-  // left: '50%',
-  // transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-} as const
 
 interface DeleteModalBoxSimpleProps {
   additionalHandle?: Function
@@ -78,17 +61,17 @@ const DeleteModalBoxSimple = ({ deleteUrl, messages, query, additionalHandle, Bu
         {messages.button}
       </Button>
 
-      <Modal open={open} onClose={handleClose} style={ModalStyle}>
-        <Box sx={BoxStyle}>
-          <Box sx={{ p: 2 }} >
-            <Typography component='div' fontSize={14} gutterBottom>
+      {open === true && (
+        <DialogDisable disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
+          <DialogContent>
+            <DialogContentText sx={{ textAlign: 'center' }}>
               {messages.modal}
-            </Typography>
-          </Box>
+            </DialogContentText>
+          </DialogContent>
 
           <Divider />
 
-          <Grid container justifyContent="flex-end" sx={{ p: 1 }}>
+          <DialogActions>
             <Button
               id="delete"
               onClick={() => {
@@ -96,7 +79,6 @@ const DeleteModalBoxSimple = ({ deleteUrl, messages, query, additionalHandle, Bu
                 handleClose()
               }}
               size="small"
-              // type="submit"
               variant="contained"
               sx={{ backgroundColor: 'rgb(108, 49, 47)', m: 1 }}
             >
@@ -111,9 +93,9 @@ const DeleteModalBoxSimple = ({ deleteUrl, messages, query, additionalHandle, Bu
             >
               Cancel
             </Button>
-          </Grid>
-        </Box>
-      </Modal>
+          </DialogActions>
+        </DialogDisable>
+      )}
     </Box>
   )
 }

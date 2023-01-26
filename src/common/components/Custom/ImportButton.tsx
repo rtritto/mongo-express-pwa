@@ -73,22 +73,25 @@ const ImportButton = ({ additionalHandle, collection, href, text = 'Import' }: I
         <input type="file" hidden onChange={handleFileUpload} />
       </Button>
 
-      <DialogDisable disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
-        <DialogContent>
-          <DialogContentText>{message}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            autoFocus
-            onClick={handleClose}
-            size="small"
-            variant="contained"
-            sx={{ m: 1 }}
-          >
-            OK
-          </Button>
-        </DialogActions>
-      </DialogDisable>
+      {open === true && (
+        <DialogDisable disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
+          <DialogContent>
+            <DialogContentText>{message}</DialogContentText>
+          </DialogContent>
+
+          <DialogActions>
+            <Button
+              autoFocus
+              onClick={handleClose}
+              size="small"
+              variant="contained"
+              sx={{ m: 1 }}
+            >
+              OK
+            </Button>
+          </DialogActions>
+        </DialogDisable>
+      )}
     </>
   )
 }
