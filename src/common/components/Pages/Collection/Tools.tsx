@@ -45,55 +45,53 @@ const Tools = ({ collection, database, show }: ToolsProps) => {
 
         <TableBody>
           <TableRow>
-            <>
-              {show.export === true && (
-                <TableCell key={`export${collection}`} sx={TableCellStyle}>
-                  <ExportButton
-                    href={EP_EXPORT_COLLECTION(encodedDatabase, encodedCollection)}
-                    text="Export"  // Standard
-                  />
-                </TableCell>
-              )}
-
-              <TableCell key={`exportArray${collection}`} sx={TableCellStyle}>
+            {show.export === true && (
+              <TableCell key={`export${collection}`} sx={TableCellStyle}>
                 <ExportButton
-                  href={EP_EXPORT_ARRAY_COLLECTION(encodedDatabase, encodedCollection)}
-                  text="Export JSON"  // --jsonArray
+                  href={EP_EXPORT_COLLECTION(encodedDatabase, encodedCollection)}
+                  text="Export"  // Standard
                 />
               </TableCell>
+            )}
 
-              <TableCell>Export --csv</TableCell>
+            <TableCell key={`exportArray${collection}`} sx={TableCellStyle}>
+              <ExportButton
+                href={EP_EXPORT_ARRAY_COLLECTION(encodedDatabase, encodedCollection)}
+                text="Export JSON"  // --jsonArray
+              />
+            </TableCell>
 
-              <TableCell>Reindex</TableCell>
+            <TableCell>Export --csv</TableCell>
 
-              <TableCell key={`import${collection}`} sx={TableCellStyle}>
-                <ImportButton
-                  collection={encodedCollection}
-                  href={EP_IMPORT_COLLECTION(encodedDatabase, encodedCollection)}
-                  text="Import JSON"  // --mongoexport
-                  additionalHandle={() => { router.reload() }}
-                />
-              </TableCell>
+            <TableCell>Reindex</TableCell>
 
-              {show.readOnly === false && (
-                <>
-                  <TableCell>Compact</TableCell>
+            <TableCell key={`import${collection}`} sx={TableCellStyle}>
+              <ImportButton
+                collection={encodedCollection}
+                href={EP_IMPORT_COLLECTION(encodedDatabase, encodedCollection)}
+                text="Import JSON"  // --mongoexport
+                additionalHandle={() => { router.reload() }}
+              />
+            </TableCell>
 
-                  {show.delete === true && (
-                    <TableCell>
-                      <DeleteModalBoxCollection
-                        collection={collection}
-                        database={database}
-                        additionalHandle={() => {
-                          // Update URI (without page reload)
-                          router.push(EP_DATABASE(database), undefined, { shallow: true })
-                        }}
-                      />
-                    </TableCell>
-                  )}
-                </>
-              )}
-            </>
+            {show.readOnly === false && (
+              <>
+                <TableCell>Compact</TableCell>
+
+                {show.delete === true && (
+                  <TableCell>
+                    <DeleteModalBoxCollection
+                      collection={collection}
+                      database={database}
+                      additionalHandle={() => {
+                        // Update URI (without page reload)
+                        router.push(EP_DATABASE(database), undefined, { shallow: true })
+                      }}
+                    />
+                  </TableCell>
+                )}
+              </>
+            )}
           </TableRow>
         </TableBody>
       </Table>

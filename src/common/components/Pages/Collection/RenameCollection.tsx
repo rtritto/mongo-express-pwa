@@ -51,9 +51,7 @@ const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => 
         const { error } = await res.json()
         setError(error)
       }
-    }).catch((error) => {
-      setError(error.message)
-    })
+    }).catch((error) => { setError(error.message) })
   }
 
   return (

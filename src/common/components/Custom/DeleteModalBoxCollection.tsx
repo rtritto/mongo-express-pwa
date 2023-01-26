@@ -41,9 +41,7 @@ const DeleteModalBoxCollection = ({ collection, database, additionalHandle }: De
         const { error } = await res.json()
         setError(error)
       }
-    }).catch((error) => {
-      setError(error.message)
-    })
+    }).catch((error) => { setError(error.message) })
   }
 
   return (

@@ -57,9 +57,7 @@ const ImportButton = ({ additionalHandle, collection, href, text = 'Import' }: I
         const { error } = await res.json()
         setError(error)
       }
-    }).catch((error) => {
-      setError(error.message)
-    })
+    }).catch((error) => { setError(error.message) })
   }
 
   return (
