@@ -5,7 +5,7 @@ import {
   EP_DATABASE, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION,
   EP_IMPORT_COLLECTION
 } from 'configs/endpoints.ts'
-import DeleteModalBoxCollection from 'components/Custom/DeleteModalBoxCollection.tsx'
+import DeleteDialogCollection from 'components/Custom/DeleteDialogCollection.tsx'
 import ExportButton from 'components/Custom/ExportButton.tsx'
 import ImportButton from 'components/Custom/ImportButton.tsx'
 
@@ -80,7 +80,7 @@ const Tools = ({ collection, database, show }: ToolsProps) => {
 
                 {show.delete === true && (
                   <TableCell>
-                    <DeleteModalBoxCollection
+                    <DeleteDialogCollection
                       collection={collection}
                       database={database}
                       additionalHandle={() => {

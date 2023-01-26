@@ -4,7 +4,7 @@ import { useSetAtom } from 'jotai'
 import { EP_DB } from 'configs/endpoints.ts'
 import { Visibility } from 'common/SvgIcons.mts'
 import CustomLink from 'components/Custom/CustomLink.tsx'
-import DeleteModalBoxDatabase from 'components/Custom/DeleteModalBoxDatabase.tsx'
+import DeleteDialogDatabase from 'components/Custom/DeleteDialogDatabase.tsx'
 import CreateDatabase from 'components/Pages/Index/CreateDatabase.tsx'
 import { selectedDatabaseState } from 'store/globalAtoms.ts'
 
@@ -94,7 +94,7 @@ const ShowDatabases = ({ databases = [], show }: ShowDatabasesProps) => {
 
                 {show.delete === true && (
                   <TableCell key={`delete${database}`} align="right" sx={TableCellStyle}>
-                    <DeleteModalBoxDatabase database={database} />
+                    <DeleteDialogDatabase database={database} />
                   </TableCell>
                 )}
               </TableRow>

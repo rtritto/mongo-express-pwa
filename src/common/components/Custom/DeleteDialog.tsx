@@ -5,14 +5,14 @@ import { useState } from 'react'
 import { Delete } from 'common/SvgIcons.mts'
 import DialogDisable from 'components/Custom/DialogDisable.tsx'
 
-interface DeleteModalBoxProps {
+interface DeleteDialogProps {
   value: string
   entity: string
   tooltipTitle: string
   handleDelete: Function
 }
 
-const DeleteModalBox = ({ value, entity, tooltipTitle, handleDelete }: DeleteModalBoxProps) => {
+const DeleteDialog = ({ value, entity, tooltipTitle, handleDelete }: DeleteDialogProps) => {
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState('')
 
@@ -110,4 +110,4 @@ const DeleteModalBox = ({ value, entity, tooltipTitle, handleDelete }: DeleteMod
   )
 }
 
-export default DeleteModalBox
+export default DeleteDialog

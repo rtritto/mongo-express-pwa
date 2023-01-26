@@ -2,7 +2,7 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import { JsonViewer } from '@textea/json-viewer'
 import { useHydrateAtoms } from 'jotai/utils'
 
-import DeleteModalBoxSimple from 'components/Custom/DeleteModalBoxSimple.tsx'
+import DeleteDialogSimple from 'components/Custom/DeleteDialogSimple.tsx'
 import { useAtom, useSetAtom } from 'jotai'
 import { columnsState, documentCountState, documentsState } from 'src/common/store/globalAtoms.ts'
 
@@ -107,7 +107,7 @@ const DocumentsTable = ({
             <TableRow key={`doc${index}`}>
               {show.delete === true && (
                 <TableCell key={`delDoc${index}`} width="1%" sx={{ px: 1, py: 0.5 }}>
-                  <DeleteModalBoxSimple
+                  <DeleteDialogSimple
                     // TODO add (json | safe | url_encode filter) to _id
                     deleteUrl={`${deleteUrl}/${document._id}`}
                     messages={{

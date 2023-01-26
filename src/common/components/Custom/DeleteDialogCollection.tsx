@@ -1,18 +1,18 @@
 import { useSetAtom } from 'jotai'
 
 import { EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
-import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
+import DeleteDialog from 'components/Custom/DeleteDialog.tsx'
 import { collectionsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 const tooltipTitle = 'Are you sure you want to delete this collection? All documents will be deleted.'
 
-interface DeleteModalBoxCollectionProps {
+interface DeleteDialogCollectionProps {
   collection: string
   database: string
   additionalHandle: Function
 }
 
-const DeleteModalBoxCollection = ({ collection, database, additionalHandle }: DeleteModalBoxCollectionProps) => {
+const DeleteDialogCollection = ({ collection, database, additionalHandle }: DeleteDialogCollectionProps) => {
   const setCollections = useSetAtom<Mongo['collections']>(collectionsState)
   const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
   const setError = useSetAtom<string | undefined>(messageErrorState)
@@ -45,7 +45,7 @@ const DeleteModalBoxCollection = ({ collection, database, additionalHandle }: De
   }
 
   return (
-    <DeleteModalBox
+    <DeleteDialog
       value={collection}
       entity="collection"
       tooltipTitle={tooltipTitle}
@@ -54,4 +54,4 @@ const DeleteModalBoxCollection = ({ collection, database, additionalHandle }: De
   )
 }
 
-export default DeleteModalBoxCollection
+export default DeleteDialogCollection

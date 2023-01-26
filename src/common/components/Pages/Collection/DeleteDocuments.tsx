@@ -1,6 +1,6 @@
 import { useAtom, useSetAtom } from 'jotai'
 
-import DeleteModalBoxSimple from 'components/Custom/DeleteModalBoxSimple.tsx'
+import DeleteDialogSimple from 'components/Custom/DeleteDialogSimple.tsx'
 import { EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import { documentsState, documentCountState } from 'store/globalAtoms.ts'
 
@@ -21,7 +21,7 @@ const DeleteDocuments = ({
   const [count, setCount] = useAtom<number>(documentCountState)
 
   return (show === true && count > 0 && (
-    <DeleteModalBoxSimple
+    <DeleteDialogSimple
       deleteUrl={EP_API_DATABASE_COLLECTION(database, collection)}
       query={query}
       messages={{
