@@ -1,17 +1,17 @@
 import { useSetAtom } from 'jotai'
 
 import { EP_API_DATABASE } from 'configs/endpoints.ts'
-import DeleteModalBox from 'components/Custom/DeleteModalBox.tsx'
+import DeleteDialog from 'components/Custom/DeleteDialog.tsx'
 import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 const tooltipTitle = 'Do you want to delete this database? All collections and documents will be deleted.'
 
-interface DeleteModalBoxDatabaseProps {
+interface DeleteDialogDatabaseProps {
   database: string
   additionalHandle: Function
 }
 
-const DeleteModalBoxDatabase = ({ database, additionalHandle }: DeleteModalBoxDatabaseProps) => {
+const DeleteDialogDatabase = ({ database, additionalHandle }: DeleteDialogDatabaseProps) => {
   const setDatabases = useSetAtom<Mongo['databases']>(databasesState)
   const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
   const setError = useSetAtom<string | undefined>(messageErrorState)
@@ -41,7 +41,7 @@ const DeleteModalBoxDatabase = ({ database, additionalHandle }: DeleteModalBoxDa
   }
 
   return (
-    <DeleteModalBox
+    <DeleteDialog
       value={database}
       entity="database"
       tooltipTitle={tooltipTitle}
@@ -50,4 +50,4 @@ const DeleteModalBoxDatabase = ({ database, additionalHandle }: DeleteModalBoxDa
   )
 }
 
-export default DeleteModalBoxDatabase
+export default DeleteDialogDatabase

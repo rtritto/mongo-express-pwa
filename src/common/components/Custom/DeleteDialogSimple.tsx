@@ -6,7 +6,7 @@ import { Delete } from 'common/SvgIcons.mts'
 import DialogDisable from 'components/Custom/DialogDisable.tsx'
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
-interface DeleteModalBoxSimpleProps {
+interface DeleteDialogSimpleProps {
   additionalHandle?: Function
   deleteUrl: string
   messages: {
@@ -21,7 +21,7 @@ interface DeleteModalBoxSimpleProps {
   }
 }
 
-const DeleteModalBoxSimple = ({ deleteUrl, messages, query, additionalHandle, ButtonProps = {} }: DeleteModalBoxSimpleProps) => {
+const DeleteDialogSimple = ({ deleteUrl, messages, query, additionalHandle, ButtonProps = {} }: DeleteDialogSimpleProps) => {
   const [open, setOpen] = useState(false)
   const handleOpen = () => { setOpen(true) }
   const handleClose = () => { setOpen(false) }
@@ -100,4 +100,4 @@ const DeleteModalBoxSimple = ({ deleteUrl, messages, query, additionalHandle, Bu
   )
 }
 
-export default DeleteModalBoxSimple
+export default DeleteDialogSimple
