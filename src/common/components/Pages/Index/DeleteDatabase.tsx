@@ -6,11 +6,11 @@ import { databasesState, messageErrorState, messageSuccessState } from 'store/gl
 
 const tooltipTitle = 'Do you want to delete this database? All collections and documents will be deleted.'
 
-interface DeleteDialogDatabaseProps {
+interface DeleteDatabaseProps {
   database: string
 }
 
-const DeleteDialogDatabase = ({ database }: DeleteDialogDatabaseProps) => {
+const DeleteDatabase = ({ database }: DeleteDatabaseProps) => {
   const setDatabases = useSetAtom<Mongo['databases']>(databasesState)
   const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
   const setError = useSetAtom<string | undefined>(messageErrorState)
@@ -46,4 +46,4 @@ const DeleteDialogDatabase = ({ database }: DeleteDialogDatabaseProps) => {
   )
 }
 
-export default DeleteDialogDatabase
+export default DeleteDatabase

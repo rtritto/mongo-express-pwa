@@ -1,6 +1,6 @@
 import { Dialog } from '@mui/material'
 
-const DialogDisable = ({
+const CustomDialog = ({
   children,
   disableBackdropClick,
   disableEscapeKeyDown,
@@ -29,4 +29,4 @@ const DialogDisable = ({
   )
 }
 
-export default DialogDisable
+export default CustomDialog

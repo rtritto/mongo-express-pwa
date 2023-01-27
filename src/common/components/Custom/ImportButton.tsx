@@ -3,7 +3,7 @@ import { useSetAtom } from 'jotai'
 import { ChangeEvent, useState } from 'react'
 
 import { FileUpload } from 'common/SvgIcons.mts'
-import DialogDisable from 'components/Custom/DialogDisable.tsx'
+import CustomDialog from 'components/Custom/CustomDialog.tsx'
 import { messageErrorState } from 'store/globalAtoms.ts'
 
 const ButtonExportImportStyle = {
@@ -74,7 +74,7 @@ const ImportButton = ({ additionalHandle, collection, href, text = 'Import' }: I
       </Button>
 
       {open === true && (
-        <DialogDisable disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
+        <CustomDialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
           <DialogContent>
             <DialogContentText>{message}</DialogContentText>
           </DialogContent>
@@ -90,7 +90,7 @@ const ImportButton = ({ additionalHandle, collection, href, text = 'Import' }: I
               OK
             </Button>
           </DialogActions>
-        </DialogDisable>
+        </CustomDialog>
       )}
     </>
   )

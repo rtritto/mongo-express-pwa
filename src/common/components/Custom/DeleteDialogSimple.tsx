@@ -1,9 +1,9 @@
 import { Box, Button, DialogActions, DialogContent, DialogContentText, Divider, SvgIcon } from '@mui/material'
-import { useState } from 'react'
 import { useSetAtom } from 'jotai'
+import { useState } from 'react'
 
 import { Delete } from 'common/SvgIcons.mts'
-import DialogDisable from 'components/Custom/DialogDisable.tsx'
+import CustomDialog from 'components/Custom/CustomDialog.tsx'
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 interface DeleteDialogSimpleProps {
@@ -28,7 +28,7 @@ const DeleteDialogSimple = ({ deleteUrl, messages, query, additionalHandle, Butt
   const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
   const setError = useSetAtom<string | undefined>(messageErrorState)
 
-  const handleDeleteCollection = async () => {
+  const handleDelete = async () => {
     const queryParams = query ? `?${new URLSearchParams({ query })}` : ''
     await fetch(`${deleteUrl}${queryParams}`, {
       method: 'DELETE'
@@ -62,7 +62,7 @@ const DeleteDialogSimple = ({ deleteUrl, messages, query, additionalHandle, Butt
       </Button>
 
       {open === true && (
-        <DialogDisable disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
+        <CustomDialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
           <DialogContent>
             <DialogContentText sx={{ textAlign: 'center' }}>
               {messages.modal}
@@ -75,7 +75,7 @@ const DeleteDialogSimple = ({ deleteUrl, messages, query, additionalHandle, Butt
             <Button
               id="delete"
               onClick={() => {
-                handleDeleteCollection()
+                handleDelete()
                 handleClose()
               }}
               size="small"
@@ -94,7 +94,7 @@ const DeleteDialogSimple = ({ deleteUrl, messages, query, additionalHandle, Butt
               Cancel
             </Button>
           </DialogActions>
-        </DialogDisable>
+        </CustomDialog>
       )}
     </Box>
   )

@@ -1,9 +1,9 @@
-import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, SvgIcon, TextField, Tooltip, Typography } from '@mui/material'
+import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, SvgIcon, TextField, Tooltip } from '@mui/material'
 import type { OutlinedInputProps } from '@mui/material'
 import { useState } from 'react'
 
 import { Delete } from 'common/SvgIcons.mts'
-import DialogDisable from 'components/Custom/DialogDisable.tsx'
+import CustomDialog from 'components/Custom/CustomDialog.tsx'
 
 interface DeleteDialogProps {
   value: string
@@ -42,7 +42,7 @@ const DeleteDialog = ({ value, entity, tooltipTitle, handleDelete }: DeleteDialo
       </Tooltip>
 
       {open === true && (
-        <DialogDisable disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
+        <CustomDialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
           <DialogTitle>
             Delete {entity}
           </DialogTitle>
@@ -96,7 +96,7 @@ const DeleteDialog = ({ value, entity, tooltipTitle, handleDelete }: DeleteDialo
               Cancel
             </Button>
           </DialogActions>
-        </DialogDisable>
+        </CustomDialog>
       )}
     </>
   )

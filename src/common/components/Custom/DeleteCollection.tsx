@@ -6,13 +6,13 @@ import { collectionsState, messageErrorState, messageSuccessState } from 'store/
 
 const tooltipTitle = 'Do you want to delete this collection? All documents will be deleted.'
 
-interface DeleteDialogCollectionProps {
+interface DeleteCollectionProps {
   collection: string
   database: string
   additionalHandle: Function
 }
 
-const DeleteDialogCollection = ({ collection, database, additionalHandle }: DeleteDialogCollectionProps) => {
+const DeleteCollection = ({ collection, database, additionalHandle }: DeleteCollectionProps) => {
   const setCollections = useSetAtom<Mongo['collections']>(collectionsState)
   const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
   const setError = useSetAtom<string | undefined>(messageErrorState)
@@ -54,4 +54,4 @@ const DeleteDialogCollection = ({ collection, database, additionalHandle }: Dele
   )
 }
 
-export default DeleteDialogCollection
+export default DeleteCollection

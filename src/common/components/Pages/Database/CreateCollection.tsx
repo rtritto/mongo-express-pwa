@@ -26,12 +26,12 @@ const CreateCollection = ({ dbName }: CreateCollectionProps) => {
       headers: { 'Content-Type': 'application/json' }
     }).then(async (res) => {
       if (res.ok === true) {
-        setSuccess(`Collection "${collection}" created!`)
         // Add collection to global collections to update viewing collections
         setCollections((collections) => ({
           ...collections,
           [dbName]: [...collections[dbName], collection].sort()
         }))
+        setSuccess(`Collection "${collection}" created!`)
         setCollection('')  // Reset value
       } else {
         const { error } = await res.json()
