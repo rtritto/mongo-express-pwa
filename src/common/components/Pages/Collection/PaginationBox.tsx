@@ -1,5 +1,5 @@
 import { Box, Pagination } from '@mui/material'
-import { ChangeEvent } from 'react'
+import type { ChangeEvent } from 'react'
 
 interface PaginationBoxProps {
   lastPage: number
