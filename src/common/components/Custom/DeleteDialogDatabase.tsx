@@ -8,10 +8,9 @@ const tooltipTitle = 'Do you want to delete this database? All collections and d
 
 interface DeleteDialogDatabaseProps {
   database: string
-  additionalHandle: Function
 }
 
-const DeleteDialogDatabase = ({ database, additionalHandle }: DeleteDialogDatabaseProps) => {
+const DeleteDialogDatabase = ({ database }: DeleteDialogDatabaseProps) => {
   const setDatabases = useSetAtom<Mongo['databases']>(databasesState)
   const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
   const setError = useSetAtom<string | undefined>(messageErrorState)
@@ -21,7 +20,6 @@ const DeleteDialogDatabase = ({ database, additionalHandle }: DeleteDialogDataba
       method: 'DELETE'
     }).then(async (res) => {
       if (res.ok === true) {
-        setSuccess('Database created!')
         // Remove database from global database to update viewing databases
         setDatabases((databases) => {
           const indexToRemove = databases.indexOf(database)
@@ -30,9 +28,7 @@ const DeleteDialogDatabase = ({ database, additionalHandle }: DeleteDialogDataba
             ...databases.slice(indexToRemove + 1)
           ]
         })
-        if (typeof additionalHandle === 'function') {
-          additionalHandle()
-        }
+        setSuccess(`Database "${database}" deleted!`)
       } else {
         const { error } = await res.json()
         setError(error)
