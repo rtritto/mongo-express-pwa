@@ -1,8 +1,8 @@
 diff --git a/dist/index.mjs b/dist/index.mjs
-index f3895849f607a9f483d5795a36caeaa14f33ee7c..69e8e4ebaf34dd7b6795539226291a4367e278ca 100644
+index c87bb61a779f17edde67f20103f50bde1d630983..8fc735749783d61a74fac052b22041aa8573689d 100644
 --- a/dist/index.mjs
 +++ b/dist/index.mjs
-@@ -1067,7 +1067,8 @@ var ObjectType = function(props) {
+@@ -1061,7 +1061,8 @@ var ObjectType = function(props) {
              pl: props.inspect ? indentWidth - 0.6 : 0,
              marginLeft: marginLeft,
              color: keyColor,
