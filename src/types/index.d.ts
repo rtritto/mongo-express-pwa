@@ -29,7 +29,7 @@ type CustomApiError = (any | Error) & {
  * Type definition is missing in mongodb
  * @see https://www.mongodb.com/docs/manual/reference/command/serverStatus
  */
-type ServerStatus = MongoDocument & {
+interface ServerStatus extends MongoDocument {
   host: string
   version: string
   uptime: number
@@ -69,7 +69,7 @@ type ServerStatus = MongoDocument & {
  * Type definition is missing in mongodb
  * @see https://www.mongodb.com/docs/manual/reference/command/dbStats
  */
-type DbStats = MongoDocument & {
+interface DbStats extends MongoDocument {
   db: string
   collections: number
   view: number
