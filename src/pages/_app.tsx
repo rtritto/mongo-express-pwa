@@ -10,24 +10,20 @@ import createEmotionCache from 'common/createEmotionCache.mts'
 import theme from 'common/Theme.mts'
 import AlertMessages from 'components/Custom/AlertMessages.tsx'
 import NavBar from 'components/Nav/NavBar.tsx'
-import { collectionsState, databasesState, selectedCollectionState, selectedDatabaseState } from 'store/globalAtoms.ts'
+import { selectedCollectionState, selectedDatabaseState } from 'store/globalAtoms.ts'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
 type App = typeof import('next/app.js').default
 interface MyAppProps extends AppProps {
-  databases: Mongo['databases']
   dbName?: string
-  collections: Mongo['collections']
   collectionName?: string
   emotionCache: EmotionCache
 }
 
 const MyApp: App = ({
-  databases,
   dbName,
-  collections,
   collectionName,
   Component,
   emotionCache = clientSideEmotionCache,
@@ -56,9 +52,7 @@ const MyApp: App = ({
     <Provider
       key="init"
       initialValues={[
-        [collectionsState, collections],
         [selectedCollectionState, collectionName],
-        [databasesState, databases],
         [selectedDatabaseState, dbName]
       ]}
     >
@@ -97,9 +91,7 @@ MyApp.getInitialProps = async ({ router /* or ctx.req */ }: AppContext): Promise
   await global.mongo.connect()
 
   return {
-    databases: global.mongo.databases,
     ...'dbName' in router.query && { dbName: router.query.dbName },
-    collections: Object.assign({}, global.mongo.collections),
     ...'collectionName' in router.query && { collectionName: router.query.collectionName }
   } as MyAppProps
 }

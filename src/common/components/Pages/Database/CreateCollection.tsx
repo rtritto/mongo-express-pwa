@@ -6,7 +6,8 @@ import { useSetAtom } from 'jotai'
 import { EP_API_DATABASE } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
 import { isValidCollectionName } from 'lib/validations.ts'
-import { collectionsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
+import { mapAddCollection } from 'lib/mapInfo.ts'
+import { collectionsState, databaseStatsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 interface CreateCollectionProps {
   dbName: string
@@ -14,6 +15,7 @@ interface CreateCollectionProps {
 
 const CreateCollection = ({ dbName }: CreateCollectionProps) => {
   const [collection, setCollection] = useState<string>('')
+  const setDatabaseStats = useSetAtom(databaseStatsState)
   const setCollections = useSetAtom<Mongo['collections']>(collectionsState)
   const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
   const setError = useSetAtom<string | undefined>(messageErrorState)
@@ -32,6 +34,7 @@ const CreateCollection = ({ dbName }: CreateCollectionProps) => {
           [dbName]: [...collections[dbName], collection].sort()
         }))
         setSuccess(`Collection "${collection}" created!`)
+        setDatabaseStats((databaseStatsOld) => mapAddCollection(databaseStatsOld))
         setCollection('')  // Reset value
       } else {
         const { error } = await res.json()

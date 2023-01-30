@@ -1,11 +1,7 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import { useRouter } from 'next/router.js'
 
-import {
-  EP_DATABASE, EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION,
-  EP_IMPORT_COLLECTION
-} from 'configs/endpoints.ts'
-import DeleteCollection from 'components/Custom/DeleteCollection.tsx'
+import { EP_EXPORT_COLLECTION, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION } from 'configs/endpoints.ts'
+import DeleteCollection from './DeleteCollection.tsx'
 import ExportButton from 'components/Custom/ExportButton.tsx'
 import ImportButton from 'components/Custom/ImportButton.tsx'
 
@@ -25,8 +21,6 @@ interface ToolsProps {
 }
 
 const Tools = ({ collection, database, show }: ToolsProps) => {
-  const router = useRouter()
-
   const encodedDatabase = encodeURIComponent(database)
   const encodedCollection = encodeURIComponent(collection)
 
@@ -70,7 +64,6 @@ const Tools = ({ collection, database, show }: ToolsProps) => {
                 collection={encodedCollection}
                 href={EP_IMPORT_COLLECTION(encodedDatabase, encodedCollection)}
                 text="Import JSON"  // --mongoexport
-                additionalHandle={() => { router.reload() }}
               />
             </TableCell>
 
@@ -80,14 +73,7 @@ const Tools = ({ collection, database, show }: ToolsProps) => {
 
                 {show.delete === true && (
                   <TableCell>
-                    <DeleteCollection
-                      collection={collection}
-                      database={database}
-                      additionalHandle={() => {
-                        // Update URI (without page reload)
-                        router.push(EP_DATABASE(database), undefined, { shallow: true })
-                      }}
-                    />
+                    <DeleteCollection collection={collection} database={database} />
                   </TableCell>
                 )}
               </>

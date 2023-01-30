@@ -1,7 +1,7 @@
 import { Container, Divider, Typography } from '@mui/material'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useHydrateAtoms } from 'jotai/utils'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { GetServerSideProps } from 'next'
 import Head from 'next/head.js'
 import { useRouter } from 'next/router.js'
@@ -24,8 +24,9 @@ import { mapCollectionStats } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
 import { stringDocIDs } from 'lib/filters.ts'
 import {
-  columnsState, documentsState, documentCountState, selectedCollectionState,
-  messageErrorState, messageSuccessState
+  collectionsState, columnsState, databasesState, documentsState,
+  documentCountState, selectedCollectionState, messageErrorState,
+  messageSuccessState
 } from 'store/globalAtoms.ts'
 
 const getRedirect = (dbName: string): { redirect: Redirect } => ({
@@ -36,6 +37,8 @@ const getRedirect = (dbName: string): { redirect: Redirect } => ({
 })
 
 interface CollectionPageProps {
+  collections: Mongo['collections']
+  databases: Mongo['databases']
   collectionStats: ReturnType<typeof mapCollectionStats>
   columns: string[]
   count: number
@@ -58,6 +61,8 @@ interface CollectionPageProps {
 }
 
 const CollectionPage = ({
+  collections: collectionsInit,
+  databases: databasesInit,
   dbName,
   collectionStats,
   columns: columnsInit,
@@ -74,22 +79,40 @@ const CollectionPage = ({
   query,
   title
 }: CollectionPageProps) => {
-  useHydrateAtoms([
+  const { current: initialValues } = useRef([
+    [collectionsState, collectionsInit],
+    [databasesState, databasesInit],
     [columnsState, columnsInit],
     [documentsState, documentsInit],
     [documentCountState, count]
   ])
+  useHydrateAtoms(initialValues)
   const router = useRouter()
-
-  const collectionName = useAtomValue<string>(selectedCollectionState)
-  const [columns, setColumns] = useAtom<string[]>(columnsState)
-  const [documents, setDocuments] = useAtom<string[]>(documentsState)
-  const [error, setError] = useAtom<string | undefined>(messageErrorState)
-  const [success, setSuccess] = useAtom<string | undefined>(messageSuccessState)
-
+  const setCollections = useSetAtom(collectionsState)
+  const setDatabases = useSetAtom(databasesState)
+  const [columns, setColumns] = useAtom(columnsState)
+  const [documents, setDocuments] = useAtom(documentsState)
+  const setDocumentCount = useSetAtom(documentCountState)
+  const collectionName = useAtomValue(selectedCollectionState)
+  const [error, setError] = useAtom(messageErrorState)
+  const [success, setSuccess] = useAtom(messageSuccessState)
   const [currentPage, setCurrentPage] = useState(currentPageInit)
   const [lastPage, setLastPage] = useState(lastPageInit)
 
+  useEffect(() => {
+    setCollections(collectionsInit)
+  }, [collectionsInit, setCollections])
+  useEffect(() => {
+    setDatabases(databasesInit)
+  }, [databasesInit, setDatabases])
+  useEffect(() => {
+    setDatabases(databasesInit)
+  }, [databasesInit, setDatabases])
+  useEffect(() => {
+    setColumns(columnsInit)
+    setDocuments(documentsInit)
+    setDocumentCount(count)
+  }, [columnsInit, documentsInit, count, setColumns, setDocuments, setDocumentCount])
   // Show alerts if messages exist
   useEffect(() => {
     if (error !== messageError) {
@@ -327,6 +350,8 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
     return {
       props: {
         // ctx,
+        collections: global.mongo.collections,
+        databases: global.mongo.databases,
         collectionStats,
         columns: Array.from(columns),  // All used columns
         count,  // total number of docs returned by the query

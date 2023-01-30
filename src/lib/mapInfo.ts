@@ -1,5 +1,7 @@
 import { bytesToSize, convertBytes } from 'lib/utils.ts'
 
+const EMPTY_COLLECTION_SIZE = 4096
+
 // TODO add global lock time stats and replica set stats
 export const mapServerStatus = (serverStatus: ServerStatus) => ({
   dbHost: {
@@ -145,6 +147,7 @@ export const mapDatabaseStats = (dbStats: DbStats) => ({
   },
   indexSize: {
     label: 'Index Size',
+    original: dbStats.indexSize,
     value: bytesToSize(dbStats.indexSize)
   },
   /* deprecated? */ ...'numExtents' in dbStats && {
@@ -159,9 +162,36 @@ export const mapDatabaseStats = (dbStats: DbStats) => ({
   },
   storageSize: {
     label: 'Storage Size',
+    original: dbStats.storageSize,
     value: bytesToSize(dbStats.storageSize)
   }
 })
+
+export const mapAddCollection = (databaseStats) => {
+  const newIndexSize = databaseStats.indexSize.original + EMPTY_COLLECTION_SIZE
+  const newStorageSize = databaseStats.storageSize.original + EMPTY_COLLECTION_SIZE
+  return {
+    ...databaseStats,
+    collections: {
+      ...databaseStats.collections,
+      value: databaseStats.collections.value + 1
+    },
+    indexes: {
+      ...databaseStats.indexes,
+      value: databaseStats.indexes.value + 1
+    },
+    indexSize: {
+      ...databaseStats.indexSize,
+      original: newIndexSize,
+      value: bytesToSize(newIndexSize)
+    },
+    storageSize: {
+      ...databaseStats.storageSize,
+      original: newStorageSize,
+      value: bytesToSize(newStorageSize)
+    }
+  }
+}
 
 export const mapCollectionStats = (collStats: CollStats) => ({
   count: {

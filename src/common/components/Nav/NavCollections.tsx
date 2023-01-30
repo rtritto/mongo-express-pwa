@@ -8,7 +8,7 @@ const NavCollections = () => {
   const collections = useAtomValue<Mongo['collections']>(collectionsState)
   const selectedDb = useAtomValue<string>(selectedDatabaseState)
 
-  return (
+  return collections[selectedDb]?.length > 0 && (
     <SelectLink
       baseUrl={EP_DATABASE(selectedDb)}
       entities={collections[selectedDb]}

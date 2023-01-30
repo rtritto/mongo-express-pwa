@@ -1,8 +1,9 @@
 import { Box, Container, Divider, Typography } from '@mui/material'
-import Head from 'next/head.js'
-import { useEffect } from 'react'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom } from 'jotai'
+import { useHydrateAtoms } from 'jotai/utils'
+import { useEffect, useRef } from 'react'
 import type { GetServerSideProps } from 'next'
+import Head from 'next/head.js'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
@@ -11,6 +12,7 @@ import { getGlobalValueAndReset } from 'lib/GlobalRef.ts'
 import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 interface IndexProps {
+  databases: Mongo['databases']
   messageError?: string
   messageSuccess?: string
   options: {
@@ -22,16 +24,22 @@ interface IndexProps {
 }
 
 const Index = ({
+  databases: databasesInit,
   messageError,
   messageSuccess,
   options: { noDelete, readOnly },
   serverStatus,
   title
 }: IndexProps) => {
-  const databases = useAtomValue<Mongo['databases']>(databasesState)
-  const [error, setError] = useAtom<string | undefined>(messageErrorState)
-  const [success, setSuccess] = useAtom<string | undefined>(messageSuccessState)
+  const { current: initialValues } = useRef([[databasesState, databasesInit]])
+  useHydrateAtoms(initialValues)
+  const [databases, setDatabases] = useAtom(databasesState)
+  const [error, setError] = useAtom(messageErrorState)
+  const [success, setSuccess] = useAtom(messageSuccessState)
 
+  useEffect(() => {
+    setDatabases(databasesInit)
+  }, [databasesInit, setDatabases])
   // Show alerts if messages exist
   useEffect(() => {
     if (error !== messageError) {
@@ -83,6 +91,7 @@ export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
   const messageSuccess = getGlobalValueAndReset('messageSuccess')
 
   const props: IndexProps = {
+    databases: global.mongo.databases,
     ...messageError !== undefined && { messageError },
     ...messageSuccess !== undefined && { messageSuccess },
     options: process.env.config.options,

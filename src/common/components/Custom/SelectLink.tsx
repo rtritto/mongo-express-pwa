@@ -1,9 +1,8 @@
 import { FormControl, Select, SelectChangeEvent } from '@mui/material'
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import type { Atom } from 'jotai'
 
 import CustomLink from 'components/Custom/CustomLink.tsx'
-import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 interface SelectLinkProps {
   baseUrl: string
@@ -14,14 +13,9 @@ interface SelectLinkProps {
 
 const SelectLink = ({ baseUrl, entities = [], label, selectedState }: SelectLinkProps) => {
   const [selected, setSelected] = useAtom<string>(selectedState)
-  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
-  const setError = useSetAtom<string | undefined>(messageErrorState)
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelected(event.target.value)
-    // reset Alerts
-    setSuccess(undefined)
-    setError(undefined)
   }
 
   return (
@@ -35,11 +29,6 @@ const SelectLink = ({ baseUrl, entities = [], label, selectedState }: SelectLink
             textDecoration: 'none'  // remove text underline
           }}
           // Button
-          onClick={() => {
-            // reset Alerts
-            setSuccess(undefined)
-            setError(undefined)
-          }}
           sx={{
             color: 'rgb(153, 143, 143)',
             justifyContent: 'flex-start',

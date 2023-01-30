@@ -3,7 +3,7 @@ import { useSetAtom } from 'jotai'
 
 import { EP_EXPORT_COLLECTION, EP_DB, EP_EXPORT_ARRAY_COLLECTION, EP_IMPORT_COLLECTION } from 'configs/endpoints.ts'
 import { Visibility } from 'common/SvgIcons.mts'
-import DeleteCollection from 'components/Custom/DeleteCollection.tsx'
+import DeleteCollection from 'components/Pages/Database/DeleteCollection.tsx'
 import CustomLink from 'components/Custom/CustomLink.tsx'
 import ExportButton from 'components/Custom/ExportButton.tsx'
 import ImportButton from 'components/Custom/ImportButton.tsx'

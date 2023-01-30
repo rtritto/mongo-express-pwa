@@ -1,6 +1,7 @@
 import { Button, DialogActions, DialogContent, DialogContentText, SvgIcon } from '@mui/material'
 import { useSetAtom } from 'jotai'
 import { ChangeEvent, useState } from 'react'
+import { useRouter } from 'next/router.js'
 
 import { FileUpload } from 'common/SvgIcons.mts'
 import CustomDialog from 'components/Custom/CustomDialog.tsx'
@@ -14,24 +15,20 @@ const ButtonExportImportStyle = {
 } as const
 
 interface ImportButtonProps {
-  additionalHandle: Function
   collection: string
   href: string
   text: string
 }
 
-const ImportButton = ({ additionalHandle, collection, href, text = 'Import' }: ImportButtonProps) => {
+const ImportButton = ({ collection, href, text = 'Import' }: ImportButtonProps) => {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState('')
+  const setError = useSetAtom<string | undefined>(messageErrorState)
 
   const handleClose = () => {
-    setOpen(false)
-    if (typeof additionalHandle === 'function') {
-      additionalHandle()
-    }
+    router.reload()
   }
-
-  const setError = useSetAtom<string | undefined>(messageErrorState)
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target

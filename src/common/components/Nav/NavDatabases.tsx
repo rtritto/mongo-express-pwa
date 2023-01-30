@@ -6,7 +6,7 @@ import { databasesState, selectedDatabaseState } from 'store/globalAtoms.ts'
 
 const NavDatabases = () => {
   const databases = useAtomValue<Mongo['collections']>(databasesState)
-  return (
+  return Object.keys(databases).length > 0 && (
     <SelectLink
       baseUrl={EP_DB}
       entities={databases}

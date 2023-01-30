@@ -1,16 +1,19 @@
 import { Container, Divider, Typography } from '@mui/material'
-import Head from 'next/head.js'
-import { useEffect } from 'react'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
+import { useHydrateAtoms } from 'jotai/utils'
+import { useEffect, useRef } from 'react'
 import type { GetServerSideProps } from 'next'
+import Head from 'next/head.js'
 
-import StatsTable from 'components/Custom/StatsTable.tsx'
+import DatabaseStats from 'components/Pages/Database/DatabaseStats.tsx'
 import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
 import { mapDatabaseStats } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
-import { collectionsState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
+import { collectionsState, databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 interface DatabasePageProps {
+  collections: Mongo['collections']
+  databases: Mongo['databases']
   databaseStats?: ReturnType<typeof mapDatabaseStats>
   dbName: string
   messageError?: string
@@ -31,6 +34,8 @@ const getRedirect = (): { redirect: Redirect } => ({
 })
 
 const DatabasePage = ({
+  collections: collectionsInit,
+  databases: databasesInit,
   dbName,
   databaseStats,
   messageError,
@@ -38,10 +43,22 @@ const DatabasePage = ({
   options: { noDelete, noExport, readOnly },
   title
 }: DatabasePageProps) => {
-  const collections = useAtomValue<Mongo['collections']>(collectionsState)
-  const [error, setError] = useAtom<string | undefined>(messageErrorState)
-  const [success, setSuccess] = useAtom<string | undefined>(messageSuccessState)
+  const { current: initialValues } = useRef([
+    [collectionsState, collectionsInit],
+    [databasesState, databasesInit]
+  ])
+  useHydrateAtoms(initialValues)
+  const [collections, setCollections] = useAtom(collectionsState)
+  const setDatabases = useSetAtom(databasesState)
+  const [error, setError] = useAtom(messageErrorState)
+  const [success, setSuccess] = useAtom(messageSuccessState)
 
+  useEffect(() => {
+    setCollections(collectionsInit)
+  }, [collectionsInit, setCollections])
+  useEffect(() => {
+    setDatabases(databasesInit)
+  }, [databasesInit, setDatabases])
   // Show alerts if messages exist
   useEffect(() => {
     if (error !== messageError) {
@@ -81,7 +98,7 @@ const DatabasePage = ({
 
         {/* TODO Create GridFS Bucket */}
 
-        <StatsTable label="Database Stats" fields={databaseStats} />
+        <DatabaseStats databaseStats={databaseStats} />
       </Container>
     </div>
   )
@@ -123,6 +140,8 @@ export const getServerSideProps: GetServerSideProps<DatabasePageProps, Params> =
 
   return {
     props: {
+      collections: global.mongo.collections,
+      databases: global.mongo.databases,
       databaseStats,
       dbName,
       // TODO grids: global.mongo.gridFSBuckets[dbName],
