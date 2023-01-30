@@ -58,16 +58,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'DELETE') {  // deleteCollection
     checkOption('readOnly', true)
     checkOption('noDelete', true)
-    const { collectionName, dbName } = req.query as Params
+    const { collectionName, dbName, query } = req.query as Params
     checkDatabase(dbName)
     checkCollection(dbName, collectionName)
 
-    const query = getQuery(req.query)
     const client = await global.mongo.connect()
     const collection = client.db(dbName).collection(collectionName)
-    if (Object.keys(query).length > 0) {
+    if (query) {
+      const filter = getQuery(query)
       // Delete some documents
-      await collection.deleteMany(query).then((opRes) => {
+      await collection.deleteMany(filter).then((opRes) => {
         console.log(`${opRes.deletedCount} documents deleted from 'collectionName'`)
         // res.redirect(res.locals.baseHref + 'db/' + req.dbName + '/' + req.collectionName)
       })

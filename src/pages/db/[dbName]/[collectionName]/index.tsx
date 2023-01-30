@@ -205,7 +205,7 @@ const CollectionPage = ({
         <DeleteDocuments
           database={dbName}
           collection={collectionName}
-          query={query}
+          query={query || '{}'}  // delete all documents
           show={readOnly === false && noDelete === false}
         />
 

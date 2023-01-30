@@ -15,7 +15,7 @@ interface DeleteDocumentsProps {
 const DeleteDocuments = ({
   collection,
   database,
-  query,
+  query,  // pass '{}' to delete all documents
   show
 }: DeleteDocumentsProps) => {
   const router = useRouter()
