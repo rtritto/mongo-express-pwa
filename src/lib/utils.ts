@@ -154,7 +154,7 @@ export const buildId = (id: string, { subtype }: QueryParameter) => {
     const _subtype = Number.parseInt(subtype, 10)
     if (ALLOWED_SUBTYPES.has(_subtype)) {
       if (_subtype === Binary.SUBTYPE_UUID) {
-        return new Binary(Buffer.from(id.replace(/-/g, ''), 'hex'), _subtype)
+        return new Binary(Buffer.from(id.replaceAll('-', ''), 'hex'), _subtype)
       }
       // mongodb.Binary.SUBTYPE_UUID_OLD
       return new Binary(Buffer.from(id, 'base64'), _subtype)

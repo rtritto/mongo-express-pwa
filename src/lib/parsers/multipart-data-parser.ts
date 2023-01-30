@@ -70,7 +70,7 @@ function process(part: Part): Input {
   }
   // always process the name field
   Object.defineProperty(input, 'name', {
-    value: header[1].split('=')[1].replace(/"/g, ''),
+    value: header[1].split('=')[1].replaceAll('"', ''),
     writable: true,
     enumerable: true,
     configurable: true
@@ -103,7 +103,7 @@ function parse(multipartBodyBuffer: Buffer, boundary: string): Input[] {
     const newLineDetected: boolean = oneByte === 0x0a && prevByte === 0x0d
     const newLineChar: boolean = oneByte === 0x0a || oneByte === 0x0d
 
-    if (!newLineChar) lastline += String.fromCharCode(oneByte)
+    if (!newLineChar) lastline += String.fromCodePoint(oneByte)
     if (ParsingState.INIT === state && newLineDetected) {
       // searching for boundary
       if ('--' + boundary === lastline) {
@@ -112,7 +112,7 @@ function parse(multipartBodyBuffer: Buffer, boundary: string): Input[] {
       lastline = ''
     } else if (ParsingState.READING_HEADERS === state && newLineDetected) {
       // parsing headers. Headers are separated by an empty line from the content. Stop reading headers when the line is empty
-      if (lastline.length) {
+      if (lastline.length > 0) {
         currentPartHeaders.push(lastline)
       } else {
         // found empty line. search for the headers we want and set the values
@@ -151,10 +151,8 @@ function parse(multipartBodyBuffer: Buffer, boundary: string): Input[] {
       if (newLineDetected) {
         lastline = ''
       }
-    } else if (ParsingState.READING_PART_SEPARATOR === state) {
-      if (newLineDetected) {
-        state = ParsingState.READING_HEADERS
-      }
+    } else if (ParsingState.READING_PART_SEPARATOR === state && newLineDetected) {
+      state = ParsingState.READING_HEADERS
     }
   }
   return allParts

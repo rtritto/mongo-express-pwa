@@ -9,7 +9,7 @@ interface DeleteDialogProps {
   value: string
   entity: string
   tooltipTitle: string
-  handleDelete: Function
+  handleDelete: () => void
 }
 
 const DeleteDialog = ({ value, entity, tooltipTitle, handleDelete }: DeleteDialogProps) => {

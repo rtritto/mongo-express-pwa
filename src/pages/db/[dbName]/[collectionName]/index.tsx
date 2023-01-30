@@ -57,6 +57,7 @@ interface CollectionPageProps {
     readOnly: boolean
   }
   query?: string | string[]
+  runAggregate: boolean
   title: string
 }
 
@@ -121,7 +122,7 @@ const CollectionPage = ({
     if (success !== messageSuccess) {
       setSuccess(messageSuccess)
     }
-  }, [messageError, messageSuccess])
+  }, [error, success, messageError, messageSuccess, setError, setSuccess])
 
   const handleClickPage = async (pageClicked: number, limit: number) => {
     const queryParams = `?${new URLSearchParams({
@@ -142,7 +143,7 @@ const CollectionPage = ({
               columnsNew.add(field)
             }
           }
-          return Array.from(columnsNew)
+          return [...columnsNew]
         })
         await router.push({
           pathname: router.pathname,
@@ -317,7 +318,7 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
     const columns = new Set<string>()
 
     for (const item of items) {
-      const valuesString = await Promise.all(Object.values(item).map(stringDocIDs))
+      const valuesString = await Promise.all(Object.values(item).map((value) => stringDocIDs(value)))
       const documentJS: MongoDocument = {}
       for (const [index, field] of Object.keys(item).entries()) {
         documentJS[field] = valuesString[index]
@@ -331,15 +332,14 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
     // Pagination
     const { limit /* TODO skip, sort */ } = filterOptions
 
-    const ctx = {
-      editorTheme: process.env.config.options.editorTheme,
-      // sort,
-      // key: query.key,
-      // value: query.value,  // value: type === 'O' ? ['ObjectId("', value, '")'].join('') : value,
-      // type: query.type,
-      // projection: query.projection,
-      runAggregate: query.runAggregate === 'on'
-    }
+    // const ctx = {
+    //   editorTheme: process.env.config.options.editorTheme,
+    //   sort,
+    //   key: query.key,
+    //   value: query.value,  // value: type === 'O' ? ['ObjectId("', value, '")'].join('') : value,
+    //   type: query.type,
+    //   projection: query.projection
+    // }
 
     const collectionStats = mapCollectionStats(stats)
 
@@ -353,7 +353,7 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
         collections: global.mongo.collections,
         databases: global.mongo.databases,
         collectionStats,
-        columns: Array.from(columns),  // All used columns
+        columns: [...columns],  // All used columns
         count,  // total number of docs returned by the query
         dbName,
         documentsJS,  // Original docs
@@ -371,6 +371,7 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
         ...messageSuccess !== undefined && { messageSuccess },
         options: process.env.config.options,
         ...'query' in query && { query: query.query },
+        runAggregate: query.runAggregate === 'on',
         title: `Viewing Collection: ${collectionName}`
       }
     }

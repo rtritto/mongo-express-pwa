@@ -17,7 +17,7 @@ type OutputObject = {
 }
 
 const mapObject = async (obj: InputObject): Promise<Output | OutputObject> => {
-  const valuesString = await Promise.all(Object.values(obj).map(stringDocIDs))
+  const valuesString = await Promise.all(Object.values(obj).map((value) => stringDocIDs(value)))
   const objOut: { [key: string]: Output | OutputObject } = {}
   for (const [index, field] of Object.keys(obj).entries()) {
     objOut[field] = valuesString[index]
@@ -32,25 +32,23 @@ const mapObject = async (obj: InputObject): Promise<Output | OutputObject> => {
  * - { _bsontype: 'Binary', __id: undefined, sub_type: <number_not_4>, position: 16, buffer: <Buffer> } => <Binary>
  */
 export const stringDocIDs = async (input: Input): Promise<Output | OutputObject> => {
-  if (input) {
-    if (typeof input === 'object') {
-      if (input instanceof Date) {
+  if (input && typeof input === 'object') {
+    if (input instanceof Date) {
+      return input.toJSON()
+    }
+    const { _bsontype } = input
+    if (_bsontype) {
+      if (_bsontype === 'Binary') {
+        if (input.sub_type === 4) {
+          return uuid4ToString(input)
+        }
         return input.toJSON()
       }
-      const { _bsontype } = input
-      if (_bsontype) {
-        if (_bsontype === 'Binary') {
-          if (input.sub_type === 4) {
-            return uuid4ToString(input)
-          }
-          return input.toJSON()
-        }
-        if (_bsontype === 'ObjectID') {
-          return input.toString()
-        }
+      if (_bsontype === 'ObjectID') {
+        return input.toString()
       }
-      return mapObject(input)
     }
+    return mapObject(input)
   }
   return input
 }

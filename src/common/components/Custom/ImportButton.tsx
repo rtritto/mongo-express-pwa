@@ -37,7 +37,7 @@ const ImportButton = ({ collection, href, text = 'Import' }: ImportButtonProps) 
     }
 
     const formData = new FormData()
-    const filesArray = Array.from(files)
+    const filesArray = [...files]
     for (const [key, file] of filesArray.entries()) {
       formData.append(`file_${key}`, file)
     }

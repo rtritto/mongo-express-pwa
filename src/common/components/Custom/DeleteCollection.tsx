@@ -9,7 +9,7 @@ const tooltipTitle = 'Do you want to delete this collection? All documents will 
 interface DeleteCollectionProps {
   collection: string
   database: string
-  additionalHandle: Function
+  additionalHandle?: () => void
 }
 
 const DeleteCollection = ({ collection, database, additionalHandle }: DeleteCollectionProps) => {

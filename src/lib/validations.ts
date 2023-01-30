@@ -27,7 +27,7 @@ export const isValidDatabaseNameRegex = (name: string) => {
   return {}
 }
 
-export const isValidDatabaseName = (name: string = '') => {
+export const isValidDatabaseName = (name = '') => {
   if (name.length > 63) {
     const validation = isValidDatabaseNameRegex(name)
     return {
@@ -54,7 +54,7 @@ export const checkCollection = (dbName: string, collectionName: string) => {
 export const checkDocument = (document: string) => {
   try {
     return toBSON(document)
-  } catch (error) {
+  } catch {
     throw new Error('That document in request body is not valid!')
   }
 }

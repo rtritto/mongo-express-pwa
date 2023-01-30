@@ -7,7 +7,7 @@ import CustomDialog from 'components/Custom/CustomDialog.tsx'
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 interface DeleteDialogSimpleProps {
-  additionalHandle?: Function
+  additionalHandle?: () => void
   deleteUrl: string
   messages: {
     button: string

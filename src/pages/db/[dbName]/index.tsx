@@ -67,7 +67,7 @@ const DatabasePage = ({
     if (success !== messageSuccess) {
       setSuccess(messageSuccess)
     }
-  }, [messageError, messageSuccess])
+  }, [error, success, messageError, messageSuccess, setError, setSuccess])
 
   return (
     <div>
