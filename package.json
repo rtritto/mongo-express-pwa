@@ -29,7 +29,7 @@
     "pages": "link:./pages",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.42.1",
+    "react-hook-form": "^7.43.0",
     "src": "link:./src",
     "store": "link:./src/common/store",
     "ts-import": "^4.0.0-beta.10"
@@ -47,7 +47,7 @@
     "eslint-import-resolver-typescript": "^3.5.3",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-unicorn": "^45.0.2",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   },
   "scripts": {
     "dev": "yarn next",

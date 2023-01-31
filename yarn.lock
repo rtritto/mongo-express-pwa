@@ -7044,11 +7044,11 @@ __metadata:
     pages: "link:./pages"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
-    react-hook-form: "npm:^7.42.1"
+    react-hook-form: "npm:^7.43.0"
     src: "link:./src"
     store: "link:./src/common/store"
     ts-import: "npm:^4.0.0-beta.10"
-    typescript: "npm:^4.9.4"
+    typescript: "npm:^4.9.5"
   languageName: unknown
   linkType: soft
 
@@ -7800,12 +7800,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.42.1":
-  version: 7.42.1
-  resolution: "react-hook-form@npm:7.42.1"
+"react-hook-form@npm:^7.43.0":
+  version: 7.43.0
+  resolution: "react-hook-form@npm:7.43.0"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18
-  checksum: 96b91895b1ff47b14b849d49e81a8bbc3cfae17340504c56978e7ec9b57879f8c9f0993953e4dae6619979bd46fe0e0c2711642cad2372fb72583628dead6946
+  checksum: a9bca8dc4ab8f3ca8402ed82c8aaeaef1d9a6dd7f8817a790b6788437a371183fcdba1121d681879c788f8b1537d5ca7e4b1c1bb1c608b9148cb2c3376d5dd64
   languageName: node
   linkType: hard
 
@@ -9000,23 +9000,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.9.4":
-  version: 4.9.4
-  resolution: "typescript@npm:4.9.4"
+"typescript@npm:^4.9.5":
+  version: 4.9.5
+  resolution: "typescript@npm:4.9.5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: b142d5e50785d0e5055771e4d9e712b01be58985ff29be3d3acc64f0fddd5fd8ade8b28583ba502f2565783c23bd5b509c5abcc1a93a2d7d4f05b8e4ee731fc9
+  checksum: 550217a465c00b1d7ef0e0ddc3a6a0b2ae1fd7c1b9f53cde5a1cfe56aa457c7a43fa83792c1b98b2185d2156d0467c9ad6f6600515ad4f4fc2acee54c4bd320e
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^4.9.4#optional!builtin<compat/typescript>":
-  version: 4.9.4
-  resolution: "typescript@patch:typescript@npm%3A4.9.4#optional!builtin<compat/typescript>::version=4.9.4&hash=23ec76"
+"typescript@patch:typescript@npm%3A^4.9.5#optional!builtin<compat/typescript>":
+  version: 4.9.5
+  resolution: "typescript@patch:typescript@npm%3A4.9.5#optional!builtin<compat/typescript>::version=4.9.5&hash=23ec76"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 8944d2310e83395ea5b50a4f3d12fbd8f834a9fd8b0b9a2316f24e78890b04d0015a434d8d825a84971caf3c4bd0d52c79f38d3dce80e05a1892dc9f7fa611f8
+  checksum: 09f82f25664c79d5cccc389502175093becf51d691b443c79294303681544a399fb42f8384b535ddeba48cadb64e7d14b42de40d8ade4418bb43174989dd8685
   languageName: node
   linkType: hard
 
