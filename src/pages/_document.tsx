@@ -1,22 +1,34 @@
-import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document.js'
 import createEmotionServer from '@emotion/server/create-instance'
+import Document, { Html, Head, Main, NextScript } from 'next/document.js'
+import type { DocumentContext } from 'next/document.js'
 
 import createEmotionCache from 'common/createEmotionCache.mts'
-import Theme, { roboto } from 'common/Theme.mts'
+import Theme, /* { roboto } */ from 'common/Theme.mts'
 
+// _document is only rendered on the server side and not on the client side
+// Event handlers like onClick can't be added to this file
+// Allow to inject
+
+// server side rendering for material-ui https://mui.com/material-ui/guides/server-rendering
 export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="en" /* className={roboto.className} */>
         <Head>
           {/* PWA primary color */}
+
           <meta name="theme-color" content={Theme.palette.primary.main} />
+
           <link rel="shortcut icon" href="/favicon.ico" />
+
           <meta name="emotion-insertion-point" content="" />
+
           {this.props.emotionStyleTags}
         </Head>
+
         <body>
           <Main />
+
           <NextScript />
         </body>
       </Html>

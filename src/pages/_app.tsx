@@ -29,6 +29,7 @@ const MyApp: App = ({
   emotionCache = clientSideEmotionCache,
   pageProps
 }: MyAppProps) => {
+  // ThemeProvider makes the theme available down the React tree thanks to React context.
   // const router = useRouter()
 
   // useEffect(() => {
@@ -60,8 +61,10 @@ const MyApp: App = ({
         {/* <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head> */}
+
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+
           <CssBaseline enableColorScheme />
 
           <NavBar
@@ -71,9 +74,9 @@ const MyApp: App = ({
             }}
           />
 
-          <AlertMessages />
-
           <Component {...pageProps} />
+
+          <AlertMessages />
         </ThemeProvider>
       </CacheProvider>
     </Provider>
