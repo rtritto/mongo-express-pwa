@@ -6379,46 +6379,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jotai@npm:^1.13.1":
-  version: 1.13.1
-  resolution: "jotai@npm:1.13.1"
+"jotai@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "jotai@npm:2.0.0"
   peerDependencies:
-    "@babel/core": "*"
-    "@babel/template": "*"
-    jotai-devtools: "*"
-    jotai-immer: "*"
-    jotai-optics: "*"
-    jotai-redux: "*"
-    jotai-tanstack-query: "*"
-    jotai-urql: "*"
-    jotai-valtio: "*"
-    jotai-xstate: "*"
-    jotai-zustand: "*"
-    react: ">=16.8"
+    react: ">=17.0.0"
   peerDependenciesMeta:
-    "@babel/core":
+    react:
       optional: true
-    "@babel/template":
-      optional: true
-    jotai-devtools:
-      optional: true
-    jotai-immer:
-      optional: true
-    jotai-optics:
-      optional: true
-    jotai-redux:
-      optional: true
-    jotai-tanstack-query:
-      optional: true
-    jotai-urql:
-      optional: true
-    jotai-valtio:
-      optional: true
-    jotai-xstate:
-      optional: true
-    jotai-zustand:
-      optional: true
-  checksum: 2c11c2afa917439b0c1ae0dfa5ed9620e957687c20120fc42e94013b87bf863fd648ec52017ca2c68859ac1987841e57fbd6e91ff0a7f23164558a9cf5297f9e
+  checksum: f1187a535b5969280592e5afaf6961bd589f65eb84269b3e8443b0bc13ec4822f2b008acd00282ae7094783ce31040a312fb39e3557d730bf384506e7f2a0c4e
   languageName: node
   linkType: hard
 
@@ -7034,7 +7003,7 @@ __metadata:
     eslint-plugin-import: "npm:^2.27.5"
     eslint-plugin-unicorn: "npm:^45.0.2"
     fastest-validator: "npm:^1.16.0"
-    jotai: "npm:^1.13.1"
+    jotai: "npm:^2.0.0"
     lib: "link:./src/lib"
     middlewares: "link:./src/middlewares"
     mongodb: "npm:^4.13.0"

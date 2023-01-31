@@ -52,7 +52,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.27.5"],\
           ["eslint-plugin-unicorn", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:45.0.2"],\
           ["fastest-validator", "npm:1.16.0"],\
-          ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:1.13.1"],\
+          ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.0.0"],\
           ["lib", "link:./src/lib::locator=mongo-express-pwa%40workspace%3A."],\
           ["middlewares", "link:./src/middlewares::locator=mongo-express-pwa%40workspace%3A."],\
           ["mongodb", "npm:4.13.0"],\
@@ -8585,66 +8585,22 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["jotai", [\
-      ["npm:1.13.1", {\
-        "packageLocation": "../../Users/Computer/AppData/Local/Yarn/Berry/cache/jotai-npm-1.13.1-1a4b1cff07-9.zip/node_modules/jotai/",\
+      ["npm:2.0.0", {\
+        "packageLocation": "../../Users/Computer/AppData/Local/Yarn/Berry/cache/jotai-npm-2.0.0-0d46022aff-9.zip/node_modules/jotai/",\
         "packageDependencies": [\
-          ["jotai", "npm:1.13.1"]\
+          ["jotai", "npm:2.0.0"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:1.13.1", {\
-        "packageLocation": "./.yarn/__virtual__/jotai-virtual-bfe1c40657/3/Users/Computer/AppData/Local/Yarn/Berry/cache/jotai-npm-1.13.1-1a4b1cff07-9.zip/node_modules/jotai/",\
+      ["virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.0.0", {\
+        "packageLocation": "./.yarn/__virtual__/jotai-virtual-4c0a91fc95/3/Users/Computer/AppData/Local/Yarn/Berry/cache/jotai-npm-2.0.0-0d46022aff-9.zip/node_modules/jotai/",\
         "packageDependencies": [\
-          ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:1.13.1"],\
-          ["@babel/core", null],\
-          ["@babel/template", null],\
-          ["@types/babel__core", null],\
-          ["@types/babel__template", null],\
-          ["@types/jotai-devtools", null],\
-          ["@types/jotai-immer", null],\
-          ["@types/jotai-optics", null],\
-          ["@types/jotai-redux", null],\
-          ["@types/jotai-tanstack-query", null],\
-          ["@types/jotai-urql", null],\
-          ["@types/jotai-valtio", null],\
-          ["@types/jotai-xstate", null],\
-          ["@types/jotai-zustand", null],\
+          ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.0.0"],\
           ["@types/react", "npm:18.0.27"],\
-          ["jotai-devtools", null],\
-          ["jotai-immer", null],\
-          ["jotai-optics", null],\
-          ["jotai-redux", null],\
-          ["jotai-tanstack-query", null],\
-          ["jotai-urql", null],\
-          ["jotai-valtio", null],\
-          ["jotai-xstate", null],\
-          ["jotai-zustand", null],\
           ["react", "npm:18.2.0"]\
         ],\
         "packagePeers": [\
-          "@babel/core",\
-          "@babel/template",\
-          "@types/babel__core",\
-          "@types/babel__template",\
-          "@types/jotai-devtools",\
-          "@types/jotai-immer",\
-          "@types/jotai-optics",\
-          "@types/jotai-redux",\
-          "@types/jotai-tanstack-query",\
-          "@types/jotai-urql",\
-          "@types/jotai-valtio",\
-          "@types/jotai-xstate",\
-          "@types/jotai-zustand",\
           "@types/react",\
-          "jotai-devtools",\
-          "jotai-immer",\
-          "jotai-optics",\
-          "jotai-redux",\
-          "jotai-tanstack-query",\
-          "jotai-urql",\
-          "jotai-valtio",\
-          "jotai-xstate",\
-          "jotai-zustand",\
           "react"\
         ],\
         "linkType": "HARD"\
@@ -9328,7 +9284,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-import", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.27.5"],\
           ["eslint-plugin-unicorn", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:45.0.2"],\
           ["fastest-validator", "npm:1.16.0"],\
-          ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:1.13.1"],\
+          ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.0.0"],\
           ["lib", "link:./src/lib::locator=mongo-express-pwa%40workspace%3A."],\
           ["middlewares", "link:./src/middlewares::locator=mongo-express-pwa%40workspace%3A."],\
           ["mongodb", "npm:4.13.0"],\

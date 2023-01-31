@@ -19,7 +19,7 @@
     "configs": "link:./src/configs",
     "errors": "link:./src/lib/errors",
     "fastest-validator": "^1.16.0",
-    "jotai": "^1.13.1",
+    "jotai": "^2.0.0",
     "lib": "link:./src/lib",
     "middlewares": "link:./src/middlewares",
     "mongodb": "^4.13.0",

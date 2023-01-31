@@ -2,7 +2,7 @@
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { CacheProvider } from '@emotion/react'
-import { Provider } from 'jotai'
+import { createStore, Provider } from 'jotai'
 import type { EmotionCache } from '@emotion/cache'
 import type { AppProps, AppContext } from 'next/app.js'
 
@@ -14,6 +14,8 @@ import { selectedCollectionState, selectedDatabaseState } from 'store/globalAtom
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
+
+const store = createStore()
 
 type App = typeof import('next/app.js').default
 interface MyAppProps extends AppProps {
@@ -48,15 +50,10 @@ const MyApp: App = ({
   //     router.events.off('routeChangeStart', handleRouteChange)
   //   }
   // }, [])
-
+  store.set(selectedCollectionState, collectionName)
+  store.set(selectedDatabaseState, dbName)
   return (
-    <Provider
-      key="init"
-      initialValues={[
-        [selectedCollectionState, collectionName],
-        [selectedDatabaseState, dbName]
-      ]}
-    >
+    <Provider key="init" store={store}>
       <CacheProvider value={emotionCache}>
         {/* <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
