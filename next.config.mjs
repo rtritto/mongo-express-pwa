@@ -6,8 +6,8 @@ import { loadSync } from 'ts-import'
 
 const loadOptions = { compiledJsExtension: '.cjs' }
 
-const { default: configDefault } = loadSync('config.default.mts', loadOptions)
-loadSync('src/middlewares/db.mts', loadOptions)
+const { default: configDefault } = loadSync('./config.default.mts', loadOptions)
+loadSync('./src/middlewares/db.mts', loadOptions)
 
 // TODO handle custom config
 const config = configDefault
