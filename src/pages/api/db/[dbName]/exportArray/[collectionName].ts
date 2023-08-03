@@ -1,18 +1,19 @@
 import { toJsonString } from 'lib/bson.ts'
 import { getQuery, getSort } from 'lib/queries.ts'
 import { checkDatabase, checkCollection } from 'lib/validations.ts'
+import { mongo } from 'middlewares/db.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {  // exportColArray
     const { collectionName, dbName } = req.query as Params
-    checkDatabase(dbName)
-    checkCollection(dbName, collectionName)
+    const client = await mongo.connect()
+    checkDatabase(dbName, Object.keys(mongo.connections))
+    checkCollection(collectionName, mongo.collections[dbName])
 
     // TODO ? change to getQueryOptions
     const queryOptions = { ...req.query.sort && { sort: getSort(req.query.sort) } }
     const query = getQuery(req.query)
 
-    const client = await global.mongo.connect()
     const items = await client.db(dbName).collection(collectionName).find(query, queryOptions).toArray()
     res.setHeader(
       'Content-Disposition',

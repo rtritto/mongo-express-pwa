@@ -1,6 +1,6 @@
 // https://github.com/vercel/next.js/discussions/15054#discussioncomment-658138
 class GlobalRef<T> {
-  private readonly sym: symbol;
+  private readonly sym: symbol
 
   constructor(uniqueName: string) {
     this.sym = Symbol.for(uniqueName)

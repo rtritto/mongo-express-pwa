@@ -50,8 +50,8 @@ const MyApp: App = ({
   //     router.events.off('routeChangeStart', handleRouteChange)
   //   }
   // }, [])
-  store.set(selectedCollectionState, collectionName)
-  store.set(selectedDatabaseState, dbName)
+  // store.set(selectedCollectionState, collectionName)
+  // store.set(selectedDatabaseState, dbName)
   return (
     <Provider key="init" store={store}>
       <CacheProvider value={emotionCache}>
@@ -81,14 +81,14 @@ const MyApp: App = ({
 }
 
 MyApp.getInitialProps = async ({ router /* or ctx.req */ }: AppContext): Promise<MyAppProps> => {
-  // if (global.mongo.adminDb) {
-  //   const rawInfo = await global.mongo.adminDb.serverStatus()
+  // await mongo.connect()
+  // if (mongo.adminDb) {
+  //   const rawInfo = await mongo.adminDb.serverStatus()
   //   const info = mapMongoDBInfo(rawInfo)
-  //   // global.global.info = info
+  //   // global.info = info
 
   //   return { info }
   // }
-  await global.mongo.connect()
 
   return {
     ...'dbName' in router.query && { dbName: router.query.dbName },

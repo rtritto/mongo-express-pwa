@@ -1,20 +1,21 @@
 import { validateDatabaseReqBody } from 'lib/validationsReq.ts'
 import { withExceptionHandler } from 'middlewares/api.ts'
+import { mongo } from 'middlewares/db.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {  // addDatabase
     await validateDatabaseReqBody(req.body)
     const { database } = req.body
 
-    const client = await global.mongo.connect()
-    const ndb = client.db(database)
+    const client = await mongo.connect()
+    const cratedDb = client.db(database)
 
-    await ndb.createCollection('delete_me').catch((error) => {
+    await cratedDb.createCollection('delete_me').catch((error) => {
       console.debug(error)
       throw new Error(`Could not create collection. ${error.message}`)
     })
-    await global.mongo.updateDatabases()
-    // await ndb.dropCollection('delete_me')/* .then(() => {
+    // await mongo.updateDatabases()  // DEPRECATED Not needed because mongo.connect is always called
+    // await cratedDb.dropCollection('delete_me')/* .then(() => {
     //   res.redirect(res.locals.baseHref + 'db/' + name)
     // }) */.catch((error) => {
     //   console.debug(error)

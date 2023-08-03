@@ -1,7 +1,7 @@
 import { Box, Container, Divider, Typography } from '@mui/material'
 import { useAtom } from 'jotai'
 import { useHydrateAtoms } from 'jotai/utils'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type ComponentType } from 'react'
 import type { GetServerSideProps } from 'next'
 import Head from 'next/head.js'
 
@@ -10,9 +10,10 @@ import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
 import { mapServerStatus } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset } from 'lib/GlobalRef.ts'
 import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
+import { mongo } from 'middlewares/db.ts'
 
 interface IndexProps {
-  databases: Mongo['databases']
+  initDatabases: Mongo['databases']
   messageError?: string
   messageSuccess?: string
   options: {
@@ -23,23 +24,23 @@ interface IndexProps {
   title: string
 }
 
-const Index = ({
-  databases: databasesInit,
+const Index: ComponentType<IndexProps> = ({
+  initDatabases,
   messageError,
   messageSuccess,
   options: { noDelete, readOnly },
   serverStatus,
   title
-}: IndexProps) => {
-  const { current: initialValues } = useRef([[databasesState, databasesInit]])
+}) => {
+  const { current: initialValues } = useRef([[databasesState, initDatabases]] as const)
   useHydrateAtoms(initialValues)
   const [databases, setDatabases] = useAtom(databasesState)
   const [error, setError] = useAtom(messageErrorState)
   const [success, setSuccess] = useAtom(messageSuccessState)
 
   useEffect(() => {
-    setDatabases(databasesInit)
-  }, [databasesInit, setDatabases])
+    setDatabases(initDatabases)
+  }, [initDatabases, setDatabases])
   // Show alerts if messages exist
   useEffect(() => {
     if (error !== messageError) {
@@ -86,17 +87,18 @@ const Index = ({
 }
 
 export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
+  await mongo.connect()
   // Get messages from redirect
   const messageError = getGlobalValueAndReset('messageError')
   const messageSuccess = getGlobalValueAndReset('messageSuccess')
 
   const props: IndexProps = {
-    databases: global.mongo.databases,
+    initDatabases: mongo.databases,
     ...messageError !== undefined && { messageError },
     ...messageSuccess !== undefined && { messageSuccess },
     options: process.env.config.options,
-    ...global.mongo.adminDb !== null && {
-      serverStatus: mapServerStatus(await global.mongo.adminDb.serverStatus())
+    ...mongo.adminDb !== null && {
+      serverStatus: mapServerStatus(await mongo.adminDb.serverStatus() as ServerStatus)
     },
     title: 'Home - Mongo Express'
   }

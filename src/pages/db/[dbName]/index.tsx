@@ -10,6 +10,7 @@ import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
 import { mapDatabaseStats } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
 import { collectionsState, databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
+import { mongo } from 'middlewares/db.ts'
 
 interface DatabasePageProps {
   collections: Mongo['collections']
@@ -46,7 +47,7 @@ const DatabasePage = ({
   const { current: initialValues } = useRef([
     [collectionsState, collectionsInit],
     [databasesState, databasesInit]
-  ])
+  ] as const)
   useHydrateAtoms(initialValues)
   const [collections, setCollections] = useAtom(collectionsState)
   const setDatabases = useSetAtom(databasesState)
@@ -106,18 +107,19 @@ const DatabasePage = ({
 
 export const getServerSideProps: GetServerSideProps<DatabasePageProps, Params> = async ({ params }) => {
   const { dbName } = params as Params
+  await mongo.connect()
 
   // Make sure database exists
-  if (!(dbName in global.mongo.connections)) {
+  if (!(dbName in mongo.connections)) {
     setGlobalValue('messageError', `Database "${dbName}" not found!`)
     return getRedirect()
   }
   // TODO ???
   // global.req.dbName = dbName
-  // global.req.db = global.mongo.connections[dbName].db
+  // global.req.db = mongo.connections[dbName].db
 
   try {
-    await global.mongo.updateCollections(global.mongo.connections[dbName])
+    await mongo.updateCollections(mongo.connections[dbName])
   } catch (error) {
     console.error(error)
     setGlobalValue('messageError', `Could not refresh collections. ${error}`)
@@ -126,7 +128,7 @@ export const getServerSideProps: GetServerSideProps<DatabasePageProps, Params> =
 
   let databaseStats
   try {
-    const dbStats = await global.mongo.connections[dbName].db.stats()
+    const dbStats = await mongo.connections[dbName].db.stats()
     databaseStats = mapDatabaseStats(dbStats)
   } catch (error) {
     console.error(error)
@@ -140,11 +142,11 @@ export const getServerSideProps: GetServerSideProps<DatabasePageProps, Params> =
 
   return {
     props: {
-      collections: global.mongo.collections,
-      databases: global.mongo.databases,
+      collections: mongo.collections,
+      databases: mongo.databases,
       databaseStats,
       dbName,
-      // TODO grids: global.mongo.gridFSBuckets[dbName],
+      // TODO grids: mongo.gridFSBuckets[dbName],
       ...messageError !== undefined && { messageError },
       ...messageSuccess !== undefined && { messageSuccess },
       options: process.env.config.options,

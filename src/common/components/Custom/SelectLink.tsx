@@ -1,6 +1,6 @@
 import { FormControl, Select, SelectChangeEvent } from '@mui/material'
 import { useAtom } from 'jotai'
-import type { Atom } from 'jotai'
+import type { PrimitiveAtom } from 'jotai'
 
 import CustomLink from 'components/Custom/CustomLink.tsx'
 
@@ -8,11 +8,11 @@ interface SelectLinkProps {
   baseUrl: string
   entities: string[]
   label: string
-  selectedState: Atom<string>
+  selectedState: PrimitiveAtom<string>
 }
 
 const SelectLink = ({ baseUrl, entities = [], label, selectedState }: SelectLinkProps) => {
-  const [selected, setSelected] = useAtom<string>(selectedState)
+  const [selected, setSelected] = useAtom(selectedState)
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelected(event.target.value)

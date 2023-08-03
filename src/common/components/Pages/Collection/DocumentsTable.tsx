@@ -1,10 +1,11 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { JsonViewer } from '@textea/json-viewer'
 import { useHydrateAtoms } from 'jotai/utils'
+import { useAtomValue } from 'jotai'
 import { useRouter } from 'next/router.js'
+import { useRef } from 'react'
 
 import DeleteDialogSimple from 'components/Custom/DeleteDialogSimple.tsx'
-import { useAtomValue } from 'jotai'
 import { columnsState, documentsState } from 'src/common/store/globalAtoms.ts'
 
 interface DocumentsTableProps {
@@ -31,7 +32,6 @@ const getTableCells = (columns: string[], document: MongoDocument, index: number
           displayObjectSize={false}
           enableClipboard={false}
           indentWidth={2}
-          props={{ inspect: false }}
           maxDisplayLength={3}
           rootName={false}
           theme="dark"
@@ -66,10 +66,11 @@ const DocumentsTable = ({
   deleteUrl,
   TableContainerProps = {}
 }: DocumentsTableProps) => {
-  useHydrateAtoms([
+  const { current: initialValues } = useRef([
     [columnsState, columnsInit],
     [documentsState, documentsInit]
-  ])
+  ] as const)
+  useHydrateAtoms(initialValues)
   const router = useRouter()
   const columns = useAtomValue<string[]>(columnsState)
   const documents = useAtomValue<MongoDocument[]>(documentsState)

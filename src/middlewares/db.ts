@@ -15,7 +15,7 @@ let mongoClient: MongoClient
 
 // if (!connectionData) {
 // connectionData = 
-global.mongo = {
+export const mongo: Mongo = {
   clients: [],
   collections: {},
   connections: {},

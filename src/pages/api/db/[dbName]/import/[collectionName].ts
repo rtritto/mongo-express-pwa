@@ -2,6 +2,7 @@ import { EJSON } from 'bson'
 
 import { checkDatabase, checkCollection } from 'lib/validations.ts'
 import multipartDataParser from 'lib/parsers/multipart-data-parser.ts'
+import { mongo } from 'middlewares/db.ts'
 
 const ALLOWED_MIME_TYPES = new Set([
   'text/csv',
@@ -11,8 +12,9 @@ const ALLOWED_MIME_TYPES = new Set([
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {  // importCollection
     const { collectionName, dbName } = req.query as Params
-    checkDatabase(dbName)
-    checkCollection(dbName, collectionName)
+    const client = await mongo.connect()
+    checkDatabase(dbName, Object.keys(mongo.connections))
+    checkCollection(collectionName, mongo.collections[dbName])
 
     const files = multipartDataParser(req)
     if (files.length === 0) {
@@ -41,7 +43,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     }
 
-    const client = await global.mongo.connect()
     const stats = await client.db(dbName).collection(collectionName).insertMany(docs)
 
     res.end(`${stats.insertedCount} document(s) inserted`)

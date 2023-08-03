@@ -10,7 +10,7 @@ interface DatabaseStatsProps {
 }
 
 const DatabaseStats = ({ databaseStats: databaseStatsInit }: DatabaseStatsProps) => {
-  const { current: initialValues } = useRef([[databaseStatsState, databaseStatsInit]])
+  const { current: initialValues } = useRef([[databaseStatsState, databaseStatsInit]] as const)
   useHydrateAtoms(initialValues)
   const setDatabaseStats = useSetAtom(databaseStatsState)
 

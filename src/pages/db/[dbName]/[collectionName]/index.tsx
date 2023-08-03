@@ -4,16 +4,14 @@ import { useHydrateAtoms } from 'jotai/utils'
 import { useEffect, useRef, useState } from 'react'
 import type { GetServerSideProps } from 'next'
 import Head from 'next/head.js'
-import { useRouter } from 'next/router.js'
 
 import StatsTable from 'components/Custom/StatsTable.tsx'
 import DeleteDocuments from 'components/Pages/Collection/DeleteDocuments.tsx'
 import IndexesTable from 'components/Pages/Collection/IndexesTable.tsx'
-import DocumentsTable from 'components/Pages/Collection/DocumentsTable.tsx'
-import PaginationBox from 'components/Pages/Collection/PaginationBox.tsx'
+import ShowDocuments from 'components/Pages/Collection/ShowDocuments.tsx'
 import RenameCollection from 'components/Pages/Collection/RenameCollection.tsx'
 import Tools from 'components/Pages/Collection/Tools.tsx'
-import { EP_API_DATABASE_COLLECTION, EP_DATABASE } from 'configs/endpoints.ts'
+import { EP_DATABASE } from 'configs/endpoints.ts'
 import * as bson from 'lib/bson.ts'
 import {
   getComplexAggregatePipeline, getLastPage, getQuery, getQueryOptions,
@@ -28,6 +26,7 @@ import {
   documentCountState, selectedCollectionState, messageErrorState,
   messageSuccessState
 } from 'store/globalAtoms.ts'
+import { mongo } from 'middlewares/db.ts'
 
 const getRedirect = (dbName: string): { redirect: Redirect } => ({
   redirect: {
@@ -68,11 +67,11 @@ const CollectionPage = ({
   collectionStats,
   columns: columnsInit,
   count,
-  currentPage: currentPageInit,
+  currentPage,
   documentsJS: documentsInit,
   // documentsString,
   indexes,
-  lastPage: lastPageInit,
+  lastPage,
   limit,
   messageError,
   messageSuccess,
@@ -86,9 +85,9 @@ const CollectionPage = ({
     [columnsState, columnsInit],
     [documentsState, documentsInit],
     [documentCountState, count]
-  ])
+  ] as const)
   useHydrateAtoms(initialValues)
-  const router = useRouter()
+
   const setCollections = useSetAtom(collectionsState)
   const setDatabases = useSetAtom(databasesState)
   const [columns, setColumns] = useAtom(columnsState)
@@ -97,8 +96,6 @@ const CollectionPage = ({
   const collectionName = useAtomValue(selectedCollectionState)
   const [error, setError] = useAtom(messageErrorState)
   const [success, setSuccess] = useAtom(messageSuccessState)
-  const [currentPage, setCurrentPage] = useState(currentPageInit)
-  const [lastPage, setLastPage] = useState(lastPageInit)
 
   useEffect(() => {
     setCollections(collectionsInit)
@@ -124,53 +121,7 @@ const CollectionPage = ({
     }
   }, [error, success, messageError, messageSuccess, setError, setSuccess])
 
-  const handleClickPage = async (pageClicked: number, limit: number) => {
-    const queryParams = `?${new URLSearchParams({
-      limit: limit.toString(),
-      skip: ((pageClicked - 1) * limit).toString()
-    })}`
-    await fetch(`${EP_API_DATABASE_COLLECTION(dbName, collectionName)}${queryParams}`, {
-      method: 'GET'
-    }).then(async (res) => {
-      if (res.ok === true) {
-        const documentsNew = await res.json()
 
-        setDocuments(documentsNew)
-        setColumns(() => {
-          const columnsNew = new Set<string>()
-          for (const document of documentsNew) {
-            for (const field in document) {
-              columnsNew.add(field)
-            }
-          }
-          return [...columnsNew]
-        })
-        await router.push({
-          pathname: router.pathname,
-          query: {
-            ...router.query,
-            page: pageClicked.toString()
-          }
-        }, undefined, { shallow: true })
-      } else {
-        const { error } = await res.json()
-        setError(error)
-      }
-    }).catch((error) => { setError(error.message) })
-  }
-
-  const PaginationBoxComponent = (lastPage !== 1) && (
-    <PaginationBox  // load Component when totalPage > 1
-      currentPage={currentPage}
-      lastPage={lastPage}
-      onChange={(event, pageClicked: number) => {
-        if (currentPage !== pageClicked) {
-          handleClickPage(pageClicked, limit)
-          setCurrentPage(pageClicked)
-        }
-      }}
-    />
-  )
 
   return (
     <div>
@@ -211,27 +162,22 @@ const CollectionPage = ({
 
         {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}
 
-        {documents.length === 0 ? (
-          <p>No documents found.</p>
-        ) : (
-          <>
-            {PaginationBoxComponent}
-
-            <DocumentsTable
-              columns={columns}
-              deleteUrl={EP_API_DATABASE_COLLECTION(dbName, collectionName)}
-              documents={documents}
-              show={{
-                delete: readOnly === false && noDelete === false
-                  && collectionName !== 'system.indexes'
-                  && columns.includes('_id')
-              }}
-              TableContainerProps={{ sx: lastPage !== 1 && { margin: 0 } }} // remove margin botton
-            />
-
-            {PaginationBoxComponent}
-          </>
-        )}
+        {/* {documents.length === 0
+          ? <p>No documents found.</p>
+          : <ShowDocuments
+            columns={columns}
+            currentPage={currentPage}
+            collection={collectionName}
+            database={dbName}
+            documents={documents}
+            lastPage={lastPage}
+            limit={limit}
+            show={{
+              delete: readOnly === false && noDelete === false
+                && collectionName !== 'system.indexes'
+                && columns.includes('_id')
+            }}
+          />} */}
 
         {readOnly === false && <RenameCollection collectionName={collectionName} dbName={dbName} />}
 
@@ -253,25 +199,26 @@ const CollectionPage = ({
 
 export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params> = async ({ params, query }) => {
   const { collectionName, dbName } = params as Params
+  const client = await mongo.connect()
 
   // Make sure database exists
-  if (!(dbName in global.mongo.connections)) {
+  if (!(dbName in mongo.connections)) {
     setGlobalValue('messageError', `Database "${dbName}" not found!`)
     return getRedirect(dbName)
   }
   // Make sure collection exists
-  if (!global.mongo.collections[dbName].includes(collectionName)) {
+  if (!mongo.collections[dbName].includes(collectionName)) {
     setGlobalValue('messageError', `Collection "${collectionName}" not found!`)
     return getRedirect(dbName)
   }
-  const collection = global.mongo.connections[dbName].db.collection(collectionName)
+  const collection = mongo.connections[dbName].db.collection(collectionName)
   if (collection === null) {
     setGlobalValue('messageError', `Collection "${collectionName}" not found!`)
     return getRedirect(dbName)
   }
   // TODO ???
   // global.req.collectionName = collectionName
-  // res.locals.gridFSBuckets = colsToGrid(global.mongo.collections[dbName])
+  // res.locals.gridFSBuckets = colsToGrid(mongo.collections[dbName])
   // req.collection = coll
 
   try {
@@ -350,8 +297,8 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
     return {
       props: {
         // ctx,
-        collections: global.mongo.collections,
-        databases: global.mongo.databases,
+        collections: mongo.collections,
+        databases: mongo.databases,
         collectionStats,
         columns: [...columns],  // All used columns
         count,  // total number of docs returned by the query

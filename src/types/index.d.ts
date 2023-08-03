@@ -140,7 +140,7 @@ type Connections = {
   [key: string]: Connection
 }
 
-// type Mongo = import('middlewares/db.mts').Mongo
+// type Mongo = import('middlewares/db.ts').Mongo
 type Mongo = {
   clients: ClientInfo[]
   collections: Collections

@@ -1,17 +1,18 @@
 import { checkCollection, checkDatabase, checkDocument, checkOption } from 'lib/validations.ts'
 import { withExceptionHandler } from 'middlewares/api.ts'
 import { buildId } from 'lib/utils.ts'
+import { mongo } from 'middlewares/db.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'PUT') {  // updateDocument
     const { collectionName, dbName, documentId } = req.query as Params
-    checkDatabase(dbName)
-    checkCollection(dbName, collectionName)
+    const client = await mongo.connect()
+    checkDatabase(dbName, Object.keys(mongo.connections))
+    checkCollection(collectionName, mongo.collections[dbName])
 
     const _id = buildId(documentId, req.query)
     const filter = { _id }
 
-    const client = await global.mongo.connect()
     const collection = client.db(dbName).collection(collectionName)
 
     const doc = await collection.findOne(filter)
@@ -40,12 +41,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     checkOption('readOnly', true)
     checkOption('noDelete', true)
     const { collectionName, dbName, documentId } = req.query as Params
-    checkDatabase(dbName)
-    checkCollection(dbName, collectionName)
+    const client = await mongo.connect()
+    checkDatabase(dbName, Object.keys(mongo.connections))
+    checkCollection(collectionName, mongo.collections[dbName])
     const _id = buildId(documentId, req.query)
     const filter = { _id }
 
-    const client = await global.mongo.connect()
     const collection = client.db(dbName).collection(collectionName)
 
     const doc = await collection.findOne(filter)

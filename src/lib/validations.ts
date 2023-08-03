@@ -39,14 +39,14 @@ export const isValidDatabaseName = (name = '') => {
   return isValidDatabaseNameRegex(name)
 }
 
-export const checkDatabase = (dbName: string) => {
-  if (!(dbName in global.mongo.connections)) {
+export const checkDatabase = (dbName: string, databases: string[]) => {
+  if (!(dbName in databases)) {
     throw new Error(`Database "${dbName}" not found!`)
   }
 }
 
-export const checkCollection = (dbName: string, collectionName: string) => {
-  if (!global.mongo.collections[dbName].includes(collectionName)) {
+export const checkCollection = (collectionName: string, collections: string[]) => {
+  if (!collections.includes(collectionName)) {
     throw new Error(`Collection "${collectionName}" not found!`)
   }
 }
