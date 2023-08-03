@@ -53,7 +53,6 @@ const RAW_RUNTIME_STATE =
           ["fastest-validator", "npm:1.17.0"],\
           ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.2.3"],\
           ["lib", "link:./src/lib::locator=mongo-express-pwa%40workspace%3A."],\
-          ["middlewares", "link:./src/middlewares::locator=mongo-express-pwa%40workspace%3A."],\
           ["mongodb", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:5.7.0"],\
           ["mongodb-query-parser", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:3.1.2"],\
           ["next", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:13.4.12"],\
@@ -8217,16 +8216,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["middlewares", [\
-      ["link:./src/middlewares::locator=mongo-express-pwa%40workspace%3A.", {\
-        "packageLocation": "./src/middlewares/",\
-        "packageDependencies": [\
-          ["middlewares", "link:./src/middlewares::locator=mongo-express-pwa%40workspace%3A."]\
-        ],\
-        "linkType": "SOFT",\
-        "discardFromLookup": true\
-      }]\
-    ]],\
     ["mime-db", [\
       ["npm:1.52.0", {\
         "packageLocation": "../../Users/Computer/AppData/Local/Yarn/Berry/cache/mime-db-npm-1.52.0-b5371d6fd2-10.zip/node_modules/mime-db/",\
@@ -8421,7 +8410,6 @@ const RAW_RUNTIME_STATE =
           ["fastest-validator", "npm:1.17.0"],\
           ["jotai", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:2.2.3"],\
           ["lib", "link:./src/lib::locator=mongo-express-pwa%40workspace%3A."],\
-          ["middlewares", "link:./src/middlewares::locator=mongo-express-pwa%40workspace%3A."],\
           ["mongodb", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:5.7.0"],\
           ["mongodb-query-parser", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:3.1.2"],\
           ["next", "virtual:302c24e30b76e033969df64a37d0536dba543fee9cc5c5d7be1591268fefded56e3413ee7ff5f5477a7c2f59e0e37c76de07082b9f65bb12daf2b0cece779d63#npm:13.4.12"],\

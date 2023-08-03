@@ -1,7 +1,6 @@
 import { checkDatabase } from 'lib/validations.ts'
 import { validateCollectionReqBody } from 'lib/validationsReq.ts'
-import { withExceptionHandler } from 'middlewares/api.ts'
-import { mongo } from 'middlewares/db.ts'
+import { mongo, withExceptionHandler } from 'src/lib/db.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {  // addCollection

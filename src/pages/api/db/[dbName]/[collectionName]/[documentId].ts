@@ -1,7 +1,6 @@
 import { checkCollection, checkDatabase, checkDocument, checkOption } from 'lib/validations.ts'
-import { withExceptionHandler } from 'middlewares/api.ts'
 import { buildId } from 'lib/utils.ts'
-import { mongo } from 'middlewares/db.ts'
+import { mongo, withExceptionHandler } from 'src/lib/db.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'PUT') {  // updateDocument

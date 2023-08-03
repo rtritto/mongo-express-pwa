@@ -10,7 +10,7 @@ import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
 import { mapServerStatus } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset } from 'lib/GlobalRef.ts'
 import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
-import { mongo } from 'middlewares/db.ts'
+import { mongo } from 'src/lib/db.ts'
 
 interface IndexProps {
   initDatabases: Mongo['databases']

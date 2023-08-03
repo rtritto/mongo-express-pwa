@@ -6,11 +6,11 @@ import { loadSync } from 'ts-import'
 
 const loadOptions = { compiledJsExtension: '.cjs' }
 const { default: configDefault } = loadSync('./config.default.mts', loadOptions)
-const { mongo } = loadSync('./src/middlewares/db.ts', loadOptions)
+const { mongo } = loadSync('./src/lib/db.ts', loadOptions)
 
 // TODO https://github.com/radarsu/ts-import/issues/39
 // const { default: configDefault } = await load('./config.default.mts', loadOptions)
-// await load('./src/middlewares/db.ts', loadOptions)
+// await load('./src/lib/db.ts', loadOptions)
 
 // TODO handle custom config
 const config = configDefault

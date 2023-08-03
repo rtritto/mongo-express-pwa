@@ -26,7 +26,7 @@ import {
   documentCountState, selectedCollectionState, messageErrorState,
   messageSuccessState
 } from 'store/globalAtoms.ts'
-import { mongo } from 'middlewares/db.ts'
+import { mongo } from 'src/lib/db.ts'
 
 const getRedirect = (dbName: string): { redirect: Redirect } => ({
   redirect: {

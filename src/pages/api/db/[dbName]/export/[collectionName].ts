@@ -3,7 +3,7 @@ import { EOL } from 'node:os'
 import { toJsonString } from 'lib/bson.ts'
 import { getQuery, getSort } from 'lib/queries.ts'
 import { checkDatabase, checkCollection } from 'lib/validations.ts'
-import { mongo } from 'middlewares/db.ts'
+import { mongo } from 'src/lib/db.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {  // exportCollection

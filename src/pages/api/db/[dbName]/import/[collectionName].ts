@@ -2,7 +2,7 @@ import { EJSON } from 'bson'
 
 import { checkDatabase, checkCollection } from 'lib/validations.ts'
 import multipartDataParser from 'lib/parsers/multipart-data-parser.ts'
-import { mongo } from 'middlewares/db.ts'
+import { mongo } from 'src/lib/db.ts'
 
 const ALLOWED_MIME_TYPES = new Set([
   'text/csv',
