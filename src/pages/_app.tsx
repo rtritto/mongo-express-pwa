@@ -1,9 +1,9 @@
 // import Head from 'next/head.js'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import { CacheProvider } from '@emotion/react'
-import { createStore, Provider } from 'jotai'
-import type { EmotionCache } from '@emotion/cache'
+import { CacheProvider, type EmotionCache } from '@emotion/react'
+import { Provider } from 'jotai'
+import { useHydrateAtoms } from 'jotai/utils'
 import type { AppProps, AppContext } from 'next/app.js'
 
 import createEmotionCache from 'common/createEmotionCache.mts'
@@ -15,7 +15,13 @@ import { selectedCollectionState, selectedDatabaseState } from 'store/globalAtom
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
-const store = createStore()
+const HydrateAtoms = ({ initialValues, children }: {
+  initialValues: Parameters<typeof useHydrateAtoms>[0]
+  children: React.ReactNode
+}) => {
+  useHydrateAtoms(initialValues)
+  return children
+}
 
 type App = typeof import('next/app.js').default
 interface MyAppProps extends AppProps {
@@ -50,30 +56,33 @@ const MyApp: App = ({
   //     router.events.off('routeChangeStart', handleRouteChange)
   //   }
   // }, [])
-  // store.set(selectedCollectionState, collectionName)
-  // store.set(selectedDatabaseState, dbName)
   return (
-    <Provider key="init" store={store}>
+    <Provider>
       <CacheProvider value={emotionCache}>
         {/* <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head> */}
 
         <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <HydrateAtoms initialValues={[
+            [selectedCollectionState, collectionName],
+            [selectedDatabaseState, dbName]
+          ]}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
 
-          <CssBaseline enableColorScheme />
+            <CssBaseline enableColorScheme />
 
-          <NavBar
-            show={{
-              databases: dbName !== undefined,
-              collections: collectionName !== undefined
-            }}
-          />
+            <NavBar
+              show={{
+                databases: dbName !== undefined,
+                collections: collectionName !== undefined
+              }}
+            />
 
-          <Component {...pageProps} />
+            <Component {...pageProps} />
 
-          <AlertMessages />
+            <AlertMessages />
+          </HydrateAtoms>
         </ThemeProvider>
       </CacheProvider>
     </Provider>

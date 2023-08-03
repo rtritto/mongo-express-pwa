@@ -1,4 +1,4 @@
-import { Box, Button, DialogActions, DialogContent, DialogContentText, Divider, SvgIcon } from '@mui/material'
+import { Box, Button, DialogActions, DialogContent, DialogContentText, Divider, SvgIcon, type ButtonProps } from '@mui/material'
 import { useSetAtom } from 'jotai'
 import { useState } from 'react'
 
@@ -10,14 +10,14 @@ interface DeleteDialogSimpleProps {
   additionalHandle?: () => void
   deleteUrl: string
   messages: {
-    button: string
+    button?: string
     modal: string
     success: string
   }
   query?: string
   width?: string
   ButtonProps: {
-    sx?: object
+    sx?: ButtonProps
   }
 }
 
@@ -25,8 +25,8 @@ const DeleteDialogSimple = ({ deleteUrl, messages, query, additionalHandle, Butt
   const [open, setOpen] = useState(false)
   const handleOpen = () => { setOpen(true) }
   const handleClose = () => { setOpen(false) }
-  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
-  const setError = useSetAtom<string | undefined>(messageErrorState)
+  const setSuccess = useSetAtom(messageSuccessState)
+  const setError = useSetAtom(messageErrorState)
 
   const handleDelete = async () => {
     const queryParams = query ? `?${new URLSearchParams({ query })}` : ''

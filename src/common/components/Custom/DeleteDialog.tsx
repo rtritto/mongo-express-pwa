@@ -1,5 +1,4 @@
-import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, SvgIcon, TextField, Tooltip } from '@mui/material'
-import type { OutlinedInputProps } from '@mui/material'
+import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, SvgIcon, TextField, Tooltip, type OutlinedInputProps } from '@mui/material'
 import { useState } from 'react'
 
 import { Delete } from 'common/SvgIcons.mts'

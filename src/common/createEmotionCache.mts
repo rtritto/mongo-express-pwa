@@ -1,12 +1,4 @@
-// import type { EmotionCache } from '@emotion/cache'
-
-// import createCache from '@emotion/cache'
-
-// Enable with ESM type module in package.json
-// https://github.com/emotion-js/emotion/issues/2582
-import emotionCache from '@emotion/cache'
-
-const createCache = 'default' in emotionCache ? emotionCache.default : emotionCache
+import createCache from '@emotion/cache'
 
 const isBrowser = typeof document !== 'undefined'
 

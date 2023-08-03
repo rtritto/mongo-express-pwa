@@ -1,4 +1,4 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, type TableContainerProps } from '@mui/material'
 import { JsonViewer } from '@textea/json-viewer'
 import { useHydrateAtoms } from 'jotai/utils'
 import { useAtomValue } from 'jotai'
@@ -7,18 +7,6 @@ import { useRef } from 'react'
 
 import DeleteDialogSimple from 'components/Custom/DeleteDialogSimple.tsx'
 import { columnsState, documentsState } from 'src/common/store/globalAtoms.ts'
-
-interface DocumentsTableProps {
-  columns: string[]
-  deleteUrl: string
-  documents: MongoDocument[]
-  show: {
-    delete: boolean
-  }
-  TableContainerProps: {
-    sx?: object
-  }
-}
 
 const getTableCells = (columns: string[], document: MongoDocument, index: number) => {
   return columns.map((column) => {
@@ -59,11 +47,23 @@ const getColumns = (columns: string[], showDelete: boolean) => {
   return columnsOut
 }
 
+interface DocumentsTableProps {
+  columns: string[]
+  deleteUrl: string
+  documents: MongoDocument[]
+  show: {
+    delete: boolean
+  }
+  TableContainerProps: {
+    sx?: TableContainerProps
+  }
+}
+
 const DocumentsTable = ({
   columns: columnsInit,
+  deleteUrl,
   documents: documentsInit,
   show,
-  deleteUrl,
   TableContainerProps = {}
 }: DocumentsTableProps) => {
   const { current: initialValues } = useRef([
@@ -72,8 +72,8 @@ const DocumentsTable = ({
   ] as const)
   useHydrateAtoms(initialValues)
   const router = useRouter()
-  const columns = useAtomValue<string[]>(columnsState)
-  const documents = useAtomValue<MongoDocument[]>(documentsState)
+  const columns = useAtomValue(columnsState)
+  const documents = useAtomValue(documentsState)
 
   return (
     <TableContainer component={Paper} sx={{ ...TableContainerProps.sx }}>

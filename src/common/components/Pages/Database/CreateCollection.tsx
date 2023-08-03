@@ -1,7 +1,7 @@
 import { Box, Button, SvgIcon, TextField } from '@mui/material'
+import { useSetAtom } from 'jotai'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { useSetAtom } from 'jotai'
 
 import { EP_API_DATABASE } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
@@ -16,9 +16,9 @@ interface CreateCollectionProps {
 const CreateCollection = ({ dbName }: CreateCollectionProps) => {
   const [collection, setCollection] = useState<string>('')
   const setDatabaseStats = useSetAtom(databaseStatsState)
-  const setCollections = useSetAtom<Mongo['collections']>(collectionsState)
-  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
-  const setError = useSetAtom<string | undefined>(messageErrorState)
+  const setCollections = useSetAtom(collectionsState)
+  const setSuccess = useSetAtom(messageSuccessState)
+  const setError = useSetAtom(messageErrorState)
   const methods = useForm({ mode: 'onChange' })
 
   const handleCreateCollection = async () => {

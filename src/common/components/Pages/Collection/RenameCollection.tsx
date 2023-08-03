@@ -1,8 +1,8 @@
 import { Box, Button, Grid, Paper, SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
+import { useSetAtom } from 'jotai'
 import { useRouter } from 'next/router.js'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { useSetAtom } from 'jotai'
 
 import { EP_DATABASE_COLLECTION, EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import { Edit } from 'common/SvgIcons.mts'
@@ -16,10 +16,10 @@ interface RenameCollectionProps {
 
 const RenameCollection = ({ collectionName, dbName }: RenameCollectionProps) => {
   const [collection, setCollection] = useState<string>('')
-  const setCollections = useSetAtom<Mongo['collections']>(collectionsState)
-  const setSelectedCollection = useSetAtom<string>(selectedCollectionState)
-  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
-  const setError = useSetAtom<string | undefined>(messageErrorState)
+  const setCollections = useSetAtom(collectionsState)
+  const setSelectedCollection = useSetAtom(selectedCollectionState)
+  const setSuccess = useSetAtom(messageSuccessState)
+  const setError = useSetAtom(messageErrorState)
   const methods = useForm({ mode: 'onChange' })
   const router = useRouter()
 

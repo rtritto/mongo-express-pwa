@@ -2,7 +2,7 @@ import { atom } from 'jotai'
 
 export const databasesState = atom<Mongo['databases']>([])
 export const collectionsState = atom<Mongo['collections']>({})
-export const columnsState = atom<MongoDocument[]>([])
+export const columnsState = atom<string[]>([])
 export const documentsState = atom<MongoDocument[]>([])
 export const documentCountState = atom<number>(0)
 export const selectedDatabaseState = atom<string>('')

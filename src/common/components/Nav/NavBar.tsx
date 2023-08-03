@@ -55,15 +55,13 @@ const mapNavLinks = navLinks.map(({ icon, title, path }) => (
 ))
 
 interface CustomNavBarProps {
-  collections: Mongo['collections']
-  databases: Mongo['databases']
   show: {
     databases: boolean
     collections: boolean
   }
 }
 
-const CustomNavBar = ({ databases, collections, show }: CustomNavBarProps) => {
+const CustomNavBar = ({ show }: CustomNavBarProps) => {
   // const [state, setState] = useState(false)
 
   //#region Theme

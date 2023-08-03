@@ -3,7 +3,7 @@ import Document, { Html, Head, Main, NextScript } from 'next/document.js'
 import type { DocumentContext } from 'next/document.js'
 
 import createEmotionCache from 'common/createEmotionCache.mts'
-import Theme, /* { roboto } */ from 'common/Theme.mts'
+import Theme /* , { roboto } */ from 'common/Theme.mts'
 
 // _document is only rendered on the server side and not on the client side
 // Event handlers like onClick can't be added to this file

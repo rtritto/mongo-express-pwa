@@ -1,6 +1,5 @@
 import { FormControl, Select, SelectChangeEvent } from '@mui/material'
-import { useAtom } from 'jotai'
-import type { PrimitiveAtom } from 'jotai'
+import { useAtom, type PrimitiveAtom } from 'jotai'
 
 import CustomLink from 'components/Custom/CustomLink.tsx'
 

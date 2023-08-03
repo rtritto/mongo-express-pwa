@@ -11,9 +11,9 @@ interface DeleteDatabaseProps {
 }
 
 const DeleteDatabase = ({ database }: DeleteDatabaseProps) => {
-  const setDatabases = useSetAtom<Mongo['databases']>(databasesState)
-  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
-  const setError = useSetAtom<string | undefined>(messageErrorState)
+  const setDatabases = useSetAtom(databasesState)
+  const setSuccess = useSetAtom(messageSuccessState)
+  const setError = useSetAtom(messageErrorState)
 
   const handleDelete = async (database: string) => {
     await fetch(EP_API_DATABASE(database), {

@@ -8,6 +8,19 @@ import PaginationBox from './PaginationBox.tsx'
 import { EP_API_DATABASE_COLLECTION } from 'configs/endpoints.ts'
 import { messageErrorState } from 'store/globalAtoms.ts'
 
+interface ShowDocumentsProps {
+  columns: string[]
+  currentPage: number
+  collection: string
+  database: string
+  documents: Document[]
+  lastPage: number
+  limit: number
+  show: {
+    delete: boolean
+  }
+}
+
 const ShowDocuments = ({
   columns,
   currentPage: currentPageInit,
@@ -17,7 +30,7 @@ const ShowDocuments = ({
   lastPage: lastPageInit,
   limit,
   show
-}) => {
+}: ShowDocumentsProps) => {
   const router = useRouter()
 
   const [currentPage, setCurrentPage] = useState(currentPageInit)

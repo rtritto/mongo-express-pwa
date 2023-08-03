@@ -4,8 +4,8 @@ import { useAtom } from 'jotai'
 import { messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 const AlertMessages = () => {
-  const [success, setSuccess] = useAtom<string | undefined>(messageSuccessState)
-  const [error, setError] = useAtom<string | undefined>(messageErrorState)
+  const [success, setSuccess] = useAtom(messageSuccessState)
+  const [error, setError] = useAtom(messageErrorState)
 
   return (
     <>

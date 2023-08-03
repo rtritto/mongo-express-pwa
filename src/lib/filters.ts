@@ -1,4 +1,4 @@
-import type { Binary, ObjectId } from 'bson'
+import { Binary, ObjectId } from 'mongodb'
 
 import { addHyphensToUUID } from './utils.ts'
 
@@ -27,7 +27,7 @@ const mapObject = async (obj: InputObject): Promise<Output | OutputObject> => {
 
 /**
  * Convert BSON into a plain string:
- * - { _bsontype: 'ObjectID', id: <Buffer> } => <ObjectId>
+ * - { _bsontype: 'ObjectId', id: <Buffer> } => <ObjectId>
  * - { _bsontype: 'Binary', __id: undefined, sub_type: 4, position: 16, buffer: <Buffer> } => <UUID>
  * - { _bsontype: 'Binary', __id: undefined, sub_type: <number_not_4>, position: 16, buffer: <Buffer> } => <Binary>
  */
@@ -39,12 +39,13 @@ export const stringDocIDs = async (input: Input): Promise<Output | OutputObject>
     const { _bsontype } = input
     if (_bsontype) {
       if (_bsontype === 'Binary') {
-        if (input.sub_type === 4) {
+        const { sub_type } = input
+        if (sub_type === Binary.SUBTYPE_UUID) {
           return uuid4ToString(input)
         }
         return input.toJSON()
       }
-      if (_bsontype === 'ObjectID') {
+      if (_bsontype === 'ObjectId') {
         return input.toString()
       }
     }

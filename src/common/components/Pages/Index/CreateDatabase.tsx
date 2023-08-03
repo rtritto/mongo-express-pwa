@@ -1,7 +1,7 @@
 import { Box, Button, FormGroup, SvgIcon, TextField } from '@mui/material'
+import { useSetAtom } from 'jotai'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { useSetAtom } from 'jotai'
 
 import { EP_API_DB } from 'configs/endpoints.ts'
 import { Add } from 'common/SvgIcons.mts'
@@ -9,10 +9,10 @@ import { isValidDatabaseName } from 'lib/validations.ts'
 import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
 
 const CreateDatabase = () => {
-  const [database, setDatabase] = useState<string>('')
-  const setDatabases = useSetAtom<Mongo['databases']>(databasesState)
-  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
-  const setError = useSetAtom<string | undefined>(messageErrorState)
+  const [database, setDatabase] = useState('')
+  const setDatabases = useSetAtom(databasesState)
+  const setSuccess = useSetAtom(messageSuccessState)
+  const setError = useSetAtom(messageErrorState)
   const methods = useForm({ mode: 'onChange' })
 
   const handleCreateDatabase = async () => {

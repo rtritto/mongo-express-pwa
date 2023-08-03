@@ -13,8 +13,8 @@ interface DeleteCollectionProps {
 }
 
 const DeleteCollection = ({ collection, database, additionalHandle }: DeleteCollectionProps) => {
-  const setSuccess = useSetAtom<string | undefined>(messageSuccessState)
-  const setError = useSetAtom<string | undefined>(messageErrorState)
+  const setSuccess = useSetAtom(messageSuccessState)
+  const setError = useSetAtom(messageErrorState)
 
   const handleDelete = async (database: string, collection: string) => {
     await fetch(EP_API_DATABASE_COLLECTION(database, collection), {

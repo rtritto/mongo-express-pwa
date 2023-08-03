@@ -24,7 +24,7 @@ const ImportButton = ({ collection, href, text = 'Import' }: ImportButtonProps) 
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState('')
-  const setError = useSetAtom<string | undefined>(messageErrorState)
+  const setError = useSetAtom(messageErrorState)
 
   const handleClose = () => {
     router.reload()
