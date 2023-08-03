@@ -162,7 +162,7 @@ const CollectionPage = ({
 
         {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}
 
-        {/* {documents.length === 0
+        {documents.length === 0
           ? <p>No documents found.</p>
           : <ShowDocuments
             columns={columns}
@@ -177,7 +177,7 @@ const CollectionPage = ({
                 && collectionName !== 'system.indexes'
                 && columns.includes('_id')
             }}
-          />} */}
+          />}
 
         {readOnly === false && <RenameCollection collectionName={collectionName} dbName={dbName} />}
 
