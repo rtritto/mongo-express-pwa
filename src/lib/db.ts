@@ -15,7 +15,7 @@ let mongoClient: MongoClient
 
 // if (!connectionData) {
 // connectionData = 
-export const mongo: Mongo = {
+export const mongo = {
   clients: [],
   collections: {},
   connections: {},
@@ -123,7 +123,7 @@ export const mongo: Mongo = {
     return mongoClient
     // return this
   }
-}
+} satisfies Mongo
 // }
 
 // global.mongo = mongo

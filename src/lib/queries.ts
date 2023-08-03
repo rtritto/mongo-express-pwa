@@ -1,4 +1,4 @@
-import mongodb from 'mongodb'
+import { Binary } from 'mongodb'
 
 import { parseObjectId, toSafeBSON } from './bson.ts'
 
@@ -82,7 +82,7 @@ const converters = {
     return new RegExp(value, 'i')
   },
   U(value: string) {
-    return new mongodb.Binary(Buffer.from(value.replaceAll('-', ''), 'hex'), mongodb.Binary.SUBTYPE_UUID)
+    return new Binary(Buffer.from(value.replaceAll('-', ''), 'hex'), Binary.SUBTYPE_UUID)
   },
   // if type == S, no conversion done
   S(value: string) {
