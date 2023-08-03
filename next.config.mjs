@@ -20,6 +20,11 @@ await mongo.connect(config)
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: { config },
+  modularizeImports: {
+    '@mui/material': {
+      transform: '@mui/material/{{member}}'
+    }
+  },
   reactStrictMode: true,
   swcMinify: true,
   typescript: {
