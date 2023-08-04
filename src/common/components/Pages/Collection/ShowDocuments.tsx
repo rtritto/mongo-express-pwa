@@ -93,8 +93,8 @@ const ShowDocuments = ({
         columns={columns}
         deleteUrl={EP_API_DATABASE_COLLECTION(database, collection)}
         documents={documents}
-        show={show.delete}
-        TableContainerProps={{ sx: lastPage !== 1 && { margin: 0 } }} // remove margin botton
+        show={show}
+        TableContainerProps={{ sx: lastPage !== 1 ? { margin: 0 } : {} }} // remove margin botton
       />
 
       {PaginationBoxComponent}

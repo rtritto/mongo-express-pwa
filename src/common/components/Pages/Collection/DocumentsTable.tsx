@@ -12,7 +12,7 @@ const getTableCells = (columns: string[], document: MongoDocument, index: number
   return columns.map((column) => {
     const field = document[column] as string | object | undefined | null
     return (typeof field === 'object' ?? Array.isArray(field)) ? (
-      <TableCell key={`${column}${index}`} sx={{ backgroundColor: '#181818', py: 1 }}>
+      <TableCell key={`${column}${index}`} sx={{ backgroundColor: '#181818', py: 0.5 }}>
         <JsonViewer
           collapseStringsAfterLength={50}
           defaultInspectDepth={1}
@@ -27,7 +27,7 @@ const getTableCells = (columns: string[], document: MongoDocument, index: number
         />
       </TableCell>
     ) : (
-      <TableCell key={`${column}${index}`} sx={{ py: 1 }}>
+      <TableCell key={`${column}${index}`} sx={{ py: 0.5 }}>
         <>{field}</>
       </TableCell>
     )
@@ -77,7 +77,7 @@ const DocumentsTable = ({
 
   return (
     <TableContainer component={Paper} sx={{ ...TableContainerProps.sx }}>
-      <Table size="small" /*padding="checkbox"*/ >
+      <Table size="small" /*padding="checkbox"*/>
         <TableHead>
           <TableRow>
             {getColumns(columns, show.delete)}
@@ -88,7 +88,7 @@ const DocumentsTable = ({
           {documents.map((document, index) => (
             <TableRow key={`doc${index}`}>
               {show.delete === true && (
-                <TableCell key={`delDoc${index}`} width="1%" sx={{ px: 1, py: 0.5 }}>
+                <TableCell key={`delDoc${index}`} width="1%" sx={{ px: 0.5, py: 0.5 }}>
                   <DeleteDialogSimple
                     // TODO add (json | safe | url_encode filter) to _id
                     deleteUrl={`${deleteUrl}/${document._id}`}
