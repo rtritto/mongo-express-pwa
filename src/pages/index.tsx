@@ -10,7 +10,7 @@ import ShowDatabases from 'components/Pages/Index/ShowDatabases.tsx'
 import { mapServerStatus } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset } from 'lib/GlobalRef.ts'
 import { databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
-import { mongo } from 'src/lib/db.ts'
+import { connectClient } from 'src/lib/db.ts'
 
 interface IndexProps {
   initDatabases: Mongo['databases']
@@ -87,18 +87,18 @@ const Index: ComponentType<IndexProps> = ({
 }
 
 export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
-  await mongo.connect()
+  await connectClient()
   // Get messages from redirect
   const messageError = getGlobalValueAndReset('messageError')
   const messageSuccess = getGlobalValueAndReset('messageSuccess')
 
   const props: IndexProps = {
-    initDatabases: mongo.databases,
+    initDatabases: global._mongo.databases,
     ...messageError !== undefined && { messageError },
     ...messageSuccess !== undefined && { messageSuccess },
     options: process.env.config.options,
-    ...mongo.adminDb !== null && {
-      serverStatus: mapServerStatus(await mongo.adminDb.serverStatus() as ServerStatus)
+    ...global._mongo.adminDb !== null && {
+      serverStatus: mapServerStatus(await global._mongo.adminDb.serverStatus() as ServerStatus)
     },
     title: 'Home - Mongo Express'
   }

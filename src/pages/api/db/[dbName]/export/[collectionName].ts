@@ -3,14 +3,14 @@ import { EOL } from 'node:os'
 import { toJsonString } from 'lib/bson.ts'
 import { getQuery, getSort } from 'lib/queries.ts'
 import { checkDatabase, checkCollection } from 'lib/validations.ts'
-import { mongo } from 'src/lib/db.ts'
+import { connectClient } from 'src/lib/db.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {  // exportCollection
     const { collectionName, dbName } = req.query as Params
-    const client = await mongo.connect()
-    checkDatabase(dbName, Object.keys(mongo.connections))
-    checkCollection(collectionName, mongo.collections[dbName])
+    const client = await connectClient()
+    checkDatabase(dbName, Object.keys(global._mongo.connections))
+    checkCollection(collectionName, global._mongo.collections[dbName])
 
     // TODO ? change to getQueryOptions
     const queryOptions = { ...req.query.sort && { sort: getSort(req.query.sort) } }

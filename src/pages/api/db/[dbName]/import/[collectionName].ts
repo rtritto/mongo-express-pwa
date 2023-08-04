@@ -2,7 +2,7 @@ import { EJSON } from 'bson'
 
 import { checkDatabase, checkCollection } from 'lib/validations.ts'
 import multipartDataParser from 'lib/parsers/multipart-data-parser.ts'
-import { mongo } from 'src/lib/db.ts'
+import { connectClient } from 'src/lib/db.ts'
 
 const ALLOWED_MIME_TYPES = new Set([
   'text/csv',
@@ -12,9 +12,9 @@ const ALLOWED_MIME_TYPES = new Set([
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {  // importCollection
     const { collectionName, dbName } = req.query as Params
-    const client = await mongo.connect()
-    checkDatabase(dbName, Object.keys(mongo.connections))
-    checkCollection(collectionName, mongo.collections[dbName])
+    const client = await connectClient()
+    checkDatabase(dbName, Object.keys(global._mongo.connections))
+    checkCollection(collectionName, global._mongo.collections[dbName])
 
     const files = multipartDataParser(req)
     if (files.length === 0) {

@@ -6,7 +6,14 @@ declare global {
       config: import('config.default.mts')
     }
   }
-  var mongo: Mongo
+  var _mongo: Mongo
+  // {
+  //   client: MongoClient
+  //   clients: ClientInfo[]
+  //   connections: Connections
+  //   collections: Collections
+  //   databases: string[]
+  // }
   var messageError: string | undefined
   var messageSuccess: string | undefined
 }

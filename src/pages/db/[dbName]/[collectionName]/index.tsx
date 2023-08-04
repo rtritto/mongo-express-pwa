@@ -26,7 +26,7 @@ import {
   documentCountState, selectedCollectionState, messageErrorState,
   messageSuccessState
 } from 'store/globalAtoms.ts'
-import { mongo } from 'src/lib/db.ts'
+import { connectClient } from 'src/lib/db.ts'
 
 const getRedirect = (dbName: string): { redirect: Redirect } => ({
   redirect: {
@@ -199,19 +199,19 @@ const CollectionPage = ({
 
 export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params> = async ({ params, query }) => {
   const { collectionName, dbName } = params as Params
-  const client = await mongo.connect()
+  const client = await connectClient()
 
   // Make sure database exists
-  if (!(dbName in mongo.connections)) {
+  if (!(dbName in global._mongo.connections)) {
     setGlobalValue('messageError', `Database "${dbName}" not found!`)
     return getRedirect(dbName)
   }
   // Make sure collection exists
-  if (!mongo.collections[dbName].includes(collectionName)) {
+  if (!global._mongo.collections[dbName].includes(collectionName)) {
     setGlobalValue('messageError', `Collection "${collectionName}" not found!`)
     return getRedirect(dbName)
   }
-  const collection = mongo.connections[dbName].db.collection(collectionName)
+  const collection = global._mongo.connections[dbName].db.collection(collectionName)
   if (collection === null) {
     setGlobalValue('messageError', `Collection "${collectionName}" not found!`)
     return getRedirect(dbName)
@@ -297,8 +297,8 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
     return {
       props: {
         // ctx,
-        collections: mongo.collections,
-        databases: mongo.databases,
+        collections: global._mongo.collections,
+        databases: global._mongo.databases,
         collectionStats,
         columns: [...columns],  // All used columns
         count,  // total number of docs returned by the query

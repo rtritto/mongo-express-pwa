@@ -1,14 +1,14 @@
 import { getQuery } from 'lib/queries.ts'
 import { checkCollection, checkDatabase, checkDocument, checkOption } from 'lib/validations.ts'
 import { validateCollectionReqBody } from 'lib/validationsReq.ts'
-import { mongo, withExceptionHandler } from 'src/lib/db.ts'
+import { connectClient, updateCollections, withExceptionHandler } from 'src/lib/db.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {  // getDocuments (NEW)
     const { collectionName, dbName, limit, skip } = req.query as Params
-    const client = await mongo.connect()
-    checkDatabase(dbName, Object.keys(mongo.connections))
-    checkCollection(collectionName, mongo.collections[dbName])
+    const client = await connectClient()
+    checkDatabase(dbName, Object.keys(global._mongo.connections))
+    checkCollection(collectionName, global._mongo.collections[dbName])
 
     // TODO handle aggregation
     const filter = {}
@@ -25,9 +25,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'PUT') {  // renameCollection
     await validateCollectionReqBody(req.body)
     const { collectionName, dbName } = req.query as Params
-    const client = await mongo.connect()
-    checkDatabase(dbName, Object.keys(mongo.connections))
-    checkCollection(collectionName, mongo.collections[dbName])
+    const client = await connectClient()
+    checkDatabase(dbName, Object.keys(global._mongo.connections))
+    checkCollection(collectionName, global._mongo.collections[dbName])
 
     const { collection } = req.body
 
@@ -35,16 +35,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       console.debug(error)
       throw new Error(`Could not rename collection "${collectionName}" in "${collection}". ${error.message}`)
     })
-    await mongo.updateCollections(mongo.connections[dbName])
+    await updateCollections(global._mongo.connections[dbName])
     // res.redirect(utils.buildCollectionURL(res.locals.baseHref, req.query.dbName, collection))
     res.end()
     return
   }
   if (req.method === 'POST') {  // addDocument
     const { collectionName, dbName } = req.query as Params
-    const client = await mongo.connect()
-    checkDatabase(dbName, Object.keys(mongo.connections))
-    checkCollection(collectionName, mongo.collections[dbName])
+    const client = await connectClient()
+    checkDatabase(dbName, Object.keys(global._mongo.connections))
+    checkCollection(collectionName, global._mongo.collections[dbName])
     const docBSON = checkDocument(req.body)
 
     await client.db(dbName).collection(collectionName).insertOne(docBSON)
@@ -60,9 +60,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     checkOption('readOnly', true)
     checkOption('noDelete', true)
     const { collectionName, dbName, query } = req.query as Params
-    const client = await mongo.connect()
-    checkDatabase(dbName, Object.keys(mongo.connections))
-    checkCollection(collectionName, mongo.collections[dbName])
+    const client = await connectClient()
+    checkDatabase(dbName, Object.keys(global._mongo.connections))
+    checkCollection(collectionName, global._mongo.collections[dbName])
 
     const collection = client.db(dbName).collection(collectionName)
     if (query) {
@@ -75,7 +75,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     } else {
       // Drop the whole collection
       await collection.drop()
-      await mongo.updateCollections(mongo.connections[dbName])
+      await updateCollections(global._mongo.connections[dbName])
       // res.redirect(res.locals.baseHref + 'db/' + req.dbName)
     }
     res.end()

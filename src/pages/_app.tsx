@@ -90,7 +90,7 @@ const MyApp: App = ({
 }
 
 MyApp.getInitialProps = async ({ router /* or ctx.req */ }: AppContext): Promise<MyAppProps> => {
-  // await mongo.connect()
+  // await connectClient()
   // if (mongo.adminDb) {
   //   const rawInfo = await mongo.adminDb.serverStatus()
   //   const info = mapMongoDBInfo(rawInfo)

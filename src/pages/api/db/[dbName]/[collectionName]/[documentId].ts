@@ -1,13 +1,13 @@
 import { checkCollection, checkDatabase, checkDocument, checkOption } from 'lib/validations.ts'
 import { buildId } from 'lib/utils.ts'
-import { mongo, withExceptionHandler } from 'src/lib/db.ts'
+import { connectClient, withExceptionHandler } from 'src/lib/db.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'PUT') {  // updateDocument
     const { collectionName, dbName, documentId } = req.query as Params
-    const client = await mongo.connect()
-    checkDatabase(dbName, Object.keys(mongo.connections))
-    checkCollection(collectionName, mongo.collections[dbName])
+    const client = await connectClient()
+    checkDatabase(dbName, Object.keys(global._mongo.connections))
+    checkCollection(collectionName, global._mongo.collections[dbName])
 
     const _id = buildId(documentId, req.query)
     const filter = { _id }
@@ -40,9 +40,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     checkOption('readOnly', true)
     checkOption('noDelete', true)
     const { collectionName, dbName, documentId } = req.query as Params
-    const client = await mongo.connect()
-    checkDatabase(dbName, Object.keys(mongo.connections))
-    checkCollection(collectionName, mongo.collections[dbName])
+    const client = await connectClient()
+    checkDatabase(dbName, Object.keys(global._mongo.connections))
+    checkCollection(collectionName, global._mongo.collections[dbName])
     const _id = buildId(documentId, req.query)
     const filter = { _id }
 

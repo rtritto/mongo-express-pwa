@@ -10,7 +10,7 @@ import ShowCollections from 'components/Pages/Database/ShowCollections.tsx'
 import { mapDatabaseStats } from 'lib/mapInfo.ts'
 import { getGlobalValueAndReset, setGlobalValue } from 'lib/GlobalRef.ts'
 import { collectionsState, databasesState, messageErrorState, messageSuccessState } from 'store/globalAtoms.ts'
-import { mongo } from 'src/lib/db.ts'
+import { connectClient, updateCollections } from 'src/lib/db.ts'
 
 interface DatabasePageProps {
   collections: Mongo['collections']
@@ -107,10 +107,10 @@ const DatabasePage = ({
 
 export const getServerSideProps: GetServerSideProps<DatabasePageProps, Params> = async ({ params }) => {
   const { dbName } = params as Params
-  await mongo.connect()
+  await connectClient()
 
   // Make sure database exists
-  if (!(dbName in mongo.connections)) {
+  if (!(dbName in global._mongo.connections)) {
     setGlobalValue('messageError', `Database "${dbName}" not found!`)
     return getRedirect()
   }
@@ -119,7 +119,7 @@ export const getServerSideProps: GetServerSideProps<DatabasePageProps, Params> =
   // global.req.db = mongo.connections[dbName].db
 
   try {
-    await mongo.updateCollections(mongo.connections[dbName])
+    await updateCollections(global._mongo.connections[dbName])
   } catch (error) {
     console.error(error)
     setGlobalValue('messageError', `Could not refresh collections. ${error}`)
@@ -128,7 +128,7 @@ export const getServerSideProps: GetServerSideProps<DatabasePageProps, Params> =
 
   let databaseStats
   try {
-    const dbStats = await mongo.connections[dbName].db.stats()
+    const dbStats = await global._mongo.connections[dbName].db.stats() as DbStats
     databaseStats = mapDatabaseStats(dbStats)
   } catch (error) {
     console.error(error)
@@ -142,11 +142,11 @@ export const getServerSideProps: GetServerSideProps<DatabasePageProps, Params> =
 
   return {
     props: {
-      collections: mongo.collections,
-      databases: mongo.databases,
+      collections: global._mongo.collections,
+      databases: global._mongo.databases,
       databaseStats,
       dbName,
-      // TODO grids: mongo.gridFSBuckets[dbName],
+      // TODO grids: global._mongo.gridFSBuckets[dbName],
       ...messageError !== undefined && { messageError },
       ...messageSuccess !== undefined && { messageSuccess },
       options: process.env.config.options,

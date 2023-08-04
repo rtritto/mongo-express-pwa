@@ -142,6 +142,7 @@ type Connections = {
 
 // type Mongo = import('lib/db.ts').Mongo
 type Mongo = {
+  client: MongoClient
   clients: ClientInfo[]
   collections: Collections
   connections: Connections
@@ -149,11 +150,6 @@ type Mongo = {
   // gridFSBuckets?  TODO
   mainClient: ClientInfo | null
   adminDb: ClientInfo['adminDb'] | null
-  addConnection: (info: ClientInfo, db: Db, dbName: string) => Connection
-  getDatabases: () => string[]
-  updateCollections: (dbConnection: Connection) => Promise<void>
-  updateDatabases: () => Promise<void>
-  connect: (config?: Config) => Promise<MongoClient>
 }
 
 interface Params extends ParsedUrlQuery {
