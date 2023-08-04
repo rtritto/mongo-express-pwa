@@ -24,6 +24,9 @@ const getTableCells = (columns: string[], document: MongoDocument, index: number
           rootName={false}
           theme="dark"
           value={field}
+          sx={{
+            minWidth: 'max-content'
+          }}
         />
       </TableCell>
     ) : (
