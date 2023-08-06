@@ -1,6 +1,7 @@
 import { checkCollection, checkDatabase, checkDocument, checkOption } from 'lib/validations.ts'
 import { buildId } from 'lib/utils.ts'
-import { connectClient, withExceptionHandler } from 'src/lib/db.ts'
+import { connectClient } from 'lib/db.ts'
+import withExceptionHandler from 'lib/withExceptionHandler.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'PUT') {  // updateDocument

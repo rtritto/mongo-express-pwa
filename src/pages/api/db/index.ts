@@ -1,5 +1,6 @@
 import { validateDatabaseReqBody } from 'lib/validationsReq.ts'
-import { connectClient, withExceptionHandler } from 'src/lib/db.ts'
+import { connectClient } from 'lib/db.ts'
+import withExceptionHandler from 'lib/withExceptionHandler.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {  // addDatabase

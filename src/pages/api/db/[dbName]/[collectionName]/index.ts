@@ -1,7 +1,8 @@
 import { getQuery } from 'lib/queries.ts'
 import { checkCollection, checkDatabase, checkDocument, checkOption } from 'lib/validations.ts'
 import { validateCollectionReqBody } from 'lib/validationsReq.ts'
-import { connectClient, updateCollections, withExceptionHandler } from 'src/lib/db.ts'
+import { connectClient, updateCollections } from 'lib/db.ts'
+import withExceptionHandler from 'lib/withExceptionHandler.ts'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {  // getDocuments (NEW)
