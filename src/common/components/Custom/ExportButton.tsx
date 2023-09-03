@@ -11,7 +11,7 @@ const ButtonExportImportStyle = {
 
 interface ExportButtonProps {
   href: string
-  text: string
+  text?: string
 }
 
 const ExportButton = ({ href, text = 'Export' }: ExportButtonProps) => {

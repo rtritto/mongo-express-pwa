@@ -90,6 +90,8 @@ const ShowDocuments = ({
       {PaginationBoxComponent}
 
       <DocumentsTable
+        collection={collection}
+        database={database}
         columns={columns}
         deleteUrl={EP_API_DATABASE_COLLECTION(database, collection)}
         documents={documents}

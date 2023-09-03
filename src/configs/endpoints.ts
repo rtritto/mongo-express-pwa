@@ -1,6 +1,7 @@
 export const EP_DB = '/db'
 export const EP_DATABASE = (database: string) => `${EP_DB}/${database}`
 export const EP_DATABASE_COLLECTION = (database: string, collection: string) => `${EP_DB}/${database}/${collection}`
+export const EP_DATABASE_COLLECTION_DOCUMENT = (database: string, collection: string, documentId: string) => `${EP_DB}/${database}/${collection}/${documentId}`
 
 // API
 export const EP_API_DB = `/api${EP_DB}`

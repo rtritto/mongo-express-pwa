@@ -105,13 +105,13 @@ const ShowCollections = ({ collections = [], dbName, show }: ShowDatabasesProps)
                     }}
                     // Button
                     fullWidth
-                    variant="text"
                     sx={{
                       // py: 2,
                       justifyContent: 'flex-start',
                       textTransform: 'none' /* remove uppercase */
                     }}
                     onClick={() => setSelectedCollectionState(collection)}
+                    variant="text"
                   >
                     <Typography component='h6' variant='h6'>{collection}</Typography>
                   </CustomLink>

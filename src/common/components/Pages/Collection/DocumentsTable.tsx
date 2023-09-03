@@ -1,12 +1,14 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, type TableContainerProps } from '@mui/material'
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, type TableContainerProps } from '@mui/material'
 import { JsonViewer } from '@textea/json-viewer'
 import { useHydrateAtoms } from 'jotai/utils'
 import { useAtomValue } from 'jotai'
 import { useRouter } from 'next/router.js'
 import { useRef } from 'react'
 
+import CustomLink from 'components/Custom/CustomLink.tsx'
 import DeleteDialogSimple from 'components/Custom/DeleteDialogSimple.tsx'
 import { columnsState, documentsState } from 'src/common/store/globalAtoms.ts'
+import { EP_DATABASE_COLLECTION_DOCUMENT } from 'src/configs/endpoints.ts'
 
 const getTableCells = (columns: string[], document: MongoDocument, index: number) => {
   return columns.map((column) => {
@@ -51,6 +53,8 @@ const getColumns = (columns: string[], showDelete: boolean) => {
 }
 
 interface DocumentsTableProps {
+  collection: string
+  database: string
   columns: string[]
   deleteUrl: string
   documents: MongoDocument[]
@@ -63,6 +67,8 @@ interface DocumentsTableProps {
 }
 
 const DocumentsTable = ({
+  collection,
+  database,
   columns: columnsInit,
   deleteUrl,
   documents: documentsInit,
@@ -107,12 +113,37 @@ const DocumentsTable = ({
                 </TableCell>
               )}
 
-              {getTableCells(columns, document, index)}
+              <TableCell key={`_id${index}`}>
+                <CustomLink
+                  key={`_id${index}Link`}
+                  // Link
+                  href={EP_DATABASE_COLLECTION_DOCUMENT(database, collection, document._id)}
+                  style={{
+                    textDecoration: 'none'  // remove text underline
+                  }}
+                  // Button
+                  fullWidth
+                  sx={{
+                    color: 'rgb(153, 143, 143)',
+                    justifyContent: 'flex-start',
+                    textTransform: 'none',  // remove uppercase
+                    ':hover': {
+                      color: 'white'
+                    },
+                    minWidth: 'max-content'
+                  }}
+                  variant="text"
+                >
+                  <Typography>{document._id}</Typography>
+                </CustomLink>
+              </TableCell>
+
+              {getTableCells(columns.slice(1) /*remove _id*/, document, index)}
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+    </TableContainer >
   )
 }
 

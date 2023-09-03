@@ -104,9 +104,6 @@ const CollectionPage = ({
     setDatabases(databasesInit)
   }, [databasesInit, setDatabases])
   useEffect(() => {
-    setDatabases(databasesInit)
-  }, [databasesInit, setDatabases])
-  useEffect(() => {
     setColumns(columnsInit)
     setDocuments(documentsInit)
     setDocumentCount(count)
@@ -136,6 +133,8 @@ const CollectionPage = ({
           Viewing Collection: <strong>{collectionName}</strong>
         </Typography>
 
+        <Divider sx={{ border: 0.5 }} />
+
         {readOnly === false && (
           <p>
             <button type="button" data-toggle="modal" data-target="#addDocument">
@@ -159,8 +158,6 @@ const CollectionPage = ({
           query={query || '{}'}  // delete all documents
           show={readOnly === false && noDelete === false}
         />
-
-        {/* <Divider sx={{ border: 1, my: 1.5 }} /> */}
 
         {documents.length === 0
           ? <p>No documents found.</p>
@@ -198,8 +195,8 @@ const CollectionPage = ({
 }
 
 export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params> = async ({ params, query }) => {
+  await connectClient()
   const { collectionName, dbName } = params as Params
-  const client = await connectClient()
 
   // Make sure database exists
   if (!(dbName in global._mongo.connections)) {
@@ -249,7 +246,7 @@ export const getServerSideProps: GetServerSideProps<CollectionPageProps, Params>
     }
 
     const [stats, indexes] = await Promise.all([
-      collection.stats(),
+      collection.aggregate([{ $collStats: { storageStats: {} } }]).next().then((s) => s.storageStats),
       collection.indexes() as Promise<Indexes>
     ])
 

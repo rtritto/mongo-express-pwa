@@ -83,7 +83,7 @@ const DatabasePage = ({
           Viewing Database: <strong>{dbName}</strong>
         </Typography>
 
-        <Divider sx={{ border: 1, my: 1.5 }} />
+        <Divider sx={{ border: 0.5 }} />
 
         <ShowCollections
           collections={collections[dbName]}
@@ -106,8 +106,8 @@ const DatabasePage = ({
 }
 
 export const getServerSideProps: GetServerSideProps<DatabasePageProps, Params> = async ({ params }) => {
-  const { dbName } = params as Params
   await connectClient()
+  const { dbName } = params as Params
 
   // Make sure database exists
   if (!(dbName in global._mongo.connections)) {
